@@ -9,9 +9,9 @@ tags: [sicp, software]
 
 Having worked on many software projects and with a lot of different people, one thing that strikes me is the lack of understanding of what software is and how it's created. Even among us developers, there's is still this belief lurking, that if you senior enough, you can design and size a problem, before you hand it over to some less senior developers to implement. (Some) people still believe that building software is the same as building cars on an assembly line.
 
-Abelsson and Sussman speaks about a "sorcerer's spirit" in chapter 1 of [SICP](http://mitpress.mit.edu/sicp/);
+Abelsson and Sussman speaks about a _sorcerer's spirit_ in chapter 1 of [SICP](http://mitpress.mit.edu/sicp/);
 
-> A computational process is indeed much like a sorcerer's idea of a spirit. It cannot be seen or touched. It is not composed of matter at all. However, it is very real. It can perform intellectual work. It can answer questions. It can affect the world by disbursing money at a bank or by controlling a robot arm in a factory. The programs we use to conjure processes are like a sorcerer's spells. They are carefully composed from symbolic expressions in arcane and esoteric programming languages that prescribe the tasks we want our processes to perform.
+> A computational process is indeed much like a sorcerer's idea of a spirit. It cannot be seen or touched. It is not composed of matter at all. However, it is very real. It can perform intellectual work. It can answer questions. It can affect the world by disbursing money at a bank or by controlling a robot arm in a factory. The programs we use to conjure processes are like a sorcerer's spells. They are carefully composed from symbolic expressions in arcane and esoteric _programming languages_ that prescribe the tasks we want our processes to perform.
 
 Some years back I say the great presentation by [Brian Cantrill](http://dtrace.org/blogs/bmc/) (then DTrace developer at Sun). The whole presentation is really interesting (DTrace is awesome btw), but the first "philosophical" part really stuck with me, and goes some ways to explain what software is. Here's a transcript of the first part, and the full presentation is [here](http://www.youtube.com/watch?v=TgmA48fILq8&feature=gv).
 
