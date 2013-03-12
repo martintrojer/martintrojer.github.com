@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The future of .NET lies in Mono. The future of F# lies in MonoDevelop"
+title: "The future of .NET lies in Mono. The future of F# lies in MonoDevelop."
 description: ""
 category:
 tags: [.NET, mono, F#]
