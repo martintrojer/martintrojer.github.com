@@ -2,7 +2,7 @@
 layout: post
 title: "Symbolic Execution"
 description: ""
-category:
+category: software
 tags: [klee, llvm, sat, symbolic execution]
 ---
 {% include JB/setup %}

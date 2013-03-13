@@ -2,12 +2,12 @@
 layout: post
 title: "Scheme as an external DSL in Clojure"
 description: ""
-category:
+category: clojure
 tags: [clojure, f#, lisp, sicp]
 ---
 {% include JB/setup %}
 
-This is a follow-up post to my previous <a href="http://martinsprogrammingblog.blogspot.com/2011/11/scheme-as-embedded-dsl-in-clojure.html">"Scheme in Clojure" post</a>.
+This is a follow-up post to my previous ["Scheme in Clojure" post](/clojure/2011/11/29/scheme-as-an-embedded-dsl-in-clojure/).
 
 This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it's called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code). However, this can serve as an example of how to write parsers in Clojure and it also highlights how elegant and succinct such a parser/interpreter can be. And of course, it's pretty darn fun :-)
 

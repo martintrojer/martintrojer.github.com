@@ -2,7 +2,7 @@
 layout: post
 title: "Replicating Datomic/Datalog queries with core.logic"
 description: ""
-category:
+category: clojure
 tags: [clojure, core.logic, datomic]
 ---
 {% include JB/setup %}

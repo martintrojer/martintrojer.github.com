@@ -2,7 +2,7 @@
 layout: post
 title: "Adding Live Unit Feeds to Frinj"
 description: ""
-category:
+category: clojure
 tags: [clojure, frinj]
 ---
 {% include JB/setup %}

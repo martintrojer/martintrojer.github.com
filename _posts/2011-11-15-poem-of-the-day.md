@@ -2,7 +2,7 @@
 layout: post
 title: "Poem of the day"
 description: ""
-category:
+category: f#
 tags: [f#]
 ---
 {% include JB/setup %}

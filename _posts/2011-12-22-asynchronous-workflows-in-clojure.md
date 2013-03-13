@@ -2,7 +2,7 @@
 layout: post
 title: "Asynchronous workflows in Clojure"
 description: ""
-category:
+category: clojure
 tags: [.net, clojure, f#, jvm]
 ---
 {% include JB/setup %}

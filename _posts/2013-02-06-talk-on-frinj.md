@@ -2,7 +2,7 @@
 layout: post
 title: "Talk on Frinj"
 description: ""
-category:
+category: clojure
 tags: [clojure, frinj]
 ---
 {% include JB/setup %}

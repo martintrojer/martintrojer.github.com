@@ -2,7 +2,7 @@
 layout: post
 title: "Welcome and some guiding words..."
 description: ""
-category:
+category: software
 tags: [sicp]
 ---
 {% include JB/setup %}

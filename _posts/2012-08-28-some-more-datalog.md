@@ -2,12 +2,12 @@
 layout: post
 title: "Some more Datalog"
 description: ""
-category:
+category: clojure
 tags: [clojure, datalog, datomic]
 ---
 {% include JB/setup %}
 
-I've [written about datalog](/2012/07/17/replicating-datomicdatalog-queries-with-corelogic-take-2/) and <a href="http://www.datomic.com">Datomic</a> a bit recently. To conclude here's another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found <a href="https://github.com/martintrojer/datalog">here</a>.
+I've [written about datalog](/clojure/2012/07/17/replicating-datomicdatalog-queries-with-corelogic-take-2/) and <a href="http://www.datomic.com">Datomic</a> a bit recently. To conclude here's another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found <a href="https://github.com/martintrojer/datalog">here</a>.
 
 The example I'm using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this; <script src="https://gist.github.com/3486837.js?file=query-datomic.clj"> </script>
 In contrib.datalog the same query requires a bit more ceremony, you can write it like this; <script src="https://gist.github.com/3486837.js?file=query-datalog.clj"> </script> In my previous posts I described a number of different way to use core.logic, unify+clojure.set/join to replicate the same query. How does the execution times compare? I use the same benchmark as in the previous post (the same query, with 5000 joins between the 2 'tables').

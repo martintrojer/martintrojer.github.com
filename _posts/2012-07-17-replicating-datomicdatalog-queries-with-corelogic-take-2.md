@@ -2,12 +2,12 @@
 layout: post
 title: "Replicating Datomic/Datalog queries with core.logic, take 2"
 description: ""
-category:
+category: clojure
 tags: [clojure, datomic, core.logic]
 ---
 {% include JB/setup %}
 
-This is a follow-up to my [previous post](/2012/07/16/replicating-datomicdatalog-queries-with-corelogic/) on datalog-equivalent queries in core.logic.
+This is a follow-up to my [previous post](/clojure//2012/07/16/replicating-datomicdatalog-queries-with-corelogic/) on datalog-equivalent queries in core.logic.
 
 Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First let's consider this datomic query;<script src="https://gist.github.com/3122185.js?file=datomic-join.clj"> </script>
 In core.logic we start by defining the relationships between our 2 datasets; <script src="https://gist.github.com/3123920.js?file=defrels.clj"> </script> This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels; <script src="https://gist.github.com/3123920.js?file=facts-and-run.clj"> </script> The join is accomplished by using the same lvar (email) is both defrel goals.

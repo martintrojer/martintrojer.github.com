@@ -2,7 +2,7 @@
 layout: post
 title: "Tail Calls in F#, Clojure and Scala"
 description: ""
-category:
+category: clojure
 tags: [.net, clojure, f#, jvm, scala]
 ---
 {% include JB/setup %}

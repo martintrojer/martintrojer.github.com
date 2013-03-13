@@ -2,8 +2,8 @@
 layout: post
 title: "What is software?"
 description: ""
-category:
-tags: [sicp, software]
+category: software
+tags: [sicp]
 ---
 {% include JB/setup %}
 

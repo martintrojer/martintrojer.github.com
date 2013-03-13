@@ -2,7 +2,7 @@
 layout: post
 title: "Scheme as an embedded DSL in Clojure"
 description: ""
-category:
+category: clojure
 tags: [clojure, jvm, lisp, sicp]
 ---
 {% include JB/setup %}

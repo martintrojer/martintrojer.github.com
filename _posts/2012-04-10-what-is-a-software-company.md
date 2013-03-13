@@ -2,7 +2,7 @@
 layout: post
 title: "What is a software company?"
 description: ""
-category:
+category: software
 tags: [software]
 ---
 {% include JB/setup %}

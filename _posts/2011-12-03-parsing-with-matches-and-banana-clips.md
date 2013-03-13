@@ -2,7 +2,7 @@
 layout: post
 title: "Parsing with Matches and Banana Clips"
 description: ""
-category:
+category: f#
 tags: [f#]
 ---
 {% include JB/setup %}
@@ -33,7 +33,9 @@ We just doubled the number of cases. It's still kind of nice and clear, but as a
 deprecated int16   dodgy       if? version &gt; 2
            myAlias data
 </pre>
-This doubles the number of cases again, the level of duplication is now pretty much unbearable :-) Thankfully, F# active patterns come to the rescue! Active patterns can be thought of as a way to impose a structure onto some of set of data (such as a list), and reason about these structures (treating said list as a binary heap for example). This can remove duplication and make code more easy to read and maintain. Let's start and tackle the newly introduced options, by defining a couple of active patterns;
+This doubles the number of cases again, the level of duplication is now pretty much unbearable :-) Thankfully, F# active patterns come to the rescue! Active patterns can be thought of as a way to impose a structure onto some of set of data (such as a list), and reason about these structures (treating said list as a binary heap for example). This can remove duplication and make code more easy to read and maintain.
+
+Let's start and tackle the newly introduced options, by defining a couple of active patterns;
 <script src="https://gist.github.com/1694986.js?file=match-step3.fs"> </script>
 The "(|" brace is called a banana clip and is used for active patterns. In this case we have defined a partial active pattern "ValidFieldOption" which only matches on 2 types of tokens. The "FieldOptions" pattern is recursive and builds up an returns a set of valid options. It easts one token at a time and if that token satisfies the ValidFieldOption pattern it's added to the set (and the pattern calls itself with the rest of the tokens for another round of matching).
 

@@ -2,7 +2,7 @@
 layout: post
 title: "Announcing Frinj, a practical unit of measure calculator DSL for Clojure"
 description: ""
-category:
+category: clojure
 tags: [clojure, frinj]
 ---
 {% include JB/setup %}

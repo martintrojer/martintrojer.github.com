@@ -2,7 +2,7 @@
 layout: post
 title: "Distributed Actors in Clojure"
 description: ""
-category:
+category: clojure
 tags: [akka, clojure, erlang, jvm]
 ---
 {% include JB/setup %}

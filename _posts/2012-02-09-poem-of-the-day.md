@@ -2,7 +2,7 @@
 layout: post
 title: "Poem of the day"
 description: ""
-category:
+category: clojure
 tags: [clojure]
 ---
 {% include JB/setup %}

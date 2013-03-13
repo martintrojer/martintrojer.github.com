@@ -2,7 +2,7 @@
 layout: post
 title: "Enumerate N Queens solutions"
 description: ""
-category:
+category: clojure
 tags: [clojure]
 ---
 {% include JB/setup %}

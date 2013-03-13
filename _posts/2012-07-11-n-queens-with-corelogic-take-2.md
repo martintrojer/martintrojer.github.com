@@ -2,7 +2,7 @@
 layout: post
 title: "N Queens with core.logic, take 2"
 description: ""
-category:
+category: clojure
 tags: [clojure, core.logic]
 ---
 {% include JB/setup %}

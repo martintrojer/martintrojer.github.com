@@ -2,7 +2,7 @@
 layout: post
 title: "Some thoughts on logging"
 description: ""
-category:
+category: clojure
 tags: [clojure]
 ---
 {% include JB/setup %}

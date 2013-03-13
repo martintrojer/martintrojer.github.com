@@ -2,7 +2,7 @@
 layout: post
 title: "Embedding a new runtime into your legacy C/C++ app"
 description: ""
-category:
+category: software
 tags: [.net, c#, f#, gnu, guile, javascript, lisp, lua, mono]
 ---
 {% include JB/setup %}

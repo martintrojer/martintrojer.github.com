@@ -2,7 +2,7 @@
 layout: post
 title: "Some core.logic graph code"
 description: ""
-category:
+category: clojure
 tags: [clojure, core.logic]
 ---
 {% include JB/setup %}

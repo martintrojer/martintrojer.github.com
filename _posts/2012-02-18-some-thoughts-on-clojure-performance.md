@@ -2,7 +2,7 @@
 layout: post
 title: "Some thoughts on Clojure performance"
 description: ""
-category:
+category: clojure
 tags: [.net, c#, clojure, f#, javascript, jvm, mono, scala]
 ---
 {% include JB/setup %}

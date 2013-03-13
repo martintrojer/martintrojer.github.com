@@ -2,7 +2,7 @@
 layout: post
 title: "Is LLVM the beginning of the end for GNU (as we know it)?"
 description: ""
-category:
+category: software
 tags: [clang, gcc, gnu, llvm]
 ---
 {% include JB/setup %}

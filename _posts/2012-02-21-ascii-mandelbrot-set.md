@@ -2,7 +2,7 @@
 layout: post
 title: "ASCII Mandelbrot Set"
 description: ""
-category:
+category: clojure
 tags: [clojure]
 ---
 {% include JB/setup %}
