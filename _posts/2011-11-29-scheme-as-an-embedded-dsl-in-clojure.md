@@ -7,10 +7,9 @@ tags: [clojure, jvm, lisp, sicp]
 ---
 {% include JB/setup %}
 
-<blockquote class="tr_bq">
-If you give someone Fortran, he has Fortran.<br />
-If you give someone Lisp, he has any language he pleases.<br />
--- Guy Steele</blockquote>
+> If you give someone Fortran, he has Fortran.<br />
+> If you give someone Lisp, he has any language he pleases.<br />
+> -- Guy Steele
 
 Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it's built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.
 

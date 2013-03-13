@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Scheme as an External DSL in Clojure"
+title: "Scheme as an external DSL in Clojure"
 description: ""
 category:
 tags: [clojure, F#, lisp, sicp]
