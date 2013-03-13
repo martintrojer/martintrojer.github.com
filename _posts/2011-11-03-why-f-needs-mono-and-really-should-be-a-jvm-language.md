@@ -3,7 +3,7 @@ layout: post
 title: "Why F# needs Mono (and really should be a JVM language)"
 description: ""
 category:
-tags: [.NET, C#, F#, jvm, llvm, mono]
+tags: [.net, c#, f#, jvm, llvm, mono]
 ---
 {% include JB/setup %}
 

@@ -7,7 +7,7 @@ tags: [clang, klee, llvm, sat, symbolic execution, valgrind]
 ---
 {% include JB/setup %}
 
-This is a follow up article to my <a href="http://martinsprogrammingblog.blogspot.com/2011/11/symbolic-execution.html">previous post</a> on symbolic execution. Here we look at <a href="http://klee.llvm.org/">KLEE</a> and <a href="http://llvm.org/">LLVM</a> in more detail, and present a potential practical application for a symbolic executor. We also discuss some of the limitations and drawbacks with this approach.
+This is a follow up article to my [previous post](/2011/11/02/symbolic-execution) on symbolic execution. Here we look at <a href="http://klee.llvm.org/">KLEE</a> and <a href="http://llvm.org/">LLVM</a> in more detail, and present a potential practical application for a symbolic executor. We also discuss some of the limitations and drawbacks with this approach.
 
 Our changes for KLEE and LLVM can be<a href="https://github.com/martintrojer/symbolic-execution">&nbsp;found on github</a>.
 

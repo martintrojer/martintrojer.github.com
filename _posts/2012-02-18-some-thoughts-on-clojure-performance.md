@@ -3,11 +3,11 @@ layout: post
 title: "Some thoughts on Clojure performance"
 description: ""
 category:
-tags: [.NET, C#, clojure, F#, javascript, jvm, mono, scala]
+tags: [.net, c#, clojure, f#, javascript, jvm, mono, scala]
 ---
 {% include JB/setup %}
 
-_Edit_: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was "Why is Clojure so slow?"). I wrote this before <a href="http://blip.tv/clojure/rich-hickey-keynote-5970064">Rich Hickey's Clojure/Conj 2011 keynote</a> was published, in which he talks about most of my concerns (and outlines possible solutions).
+_Edit_: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was "Why is Clojure so slow?"). I wrote this before [Rich Hickey's Clojure/Conj 2011 keynote](http://www.youtube.com/watch?v=I5iNUtrYQSM) was published, in which he talks about most of my concerns (and outlines possible solutions).
 
 Clojure is great in many ways, but one thing it can't be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute. This is a well known issue in the Clojure community and have been discussed on the <a href="http://groups.google.com/group/clojure">mailing list</a> and <a href="http://stackoverflow.com/questions/2531616/why-is-the-clojure-hello-world-program-so-slow-compared-to-java-and-python">stack overflow</a>.&nbsp;I am not intending to troll or fuel any fires here, just jotting down some of my findings when looking into the matter.
 
@@ -88,7 +88,7 @@ The CLR (mono) is about 4x faster getting going than the JVM. This is a big plus
 So why don't we use the Clojure/CLR on mono for stuff like lein then? Well, as it currently stands, the Clojure startup times are even worse on the CLR. The same hello world example as above clocks in a 1.8s! (using the debug Clojure/CLR assembly) - the difference between ClojureCLR and C# is an order of magnitude worse than Clojure and Java, some work left to be done in the ClojureCLR project...
 
 ### What's taking so long?
-[Daniel Solano](http://www.deepbluelambda.org/) gave a talk at [Clojure/conj 2011](http://clojure-conj.org/) about Clojure and Android - [slides](https://github.com/relevance/clojure-conj/blob/master/2011-slides/daniel-solano-g%C3%B3mez-clojure-and-android.pdf), the performance part of that talk gives some valuable insights into Clojure internals and what happens when it starts up. My summary is that it spends 95% of the startup-time loading the clojure.core namespace (the clojure.lang.RT class in particular) and filling out all the metadata/docstrings etc for the methods. This process stresses the GC quite a bit, some 130k objects are allocated and 90k free-d during multiple invokes of the GC (3-6 times), the building up of meta data is one big source of this massive object churn.
+[Daniel Solano](http://www.deepbluelambda.org/) gave a talk at [Clojure/conj 2011](http://www.youtube.com/watch?v=1NptqU3bqZE) about Clojure and Android - [slides](https://github.com/relevance/clojure-conj/blob/master/2011-slides/daniel-solano-g%C3%B3mez-clojure-and-android.pdf), the performance part of that talk gives some valuable insights into Clojure internals and what happens when it starts up. My summary is that it spends 95% of the startup-time loading the clojure.core namespace (the clojure.lang.RT class in particular) and filling out all the metadata/docstrings etc for the methods. This process stresses the GC quite a bit, some 130k objects are allocated and 90k free-d during multiple invokes of the GC (3-6 times), the building up of meta data is one big source of this massive object churn.
 
 _Edit_: By using the "-verbose:gc" flag when running the clojure test above, I notice a single collection, taking some 0.018s. This is different to Daniel's findings, but hardly surprising since he measured performance on the <a href="http://code.google.com/p/dalvik/">Dalvik VM</a>.
 

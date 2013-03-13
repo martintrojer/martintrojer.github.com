@@ -7,7 +7,7 @@ tags: [clojure, core.logic]
 ---
 {% include JB/setup %}
 
-This post is a follow-up to my <a href="http://martinsprogrammingblog.blogspot.co.uk/2012/07/n-queens-with-corelogic-take-1.html">previous post on NQueens and core.logic</a>, in which I tried to find the solutions using "pure" logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.
+This post is a follow-up to my [previous post on NQueens and core.logic](/2012/07/07/n-queens-with-corelogic-take-1/), in which I tried to find the solutions using "pure" logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.
 
 After some excellent feedback and hints from Mr <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&amp;qid=1341989805&amp;sr=8-2">good old Bratko</a>.
 

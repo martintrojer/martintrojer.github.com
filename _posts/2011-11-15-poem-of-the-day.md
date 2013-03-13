@@ -3,7 +3,7 @@ layout: post
 title: "Poem of the day"
 description: ""
 category:
-tags: [F#]
+tags: [f#]
 ---
 {% include JB/setup %}
 

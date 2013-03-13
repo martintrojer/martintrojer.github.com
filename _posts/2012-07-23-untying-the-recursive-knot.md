@@ -3,7 +3,7 @@ layout: post
 title: "Untying the Recursive Knot"
 description: ""
 category:
-tags: [clojure, fp]
+tags: [clojure]
 ---
 {% include JB/setup %}
 

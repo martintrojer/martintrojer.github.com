@@ -3,7 +3,7 @@ layout: post
 title: "Parsing with Matches and Banana Clips"
 description: ""
 category:
-tags: [F#, fp]
+tags: [f#]
 ---
 {% include JB/setup %}
 

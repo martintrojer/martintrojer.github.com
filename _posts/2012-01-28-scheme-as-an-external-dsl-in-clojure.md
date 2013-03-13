@@ -3,7 +3,7 @@ layout: post
 title: "Scheme as an external DSL in Clojure"
 description: ""
 category:
-tags: [clojure, F#, lisp, sicp]
+tags: [clojure, f#, lisp, sicp]
 ---
 {% include JB/setup %}
 

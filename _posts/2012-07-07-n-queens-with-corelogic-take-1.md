@@ -9,9 +9,9 @@ tags: [clojure, core.logic]
 
 I've been "hammock-reading" the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.
 
-My first attempt is to apply it to a problem where (as it turns out) miniKanren isn't a good fit, <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people over at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/tree/cKanren">as we speak</a>, so I intend to revisit this problem as that work progresses.
+My first attempt is to apply it to a problem where (as it turns out) miniKanren isn't a good fit, <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people over at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.
 
-Let's have a crack at this problem anyway shall we? I've previously posted a <a href="http://martinsprogrammingblog.blogspot.co.uk/2012/03/enumerate-n-queens-solutions.html">functional implementation on n-queens</a> in Clojure, and it's both nice to read and fast. What would this look like using core.logic?
+Let's have a crack at this problem anyway shall we? I've previously posted a [functional implementation on n-queens](/2012/03/25/enumerate-n-queens-solutions) in Clojure, and it's both nice to read and fast. What would this look like using core.logic?
 
 Here's the core function (in Clojure) which determines if 2 queens are threatening each other.
 <script src="https://gist.github.com/3065962.js?file=safe.clj"> </script>

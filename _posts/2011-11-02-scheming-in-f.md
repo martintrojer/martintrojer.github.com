@@ -3,7 +3,7 @@ layout: post
 title: "Scheming in F#"
 description: ""
 category:
-tags: [klee, llvm, fp, sicp]
+tags: [f#, sicp]
 ---
 {% include JB/setup %}
 

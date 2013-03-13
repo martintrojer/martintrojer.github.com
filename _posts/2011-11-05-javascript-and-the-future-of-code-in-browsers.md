@@ -3,7 +3,7 @@ layout: post
 title: "Javascript and the future of code in browsers"
 description: ""
 category:
-tags: [.NET, clojure, dart, javascript, jvm]
+tags: [.net, clojure, dart, javascript, jvm]
 ---
 {% include JB/setup %}
 
