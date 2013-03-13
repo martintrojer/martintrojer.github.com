@@ -16,10 +16,10 @@ Let's write a little helper function that maps binding-map over all elements of 
 We can use clojure.set/join to perform the natural join of 2 sets of binding maps like so;
 <script src="https://gist.github.com/3122185.js?file=join-test.clj"> </script>
 Note that I also pick out just the first/height lvars here, this corresponds to the :find clause in the datomic query. That's it really, not as generic (and data driven) as the datomic query, but working;  <script src="https://gist.github.com/3122185.js?file=run-join-test.clj"> </script>
-Here's the kicker, for this join query the datomic.api/q's time complexity estimates to O[n2] (actually 22n2-50n) where as the time complexity for core.logic/unify + clojure.set/join solution is O[n] (10n). That means that for a run over a modest dataset of size 5000 the **difference is 50x**!
+Here's the kicker, for this join query the datomic.api/q's time complexity estimates to O(n2) (actually 22n2-50n) where as the time complexity for core.logic/unify + clojure.set/join solution is O(n) (10n). That means that for a run over a modest dataset of size 5000 the **difference is 50x**!
 
 _Edit_: The Datomic query used in the benchmark is not optimal as it turns out. In the example below you'll see a more optimal version that's infact ~18x faster than the core.logic + clojure.set/join solution.
 <script src="https://gist.github.com/3122185.js?file=bench.clj"> </script>
 Obviously this little example doesn't convey the true power of either datomic/datalog or core.logic/unifier. Be careful writing your Datomic queries, the running time can be vastly different!
 
-<a href="https://gist.github.com/3122375">Here some more of the datomic queries</a> converted in a similar fashion.
+<a href="https://gist.github.com/3122375">Here some more of the datomic queries converted in a similar fashion.</a>
