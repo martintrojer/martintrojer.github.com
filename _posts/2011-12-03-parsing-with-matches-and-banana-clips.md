@@ -2,7 +2,7 @@
 layout: post
 title: "Parsing with Matches and Banana Clips"
 description: ""
-category: f#
+category: fsharp
 tags: [f#]
 ---
 {% include JB/setup %}

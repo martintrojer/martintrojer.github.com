@@ -2,12 +2,12 @@
 layout: post
 title: "The future of .NET lies in Mono. The future of F# lies in MonoDevelop."
 description: ""
-category: f#
+category: fsharp
 tags: [.net, mono, f#]
 ---
 {% include JB/setup %}
 
-It's been a year since [I last wrote about F# and Mono](/2011/11/03/why-f-needs-mono-and-really-should-be-a-jvm-language) - what's happened since then?
+It's been a year since [I last wrote about F# and Mono](/fsharp/2011/11/03/why-f-needs-mono-and-really-should-be-a-jvm-language) - what's happened since then?
 
 F# 3.0 has recently been released, bundled in with the new <a href="http://www.theregister.co.uk/2012/08/28/visual_studio_2012_review/">all-grey</a>, <a href="http://blogs.msdn.com/b/visualstudio/archive/2012/06/05/a-design-with-all-caps.aspx">ALL-CAPS</a> Visual Studio 2012. The biggest new feature is <a href="http://msdn.microsoft.com/en-us/library/hh156509.aspx">type providers</a>, bringing some of the benefits of dynamic languages into type safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up pretty soon so more developers (including me) can enjoy the benefits.
 

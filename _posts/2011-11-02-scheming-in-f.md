@@ -2,7 +2,7 @@
 layout: post
 title: "Scheming in F#"
 description: ""
-category: f#
+category: fsharp
 tags: [f#, sicp]
 ---
 {% include JB/setup %}
