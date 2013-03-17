@@ -15,7 +15,7 @@ Recently a [colleague](https://twitter.com/jonpither) and I faced a problem wher
 
 Some work items can come "out of order" and some had to hit different systems before "coming back" and be part of the remaining calculation.
 
-In order to improve performance, the communication with some of these services needed to batched. The total data amount of data to flow through the steps far exceeded the heap size of a single VM, so we had to be careful to partition up the data and only keep parts of it in memory at any time. Different steps required different amount of resources (memory / threads etc) - so we needed to balance the entire system.
+In order to improve performance, the communication with some of these services needed to batched. The total amount of data to flow through the steps far exceeded the heap size of a single VM, so we had to be careful to partition up the data and only keep parts of it in memory at any time. Different steps required different amount of resources (memory / threads etc) - so we needed to balance the entire system.
 
 The different steps had different failure characteristics, and it's important that the entire calculation didn't lock up when a part behaved badly, and try to come out of a bad situation as good as possible. Since the whole calculation is very multi threaded, we had to have a way of determining when the whole calculation was done and we could pass on the final result. This "done signal" also have to be consistent in error situations.
 
