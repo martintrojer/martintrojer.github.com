@@ -21,8 +21,8 @@ The different steps had different failure characteristics, and it's important th
 
 Because of the complexity of the many steps, it was important to track the status of the whole system, to pick out potential problems and bottlenecks. Finally, we wanted many different of these calculations to be run in parallel (independent of each-other) and be able to cancel single ones (within reasonable time frames).
 
-Phew, that's quite a lot. How can you describe something like this (in Clojure) without pulling your hair out and go totally mad? Well, this looks like a pipeline problem does it not? There a few Hadoop-y / Storm-y solutions out there, but this all had to run inside a single VM, and this problem isn't really "big data" enough to justify hadoop -- we don't want to use a thermo nuclear bomb to open a match-box. We also wanted our pipeline to handle our little quirky requirements like batching transparently from the producers/consumers.
+Phew, that's quite a lot. How can you describe something like this (in Clojure) without pulling your hair out and go totally mad? Well, this looks like a pipeline problem does it not? There are a few Hadoop-y / Storm-y solutions out there, but all this had to run inside a single VM, and the problem wasn't really "big data" enough to justify hadoop -- we didn't want to use a thermo nuclear bomb to open a match-box. We also wanted our pipeline to handle our quirky little requirements (like batching) transparently from the producer/consumer functions.
 
 I've put what we come up with on [github](https://github.com/martintrojer/pipejine/) and I'm happy to say that it managed to solve the problems described above very neatly and still be very small and nimble. It's basically some helper functions over Java's powerful concurrent queues. And as it turns out, by using these primitives we manged to write a simple and flexible solution.
 
-So if you find yourself with a similar "biggish" problem, please feel free give pipejine a spin!
+So if you find yourself with a similar "not big enough for hadoop" problem, please feel free give pipejine a spin!
