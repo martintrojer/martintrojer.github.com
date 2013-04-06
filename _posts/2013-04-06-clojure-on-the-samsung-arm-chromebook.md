@@ -22,3 +22,5 @@ Fortunately it's not a big problem. Emacs builds nicely and you can snap up a JV
 Once you have Emacs and Java8/armhf, just can install and run [leiningen](https://github.com/technomancy/leiningen) as normal, jack-in in Emacs and hack away! You will quickly forget you're on ARM hardware, it's just normal Ubuntu. Well, you might notice that there aren't any CPU fans, and you won't get 2nd degree burns on your legs :-)
 
 As you can see in the picture above, I'm an also working a bit on my [Raspberry Pi](http://www.raspberrypi.org/). This work is greatly helped by having developer spec-ed ARM hardware to work on. All binaries have be copied verbatim to/from the PI -- no more ARM Emulators on x86 hardware!
+
+I recommend the Samsung ARM Chromebook for Clojure development!
