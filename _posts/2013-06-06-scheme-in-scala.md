@@ -28,7 +28,7 @@ It can be argued that time is better spend working on the problems/functions the
 
 I'm really impressed by [scala.util.parsing.combinator](http://www.scala-lang.org/api/current/index.html#scala.util.parsing.combinator.Parsers). The code below is the entire parser, both readable (once you get the hang of it) and powerful.
 <script src="https://gist.github.com/martintrojer/5707573.js?file=Parser.scala"> </script>
-The way you map the parse results onto your own type domain is fantastic. Contrast this is an example of a [hand rolled parser](https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/HandRolledParser.scala), which still is pretty neat if you ask me, both much more code.
+The way you map the parse results onto your own type domain is fantastic. Contrast this is an example of a [hand rolled parser](https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/HandRolledParser.scala), which still is pretty neat if you ask me, but much more code.
 
 ## IDE vs Emacs and REPLs
 
