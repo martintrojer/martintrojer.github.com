@@ -3,7 +3,7 @@ layout: post
 title: "Scheme in Scala"
 description: ""
 category: scala
-tags: [scala, scheme]
+tags: [scala, lisp]
 ---
 {% include JB/setup %}
 
