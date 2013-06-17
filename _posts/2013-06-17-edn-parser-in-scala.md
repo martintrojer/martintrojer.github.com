@@ -7,4 +7,4 @@ tags: [scala]
 ---
 {% include JB/setup %}
 
-<script src="https://gist.github.com/martintrojer/5799518.js"> </script>
+<script src="https://gist.github.com/martintrojer/5799518.js?file=EDNParser.scala"> </script>
