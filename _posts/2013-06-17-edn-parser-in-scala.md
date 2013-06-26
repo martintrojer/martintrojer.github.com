@@ -2,7 +2,7 @@
 layout: post
 title: "EDN Parser in Scala"
 description: ""
-category: 
+category: scala
 tags: [scala]
 ---
 {% include JB/setup %}
