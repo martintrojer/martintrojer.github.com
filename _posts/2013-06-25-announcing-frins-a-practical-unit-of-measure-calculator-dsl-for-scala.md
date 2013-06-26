@@ -16,7 +16,7 @@ Key features;
 * Comes with a **huge** database of units and conversion factors
 * Inspired by the [Frink project](http://futureboy.us/frinkdocs/)
 
-Full source code available on [here](https://github.com/martintrojer/frins).
+Full source code available on [github](https://github.com/martintrojer/frins).
 
 To wet your appetite head straight over to the [example calculations](https://github.com/martintrojer/frins/blob/master/src/main/scala/frins/ExampleCalculations.scala).
 
