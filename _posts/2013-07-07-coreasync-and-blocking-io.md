@@ -56,3 +56,5 @@ Note, the use of Netty as an example isn't an ideal core.async use case, since N
 Here's the main take-away; if your code is using blocking APIs, no async framework can avoid your code hogging threads.
 
 core.async isn't some magic that make problems with blocking IO disappear. While the go blocks and it's thread parking is very useful, they have to be used with care. Since the go block thread pool is quite small, it's easy to block all the threads and thus stopping all 'go processing'.
+
+Never Thread/sleep in a go block!
