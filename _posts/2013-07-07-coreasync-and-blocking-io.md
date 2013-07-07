@@ -17,13 +17,13 @@ Here's a little diagram visualizing thread activity when using blocking IO calls
 As you can see the threads mostly wait. What we are trying to achieve is to get more work out of each thread. In order to do this we want other work to be scheduled on the thread "while they wait". Thus getting more work done with fewer threads.
 <p align="center"><img src="/assets/images/asyncclj/asyncthreads.png"></p>
 
-When have a long-running API call, we want to "park the thread", schedule some unrelated work and resume later when the result is available.
+When we have a long-running API call, we want to "park the thread", schedule some unrelated work and resume later when the result is available.
 
 This will break the 1 job = 1 thread knot, thus this thread parking will allow us to scale the number of jobs way beyond any thread limit on the platform (usually around 1000 on the JVM).
 
 ## core.async
 
-core.async gives (blocking) channels and a new (unbounded) thread pool with using 'thread'. This (in effect) is just some sugar over using java threads (or clojure futures) and BlockingQueues from java.util.concurrent. The main feature is [go blocks](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html) in which threads can be parked and resumed on the (potentially) blocking calls dealing with core.async's channels.
+core.async gives (blocking) channels and a new (unbounded) thread pool when using 'thread'. This (in effect) is just some sugar over using java threads (or clojure futures) and BlockingQueues from java.util.concurrent. The main feature is [go blocks](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html) in which threads can be parked and resumed on the (potentially) blocking calls dealing with core.async's channels.
 
 The go blocks are run on a fix sized thread pool (2+number of cores) -- this is plenty for asynchronous workflows where we spend almost all our time waiting for callbacks and pushing / popping data on channels.
 
@@ -35,7 +35,7 @@ To get a bit more concrete let's see what happens when we try to issue some HTTP
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=blocking.clj"> </script>
 
-Here's we trying to fetch 90 code snippets (in parallel) using go blocks (and blocking IO). This took a long time, and that's because the go block threads are "hogged" by the long running IO operations. The situation can be improved by switching the go blocks to normal threads.
+Here we're trying to fetch 90 code snippets (in parallel) using go blocks (and blocking IO). This took a long time, and that's because the go block threads are "hogged" by the long running IO operations. The situation can be improved by switching the go blocks to normal threads.
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=blocking-thread.clj"> </script>
 
@@ -47,7 +47,7 @@ Now we can use go blocks and channels for the results.
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=nonblocking.clj"> </script>
 
-As you can see this performs like the threaded version above (which is all we can ask for). However, this solution scales to way more requests that the threaded version. And it's very convenient to use the size of the channel to control the number of outstanding requests.
+As you can see this performs like the threaded version above (which is all we can ask for). However, this solution scales to way more requests than the threaded version. And it's very convenient to use the size of the channel to control the number of outstanding requests.
 
 Note, the use of Netty as an example isn't an ideal core.async use case, since Netty comes with it's own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations; the connection and the request).
 
