@@ -49,7 +49,7 @@ Now we can use go blocks and channels for the results.
 
 As you can see this performs like the threaded version above (which is all we can ask for). However, this solution scales to way more requests than the threaded version. And it's very convenient to use the size of the channel to control the number of outstanding requests.
 
-Note, the use of Netty as an example isn't an ideal core.async use case, since Netty comes with it's own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations; the connection and the request).
+Note that Netty isn't an ideal core.async example, since Netty comes with it's own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations of a http request; the connection and the request). However, the pattern of putting the result of callback function onto a channel, and thus decoupling the useful logic from the plumbing, is preferable over putting the "handling logic" inside said callback.
 
 ## Summary
 
