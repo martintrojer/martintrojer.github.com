@@ -3,7 +3,7 @@ layout: post
 title: "core.async and Blocking IO"
 description: ""
 category: clojure
-tags: [clojure]
+tags: [clojure, core.async, go]
 ---
 {% include JB/setup %}
 
