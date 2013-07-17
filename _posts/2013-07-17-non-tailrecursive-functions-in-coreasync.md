@@ -36,7 +36,7 @@ Here's a simple version of the walker (using the thread blocking `>!!` call).
 Then we can use the `same` function to see if 2 trees are identical;
 <script src="https://gist.github.com/martintrojer/6019215.js?file=thread-same.clj"> </script>
 
-How do we convert this to use go blocks? We ideally we want to have the entire `walker` function done by one go process, so that we can close the channel when the that function returns. Embracing the body of that function with `(go ..)` gives us the problem that the channel immediately closes before we get a chance to put anything on it.
+How do we convert this to use go blocks? We ideally want to have the entire `walker` function done by one go process, so that we can close the channel when the that function returns. Embracing the body of that function with `(go ..)` gives us the problem that the channel immediately closes before we get a chance to put anything on it.
 
 <script src="https://gist.github.com/martintrojer/6019215.js?file=bad-go-walker.clj"> </script>
 
