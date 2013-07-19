@@ -31,7 +31,7 @@ __However__ if you are using go blocks and blocking IO calls you're in trouble. 
 
 ## Http client example
 
-To get a bit more concrete let's see what happens when we try to issue some HTTP GET request using core.async. Let's start with the naive solution, using blocking IO.
+To get a bit more concrete let's see what happens when we try to issue some HTTP GET request using core.async. Let's start with the naive solution, using blocking IO via [clj-http](https://github.com/dakrone/clj-http).
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=blocking.clj"> </script>
 
@@ -39,7 +39,21 @@ Here we're trying to fetch 90 code snippets (in parallel) using go blocks (and b
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=blocking-thread.clj"> </script>
 
-This is quicker, but we're back to one thread per connection; exactly what we wanted to avoid. How can we approve the situation? We need a non-blocking API in order to use the go blocks properly. On the JVM we can use [Netty](http://netty.io), which gives us a callback based API. Here's some helper functions;
+This is quicker, but we're back to one thread per connection; exactly what we wanted to avoid. How can we approve the situation? We need a non-blocking API in order to use the go blocks properly.
+
+### http-kit
+
+Clojure has a very nice library for asynchronous http clients (and servers) called [http-kit](http://http-kit.org/). With http-kit we can use callbacks to signal when the request is finished, this plays very well with core.async channels.
+
+<script src="https://gist.github.com/martintrojer/5943467.js?file=nonblocking-kit.clj"> </script>
+
+As you can see this performs like the threaded version above (which is all we can ask for in this case). However, this solution scales to way more requests than the threaded version.
+
+The pattern of putting the result of callback function onto a channel, and thus decoupling the useful logic from the plumbing, is preferable over putting the "handling logic" inside said callback.
+
+### Netty
+
+Another option is [Netty](http://netty.io), which also gives us a callback based API. Here's some helper functions;
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=netty.clj"> </script>
 
@@ -47,9 +61,7 @@ Now we can use go blocks and channels for the results.
 
 <script src="https://gist.github.com/martintrojer/5943467.js?file=nonblocking.clj"> </script>
 
-As you can see this performs like the threaded version above (which is all we can ask for). However, this solution scales to way more requests than the threaded version. And it's very convenient to use the size of the channel to control the number of outstanding requests.
-
-Note that Netty isn't an ideal core.async example, since Netty comes with it's own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations of a http request; the connection and the request). However, the pattern of putting the result of callback function onto a channel, and thus decoupling the useful logic from the plumbing, is preferable over putting the "handling logic" inside said callback.
+Note that Netty isn't an ideal core.async example, since Netty comes with it's own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations of a http request; the connection and the request).
 
 ## Summary
 
