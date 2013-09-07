@@ -42,16 +42,16 @@ When retrofitting this pattern into existing codebases, having the system passed
 
 If you have a `:main` (and `:aot`) key in your `project.clj` you might have noticed that you have quite a few .class files in your jar. This is usually not a big deal, but it causes problems for clojure.tools.namespace since it can't unload these namespaces correctly.
 
-One method to minimize the class files in your jar is a new namespace like this;
+One method to minimize the class files in your jar is a namespace containing your new entry point;
 <script src="https://gist.github.com/martintrojer/6473714.js?file=app.clj"> </script>
 
-Note that this namespace doesn't require any other in the `ns` macro, this will minimize the number of generated class files.
+Note that this namespace doesn't require any other in the `ns` macro, this means you'll only get class files for this namespace in your jar.
 
 ## Dealing with dependant services
 
 Now, your application probably consist of more than one service. So you'll have to apply the steps described above to all of them. Then, in order to maximize your REPL productivity you want to include and control all the services your current project interact with. This is only done in the `:dev` profile, since you wouldn't do this in the "real" entry point of your service.
 
-To make this work you need 2 things; Add a leiningen dependency to these services (under the `:dev` profile) and soft links to their folders in the current projects [checkouts folder](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies). The reason for the dependency is that we want to pull in of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.
+To make this work you need 2 things; Add a leiningen dependency to these services (under the `:dev` profile) and soft links to their folders in the current projects [checkouts folder](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies). The reason for the dependency is that we want to pull in all of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.
 
 This means that you are probably going to need a local [nexus](http://www.sonatype.org/nexus/go) / [archiva](http://archiva.apache.org/index.cgi) / [clojars](https://github.com/ato/clojars-web). Then have your CI system do a `lein deploy` after each successful build.
 
