@@ -36,3 +36,26 @@ This is straight forward code to post some data, make sure we get the same data 
 
 It's helpful to familiarize yourself with the Simulant schema first, and then think about what extra attributes you'll need. Lets start with the model of the simulation (abbreviated -- datomic schemas are very noisy);
 <script src="https://gist.github.com/martintrojer/6657390.js?file=model.edn"> </script>
+
+As you can see, the model contains basic configuration for a simulation. Next we define the type of tests (and agents running them);
+<script src="https://gist.github.com/martintrojer/6657390.js?file=test.edn"> </script>
+
+In this case we are going to test put/get/delete operations of the API. Finally some attributes used to store data used by the tests and agents;
+<script src="https://gist.github.com/martintrojer/6657390.js?file=api-user-data.edn"> </script>
+
+`:action/payload` is input to the `:action.type/get` tests, the rest of these attributes are outputs from the tests. For instance `:action/siteId` will be the id returned by a put action or the id picked (at random) by the get/delete actions. Please note that for the get/delete actions, these Ids can't be populated up-front (like the `:action/payload`) since we only know what they are after we have run put tests. The `:agent/siteIds` is also worth mentioning, this encapsulates the local state of an agent. As you can see the in the "raw" stress code above, the agent needs to remember which Ids it has created `my-ids`, so it can do get/delete tests.
+
+We are exploiting the great flexibility of Datomic schemas here, you can extend the standard simulant schema as you wish. Here's a pretty picture with what's added to the simulant schema (please reference this to the simulant schema);
+<script src="https://gist.github.com/martintrojer/6657390.js?file=schema.org"> </script>
+
+## Creating the test, agents and test data
+
+In simulant, all data goes into the database, including the agents and the actions they should perform (and the data they should use). So before we run a simulation we need to create all that data and put it into the database.
+
+
+## The agents
+
+## Perf
+
+Gatlin
+datomic write perf
