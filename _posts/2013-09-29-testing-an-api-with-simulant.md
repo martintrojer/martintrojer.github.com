@@ -7,7 +7,7 @@ tags: [clojure]
 ---
 {% include JB/setup %}
 
-tl;dr I present a new [Simulant example project](https://github.com/martintrojer/simulant-bootstrap), based on simulating usage of a simple web API.
+tl;dr I present a new [Simulant example project](https://github.com/martintrojer/simulant-bootstrap), testing a simple web API.
 
 > All programs are simulation tested, atleast once.
 > --- Stu Halloway
@@ -16,13 +16,13 @@ Simulating testing is an interesting field that has a lot going for it. While mo
 
 While you can (quite easily) write some code that stress test your system, libraries like [simulant](https://github.com/Datomic/simulant)/[datomic](http://www.datomic.com) gives you much more. By recording all tests/configurations/results in a database and separating the concerns of running the simulation and asserting the results new opportunities arise.
 
-The basic workflow is to create a schema for your test scenarios, code that populate that schema with tests given to configuration parameters (also in the db), the running the simulation on multiple threads/processes/machines, and finally running queries against the results and finding potential issues. If you work against a persistent database, you are building up a corpus of test data, that you can later go and mine for additional information that you didn't think of when you ran them. Lets say a new issue presents itself in production, now you can go back an check how a potential fix would behave in previous test runs.
+The basic workflow is to create a schema for your test scenarios, code that populate that schema with tests given to configuration parameters (also in the db), then running the simulation on multiple threads/processes/machines, and finally running queries against the results and finding potential issues. If you work against a persistent database, you are building up a corpus of test data, that you can later go and mine for additional information that you didn't think of when you ran them. Lets say a new issue presents itself in production, now you can go back an check how a potential fix would behave in previous test runs.
 
 ## Testing a site
 
-This brings us to simulant, which is a datomic schema and some code to run simulations. It was created by the datomic team, to test datomic. Simulant comes with a example project, which is quite meta since it's using datomic to test datmoic, and quite hard to wrap your head around. Recently I wanted to try simulant on a system I was building. I'll post of some of my learnings here, and present an simplified example that is hopefully easier to relate to than the simulant example project. Basic datomic knowledge is required in order to follow along.
+This brings us to simulant, which is a datomic schema and some code to run simulations. It was created by the datomic team. Simulant comes with a example project, which is quite meta since it's using datomic to test datmoic, and quite hard to wrap your head around. Recently I wanted to try simulant on a system I was building. I'll post of some of my learnings here, and present a simplified example that is hopefully easier to relate to than the simulant example project. Basic datomic knowledge is required in order to follow along.
 
-The example project I've set up on github consists of 2 sub projects; the [site](https://github.com/martintrojer/simulant-bootstrap/tree/master/site) and the [sim](https://github.com/martintrojer/simulant-bootstrap/tree/master/sim). The site is a very simple CRUD API for EDN data. This is the site we want to test. Here is the routes;
+The example project I've set up on github consists of 2 sub projects; the [site](https://github.com/martintrojer/simulant-bootstrap/tree/master/site) and the [sim](https://github.com/martintrojer/simulant-bootstrap/tree/master/sim). The site is a very simple CRUD API for EDN data, which we will use simulant to test. Here is the routes;
 <script src="https://gist.github.com/martintrojer/6657390.js?file=routes.clj"> </script>
 
 You can put, get and delete data, and get a list of all live Ids.
@@ -32,11 +32,11 @@ You can put, get and delete data, and get a list of all live Ids.
 Your first attempt to 'simulate' usage (or stress test) this api would probably be to just write some functions. Let's start there and then see how we can convert those functions into a simulant simulation.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=api-tester.clj"> </script>
 
-This is straight forward code to post some data, make sure we get the same data back. We can the "stress" our API but running this in many simultaneous futures. So this tests the basic functionality, and we could add logging of the access times to see how our site behaves under load.
+This is straight forward code to post some data, make sure we get the same data back. We can then "stress" our API but running this in many simultaneous futures. So this tests the basic functionality, and we could add logging of the access times to see how our site behaves under load. How would we do this (and more) in simulant?
 
 ## Setting up our schema
 
-It's helpful to familiarize yourself with the [Simulant schema](https://github.com/Datomic/simulant/wiki/Schema-diagram) first, and then think about what extra attributes you'll need. Lets start with the model of the simulation (abbreviated -- datomic schemas are very noisy);
+It's helpful to familiarize yourself with the [Simulant schema](https://github.com/Datomic/simulant/wiki/Schema-diagram) first, and then think about what extra attributes you'll need. Lets start with the model of the simulation (all schemas below are abbreviated -- datomic schemas are very noisy);
 <script src="https://gist.github.com/martintrojer/6657390.js?file=model.edn"> </script>
 
 As you can see, the model contains basic configuration for a simulation. Next we define the type of tests (and agents running them);
@@ -47,13 +47,13 @@ In this case we are going to test put/get/delete operations of the API. Finally 
 
 `:action/payload` is input to the `:action.type/get` tests, the rest of these attributes are outputs from the tests. For instance `:action/siteId` will be the id returned by a put action or the id picked (at random) by the get/delete actions. Please note that for the get/delete actions, these Ids can't be populated up-front (like the `:action/payload`) since we only know what they are after we have run put tests. The `:agent/siteIds` is also worth mentioning, this encapsulates the local state of an agent. As you can see the in the "raw" stress code above, the agent needs to remember which Ids it has created `my-ids`, so it can do get/delete tests.
 
-We are exploiting the great flexibility of Datomic schemas here, you can extend the standard simulant schema as you wish. Here's a pretty picture with what's added to the simulant schema (please reference this to the simulant schema);
+We are exploiting the great flexibility of datomic schemas here, since we are extending the standard simulant schema with new attributes. Here's a pretty picture with what's added to the simulant schema (please compare this to the simulant standard schema);
 <script src="https://gist.github.com/martintrojer/6657390.js?file=schema.org"> </script>
 
 ## Creating the test, agents and test data
 In simulant, all data goes into the database, including the agents and the actions they should perform (and the data they should use). So before we run a simulation we need to create all that data and put it into the database.
 
-First we create an instance of a test, which will hold the references to all the agents, and all the agents actions. A test also has references to all sims that has been run. This is handled by a multimethod in simulant, and if you follow the code below you can see the outline of how the test, agents and actions are created.
+First we create an instance of a test, which will hold the references to all the agents, and all the agents actions. A test also have references to all sims that has been run. This is handled by a multimethod in simulant, and if you follow the code below you can see the outline of how the test, agents and actions are created.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=create-test.clj"> </script>
 
 Please note that the `create-test` and `create-api-users` functions also create transactions. More details in the [api_user_sim.clj](https://github.com/martintrojer/simulant-bootstrap/blob/master/sim/src/api_user_sim.clj) file.
@@ -88,13 +88,13 @@ Here we are kicking off the sim run (of several different threads) and waiting f
 
 ## Looking at the results
 
-After a sim is run, we have a lot of (hopefully) useful data in our database. Now comes the payoff of all the setup described above, we can use all the power of datomic queries to look at this data and find potential issues. Here's a simple example (there are more in the github repo) -- we want to make sure the payload we got back from get actions are the same we sent in the put actions.
+After a sim is run, we have a lot of (hopefully) useful data in our database. Now comes the payoff of all the setup described above, we can use all the power of datomic queries to look at this data and find potential issues. Here's a simple example (there are more in the example project) -- we want to make sure the payload we got back from the get actions are the same we sent in the put actions.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=payload-assert.clj"> </script>
 
 ## Conclusion and some perf considerations
 
-This is pretty cool right? So is simlant the silver bullet for all system testing? Well no, it certainly capable of replacing many system test frameworks, but for extreme usecases some of the inherent limitations of datomic will become a problem. One of these limitations are write throughput. Datomic only have one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like [Gatling](http://gatling-tool.org/) you might be out of luck.
+This is pretty cool right? So is simlant the silver bullet for all system testing? Well no, it is certainly capable of replacing many system test frameworks, but for extreme use-cases some of the inherent limitations of datomic will become a problem. One of these limitations are write throughput. Datomic only have one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like [Gatling](http://gatling-tool.org/) you might be out of luck.
 
 However, it is not necessarily is huge problem, I see tools like simulant and gatling complementing each other, they solve different problems. Simulant is more about simulating real usage, run in 'moderate' pace collecting all kinds of system information, and later analyzing it.
 
-Having said this, Datmoic certainly have a bunch of options to improve it's write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against and in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
+Having said this, Datmoic certainly have a bunch of options to improve it's write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
