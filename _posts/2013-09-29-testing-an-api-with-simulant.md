@@ -97,4 +97,4 @@ This is pretty cool right? So is simlant the silver bullet for all system testin
 
 However, it is not necessarily is huge problem, I see tools like simulant and gatling complementing each other, they solve different problems. Simulant is more about simulating real usage, run in 'moderate' pace collecting all kinds of system information, and later analyzing it.
 
-Having said this, Datmoic certainly have a bunch of options to improve it's write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
+Having said this, Datmoic certainly have a bunch of options to improve its write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
