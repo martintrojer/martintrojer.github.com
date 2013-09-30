@@ -20,7 +20,7 @@ The basic workflow is to create a schema for your test scenarios, code that popu
 
 ## Testing a site
 
-This brings us to simulant, which is a datomic schema and some code to run simulations. It was created by the datomic team. Simulant comes with a example project, which is quite meta since it's using datomic to test datmoic, and quite hard to wrap your head around. Recently I wanted to try simulant on a system I was building. I'll post of some of my learnings here, and present a simplified example that is hopefully easier to relate to than the simulant example project. Basic datomic knowledge is required in order to follow along.
+This brings us to simulant, which is a datomic schema and some code to run simulations. It was created by the datomic team. Simulant comes with a example project, which is quite meta since it's using datomic to test datomic, and quite hard to wrap your head around. Recently I wanted to try simulant on a system I was building. I'll post of some of my learnings here, and present a simplified example that is hopefully easier to relate to than the simulant example project. Basic datomic knowledge is required in order to follow along.
 
 The example project I've set up on github consists of 2 sub projects; the [site](https://github.com/martintrojer/simulant-bootstrap/tree/master/site) and the [sim](https://github.com/martintrojer/simulant-bootstrap/tree/master/sim). The site is a very simple CRUD API for EDN data, which we will use simulant to test. Here is the routes;
 <script src="https://gist.github.com/martintrojer/6657390.js?file=routes.clj"> </script>
@@ -60,7 +60,7 @@ Please note that the `create-test` and `create-api-users` functions also create 
 
 ## Performing actions
 
-Once nice effect of keeping all the test data in a database is that the [code required to perform the actions](https://github.com/martintrojer/simulant-bootstrap/blob/master/sim/src/api_user_agent.clj) (in this case hitting the API) becomes trivial. The only caveat in this particular case is that the state of a particular agent (the Ids it has created in the API) is stored in the databse, so it needs to look them up to perform the get and remote actions. While this is perhaps a little bit awkward it's also powerful, since we now have detailed record in datomic of what each agent did. This can be very useful in analysis we want to do further down the line.
+Once nice effect of keeping all the test data in a database is that the [code required to perform the actions](https://github.com/martintrojer/simulant-bootstrap/blob/master/sim/src/api_user_agent.clj) (in this case hitting the API) becomes trivial. The only caveat in this particular case is that the state of a particular agent (the Ids it has created in the API) is stored in the database, so it needs to look them up to perform the get and remote actions. While this is perhaps a little bit awkward it's also powerful, since we now have detailed record in datomic of what each agent did. This can be very useful in analysis we want to do further down the line.
 
 Here's some code for the post and get actions, and a helper function `get-an-id` that given an action, get the siteId attributes associated with it's agent and picks one at random.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=api-user-agent.clj"> </script>
@@ -93,8 +93,8 @@ After a sim is run, we have a lot of (hopefully) useful data in our database. No
 
 ## Conclusion and some perf considerations
 
-This is pretty cool right? So is simlant the silver bullet for all system testing? Well no, it is certainly capable of replacing many system test frameworks, but for extreme use-cases some of the inherent limitations of datomic will become a problem. One of these limitations are write throughput. Datomic only have one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like [Gatling](http://gatling-tool.org/) you might be out of luck.
+This is pretty cool right? So is simulant the silver bullet for all system testing? Well no, it is certainly capable of replacing many system test frameworks, but for extreme use-cases some of the inherent limitations of datomic will become a problem. One of these limitations are write throughput. Datomic only have one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like [Gatling](http://gatling-tool.org/) you might be out of luck.
 
 However, it is not necessarily is huge problem, I see tools like simulant and gatling complementing each other, they solve different problems. Simulant is more about simulating real usage, run in 'moderate' pace collecting all kinds of system information, and later analyzing it.
 
-Having said this, Datmoic certainly have a bunch of options to improve its write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
+Having said this, Datomic certainly have a bunch of options to improve its write throughput by using different database backends (like in-memory, dynamodb) -- some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.
