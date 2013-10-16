@@ -60,7 +60,7 @@ Please note that the `create-test` and `create-api-users` functions also create 
 
 ## Performing actions
 
-Once nice effect of keeping all the test data in a database is that the [code required to perform the actions](https://github.com/martintrojer/simulant-bootstrap/blob/master/sim/src/api_user_agent.clj) (in this case hitting the API) becomes trivial. The only caveat in this particular case is that the state of a particular agent (the Ids it has created in the API) is stored in the database, so it needs to look them up to perform the get and remote actions. While this is perhaps a little bit awkward it's also powerful, since we now have detailed record in datomic of what each agent did. This can be very useful in analysis we want to do further down the line.
+Once nice effect of keeping all the test data in a database is that the [code required to perform the actions](https://github.com/martintrojer/simulant-bootstrap/blob/master/sim/src/api_user_agent.clj) (in this case hitting the API) becomes trivial. The only caveat in this particular case is that the state of a particular agent (the Ids it has created in the API) is stored in the database, so it needs to look them up to perform the get and delete actions. While this is perhaps a little bit awkward it's also powerful, since we now have detailed record in datomic of what each agent did. This can be very useful in analysis we want to do further down the line.
 
 Here's some code for the post and get actions, and a helper function `get-an-id` that given an action, get the siteId attributes associated with it's agent and picks one at random.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=api-user-agent.clj"> </script>
@@ -90,6 +90,8 @@ Here we are kicking off the sim run (of several different threads) and waiting f
 
 After a sim is run, we have a lot of (hopefully) useful data in our database. Now comes the payoff of all the setup described above, we can use all the power of datomic queries to look at this data and find potential issues. Here's a simple example (there are more in the example project) -- we want to make sure the payload we got back from the get actions are the same we sent in the put actions.
 <script src="https://gist.github.com/martintrojer/6657390.js?file=payload-assert.clj"> </script>
+
+Please note that this query extracts the payloads from all simulations (in case you've run more than one). Once again, have a look at the example project for how to restrict your queries to a single sim.
 
 ## Conclusion and some perf considerations
 
