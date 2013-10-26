@@ -2,7 +2,7 @@
 layout: post
 title: "Scala and me"
 description: ""
-category: Scala
+category: scala
 tags: [f#, scala, clojure, sicp]
 ---
 {% include JB/setup %}
