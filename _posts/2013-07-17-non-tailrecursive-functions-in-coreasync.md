@@ -66,6 +66,6 @@ The complete solution can be found [here](https://github.com/martintrojer/go-tut
 
 ### Postscript
 
-[Some more Go tutorials converted to core.async](https://github.com/martintrojer/go-tutorials-core-async/tree/master/src/go_tutorials_core_async)
+[Some more Go tutorials converted to core.async](https://github.com/martintrojer/go-tutorials-core-async/)
 
 A final word of advice, when converting Go examples to core.async remember no to do `Thread/sleep` in your go blocks! In go, the sleep function is integrated in the go routine scheduling, this is not the case in core.async. See [here](http://martintrojer.github.io/clojure/2013/07/07/coreasync-and-blocking-io/) for a deeper explanation why.
