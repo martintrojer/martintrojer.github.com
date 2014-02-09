@@ -62,7 +62,7 @@ We need a little bit more synchronisation to arrive at a working solution.
 
 Now all the nodes will be processed (by different go processes) but in the correct order.
 
-The complete solution can be found [here](https://github.com/martintrojer/go-tutorials-core-async/tree/master/src/go_tutorials_core_async/tut5.clj), note that the `(thread ...)` embrace in the `same` function has been removed.
+The complete solution can be found [here](https://github.com/martintrojer/go-tutorials-core-async/blob/master/src/tut005.clj), note that the `(thread ...)` embrace in the `same` function has been removed.
 
 ### Postscript
 
