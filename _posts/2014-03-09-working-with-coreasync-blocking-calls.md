@@ -7,7 +7,7 @@ tags: []
 ---
 {% include JB/setup %}
 
-This is the big one; you can't do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block -- *all* go blocks will stop! I've [written about this previously](http://martintrojer.github.io/clojure/2013/07/07/coreasync-and-blocking-io/).
+You can't do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block -- *all* go blocks will stop! For a more in-depth explanation see [this previous post](http://martintrojer.github.io/clojure/2013/07/07/coreasync-and-blocking-io/).
 
 But what is blocking anyway? If an API you are using claims to be non-blocking, is it really? Unfortunately this isn't black and white, some functions are more non-blocking than others. They can also become 'more blocking' by accident. One good example of this is when using the async APIs of any client that writes to sockets. When the network stack of the system is very stressed, these calls start slowly drifting towards more blocking -- with very bad effects in the core.async go thread pool.
 

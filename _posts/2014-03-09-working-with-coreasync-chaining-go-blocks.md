@@ -19,7 +19,7 @@ This is all fine and well, but lets say the calculation function also needs to w
 
 <script src="https://gist.github.com/martintrojer/9436582.js?file=get-result-go.clj"> </script>
 
-Nope, you can't to that, `Assert failed: <! used not in (go ...) block`. It's also 'returns' nil, more on that later. Let's try another way;
+Nope, you can't to that, `Assert failed: <! used not in (go ...) block`. It's also 'returns' nil, [explained in this post](http://martintrojer.github.io/clojure/2014/03/09/working-with-coreasync-exceptions-in-go-blocks/). Let's try another way;
 
 <script src="https://gist.github.com/martintrojer/9436582.js?file=get-result-go2.clj"> </script>
 
