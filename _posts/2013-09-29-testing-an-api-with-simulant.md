@@ -48,7 +48,7 @@ In this case we are going to test put/get/delete operations of the API. Finally 
 `:action/payload` is input to the `:action.type/get` tests, the rest of these attributes are outputs from the tests. For instance `:action/siteId` will be the id returned by a put action or the id picked (at random) by the get/delete actions. Please note that for the get/delete actions, these Ids can't be populated up-front (like the `:action/payload`) since we only know what they are after we have run put tests. The `:agent/siteIds` is also worth mentioning, this encapsulates the local state of an agent. As you can see the in the "raw" stress code above, the agent needs to remember which Ids it has created `my-ids`, so it can do get/delete tests.
 
 We are exploiting the great flexibility of datomic schemas here, since we are extending the standard simulant schema with new attributes. Here's a pretty picture with what's added to the simulant schema (please compare this to the simulant standard schema);
-<script src="https://gist.github.com/martintrojer/6657390.js?file=schema.org"> </script>
+<script src="https://gist.github.com/martintrojer/6657390.js?file=schema"> </script>
 
 ## Creating the test, agents and test data
 In simulant, all data goes into the database, including the agents and the actions they should perform (and the data they should use). So before we run a simulation we need to create all that data and put it into the database.
