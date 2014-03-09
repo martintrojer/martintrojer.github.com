@@ -27,6 +27,12 @@ Oh dear, 2 orders of magnitude and that warm fuzzy FP feeling is gone.
 
 Since a go block returns a channel (with the result), you now have to deal with taking that value out of the channel. If you have long 'go-call-chains' of go blocks, you're going to spend lots of time in and out of channels. In this case we have lock congestion amongst all the `calculation-go2` blocks and that single channel.
 
+The nil returning snippet above can be written in a similar fashion using some of core.async's helpers functions (thanks to Ben Ashford for pointing this out);
+
+<script src="https://gist.github.com/martintrojer/9436582.js?file=get-result-go-better.clj"> </script>
+
+Unfortunately this performs even worse than the written out go-loop, but it is much nicer.
+
 ## How is this any better in Go?
 
 Here's a rough equivalent of the 2 scenarios in Go.
