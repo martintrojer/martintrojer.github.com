@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Working with core.async: Chaining go blocks"
-description: "clojure"
-category:
+description: ""
+category: clojure
 tags: [clojure, core.async, go]
 ---
 {% include JB/setup %}
@@ -11,7 +11,7 @@ One particularly annoying difference between the core.async and [Go](http://gola
 
 Anyway, let me explain what I mean.
 
-Let's say we have a complicated `get-result` function that hits some external services (waits for the result) and the feeds the input to a big calculation function multiple times. All examples below simplified for brevity.
+Let's say we have a complicated `get-result` function that hits some external services (waits for the result) and then feeds the input to a big calculation function multiple times. All examples below simplified for brevity.
 
 <script src="https://gist.github.com/martintrojer/9436582.js?file=get-result.clj"> </script>
 
@@ -43,6 +43,6 @@ If we have to wrap every function in a go block and if chaining go blocks is so 
 
 <script src="https://gist.github.com/martintrojer/9436582.js?file=get-result-go-macro.clj"> </script>
 
-Problem solve right? Well, not really. Instead of composable functions (well kind of since they return channels) we now have a special kind of macros that must be called from within a go block. In the snippet above we can't use the lovely `(reduce ... (repeatedly calculation-go-macro))` form since we can't use macros that way. However, the macro itself can use `<!`, `>!` etc freely without the `go` wrapper and we solved the perf problem.
+Problem solved right? Well, not really. Instead of composable functions (well kind of since they return channels) we now have a special kind of macros that must be called from within a go block. In the snippet above we can't use the lovely `(reduce ... (repeatedly calculation-go-macro))` form since we can't use macros that way. However, the macro itself can use `<!`, `>!` etc freely without the `go` wrapper and we solved the perf problem.
 
-If you're interested is how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).
+If you're interested in how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).

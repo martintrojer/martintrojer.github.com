@@ -3,7 +3,7 @@ layout: post
 title: "Working with core.async: Blocking calls"
 description: ""
 category: clojure
-tags: []
+tags: [clojure, core.async]
 ---
 {% include JB/setup %}
 
@@ -15,4 +15,4 @@ The only way to be sure is to measure / profile the functions you call inside yo
 
 <script src="https://gist.github.com/martintrojer/9436582.js?file=blocking.clj"> </script>
 
-If you're interested is how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).
+If you're interested in how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).
