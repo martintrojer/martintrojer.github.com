@@ -26,6 +26,7 @@ This is the famous recursive eval/appy loop as described in SICP. Of all the lan
 The interactive Read-Eval-Print-Loop (REPL) also deserves a shout out, this is using the F# pipe operator that passes the result of a function to the (last) parameter of another.
 <script src="https://gist.github.com/1695088.js?file=repl.fs"> </script>
 So that try/catch is basically saying;
+
 1. read a line from the console
 2. >convert it to a list
 3. parse that list

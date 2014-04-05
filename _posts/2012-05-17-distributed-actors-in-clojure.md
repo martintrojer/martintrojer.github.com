@@ -10,6 +10,7 @@ tags: [akka, clojure, erlang, jvm]
 Here's another post on a topic that have been discussed since the <a href="https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ">dawn-of-time</a>, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure?&nbsp;There has certainly been a few attempts, but Rich's post (above) still holds true today.
 
 First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;
+
 * [clojure-hadoop](https://github.com/stuartsierra/clojure-hadoop)
 * [swamiji](https://github.com/amitrathore/swarmiji)
 * [cacalog](https://github.com/nathanmarz/cascalog)

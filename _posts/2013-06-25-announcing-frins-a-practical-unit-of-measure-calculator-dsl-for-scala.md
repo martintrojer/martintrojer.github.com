@@ -12,6 +12,7 @@ I am proud to announce a new Scala project called "Frins".
 Frins is a practical unit-of-measure calculator DSL for Scala.
 
 Key features;
+
 * Tracks units of measure through all calculations allowing you to mix units of measure transparently
 * Comes with a **huge** database of units and conversion factors
 * Inspired by the [Frink project](http://futureboy.us/frinkdocs/)
