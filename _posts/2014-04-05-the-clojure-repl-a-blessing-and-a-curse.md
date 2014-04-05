@@ -23,7 +23,7 @@ Here is a scenario that you might recognize. You've done a pretty substantial re
 
 ### Solutions
 
-For the issue of launch time for production programs a number of solutions have been proposed; tree shaking, static compilation of vars etc. They all look promising but doesn't completely solve the problem for slow REPLs. I think a mixture of improved namespace bootstrapping carefully selected AOT and faster reading/analyzing/emitting is the way to go. This could be one possible outcome of the Clojure-in-Clojure projects currently being worked on. Parallel, lazy loading of immutable namespaces can perhaps lead some simplifications and speed improvements.
+For the issue of launch time for production programs a number of solutions have been proposed; tree shaking, static compilation of vars etc. They all look promising but doesn't completely solve the problem for slow REPLs. I think a mixture of improved namespace bootstrapping, selective AOT and faster reading/analyzing/emitting is the way to go. This could be one possible outcome of the Clojure-in-Clojure projects currently being worked on. Parallel, lazy loading of immutable namespaces can perhaps lead some simplifications and speed improvements.
 
 ### References
 
