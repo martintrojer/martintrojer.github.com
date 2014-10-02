@@ -9,7 +9,7 @@ tags: [clojure, emacs]
 
 I've been hacking Clojure for many years now, and I've been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will 'make your day'.
 
-However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is 're-inventing' an IDE inside Emacs.
+However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is 're-inventing' an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out [Cursive Clojure](https://cursiveclojure.com), its awesome.
 
 In this post I'll describe a simpler Emacs/Clojure setup that I've been using for the last couple of weeks. It's much closer to 'vanilla Emacs' and thus has much less features. On the flip side, it's very fast and super stable.
 
