@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "Book Review: Clojure Cookbook"
-description: "clojure, review"
+description: ""
 category: clojure
-tags: []
+tags: [clojure, review]
 ---
 {% include JB/setup %}
 
