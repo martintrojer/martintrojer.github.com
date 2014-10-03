@@ -9,13 +9,13 @@ tags: [clojure, emacs]
 
 I've been hacking Clojure for many years now, and I've been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will 'make your day'.
 
-However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is 're-inventing' an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out [Cursive Clojure](https://cursiveclojure.com), its awesome.
+However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is 're-inventing' an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out [Cursive Clojure](https://cursiveclojure.com), its great.
 
-In this post I'll describe a simpler Emacs/Clojure setup that I've been using for the last couple of weeks. It's much closer to 'vanilla Emacs' and thus has much less features. On the flip side, it's very fast and super stable.
+In this post I'll describe a simpler Emacs/Clojure setup that I've been using for the last couple of weeks. It's much closer to 'vanilla Emacs' and thus have much fewer features. On the flip side, it's very fast and super stable.
 
-It's based on Emacs standard way to talk to Lisp REPLs, `inferior-lisp-mode`. This setup bypasses nREPL completely, it simply launches `lein repl` in a buffer and communicates via stdin/stdout (never again any hanged UI because cider-nrepl middle-ware have crashed).
+It's based on Emacs standard way to talk to Lisp REPLs, `inferior-lisp-mode`. This setup bypasses nREPL completely, it simply launches `lein repl` in a buffer and communicates via stdin/stdout.
 
-The setup consists of the following main emacs modes (all available on [Melpa](http://melpa.milkbox.net/#/));
+The setup consists of the following emacs modes (all available on [Melpa](http://melpa.milkbox.net/#/));
 
 - [clojure-mode](https://github.com/clojure-emacs/clojure-mode)
 - paredit
@@ -42,8 +42,8 @@ Running tests are done manually in the REPL buffer. I typically do `(run-tests)`
 ## Code navigation and auto-complete
 Make sure you have [Exuberant ctags](http://ctags.sourceforge.net) installed on your system; `apt-get install exuberant-ctags` or `brew install ctags`.
 
-You will also need to put the following in `~/.ctags` [see here](https://github.com/martintrojer/dotfiles/blob/master/.ctags).
+You will also need to add `--langmap=Lisp:+.clj.cljs` into `~/.ctags`; [see here](https://github.com/martintrojer/dotfiles/blob/master/.ctags).
 
 Then use `C-c p R` to rebuild your TAGS file (this works when you're in projectile mode). After that just can either do `M-.` to jump to definition (or `C-c p j`). Remember that `C-u C-space` takes you back. One great thing about tags is that you don't have to be 'jacked in' to use them! That goes for both navigation and auto-complete.
 
-That's it really, nice and simple! If you have any nice additions to make this setup even better I'd love to hear about them.
+That's it really, nice and simple! If you have any additions to make this setup even better I'd love to hear about them.
