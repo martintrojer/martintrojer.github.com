@@ -44,6 +44,6 @@ Make sure you have [Exuberant ctags](http://ctags.sourceforge.net) installed on 
 
 You will also need to add `--langmap=Lisp:+.clj.cljs` into `~/.ctags`; [see here](https://github.com/martintrojer/dotfiles/blob/master/.ctags).
 
-Then use `C-c p R` to rebuild your TAGS file (this works when you're in projectile mode). After that just can either do `M-.` to jump to definition (or `C-c p j`). Remember that `C-u C-space` takes you back. One great thing about tags is that you don't have to be 'jacked in' to use them! That goes for both navigation and auto-complete.
+Then use `C-c p R` to rebuild your TAGS file (this works when you're in projectile mode). After that just can either do `M-.` to jump to definition (and `C-u M-.` for next match), remember that `M-*` takes you back. One great thing about tags is that you don't have to be 'jacked in' to use them! That goes for both navigation and auto-complete.
 
 That's it really, nice and simple! If you have any additions to make this setup even better I'd love to hear about them.
