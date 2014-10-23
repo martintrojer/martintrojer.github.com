@@ -1,0 +1,64 @@
+==================================================================
+https://keybase.io/martintrojer
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://martintrojer.github.io
+  * I am martintrojer (https://keybase.io/martintrojer) on keybase.
+  * I have a public key with fingerprint B707 4DB9 6A05 78CD EAB3  8E59 DDD9 60EB 6E97 E544
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "b7074db96a0578cdeab38e59ddd960eb6e97e544",
+            "host": "keybase.io",
+            "key_id": "ddd960eb6e97e544",
+            "uid": "db36913b86774393ceef9c4163400d00",
+            "username": "martintrojer"
+        },
+        "service": {
+            "hostname": "martintrojer.github.io",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1414068748,
+    "expire_in": 157680000,
+    "prev": "f233adf8a7757fb8c303225b8f8b26f3ea0c5b0f961233d5b7f251e990d7a734",
+    "seqno": 6,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1
+
+owGbwMvMwMR492bC67zpT10YTx9kTGII8fglWK2UlJ9SqWRVrZSdCqbSMvPSU4sK
+ijLzSpSslJLMDcxNUpIszRINTM0tklNSE5OMLVJNLVNSUizNDFKTzFItzVNNTUyU
+dJQy8otBOoDGJCUWp+pl5gPFgJz4zBSgKBb1pRCJJGMzS0PjJAszc3MTY0vj5NTU
+NMtkE0MzYxMDgxQDA5DC4tSivMTcVKDq3MSiEqDDivKzUouUanWUgDJlmcmpIHeD
+rMeiSi89sySjNAninIKi/JL85PwcoJqMkpKCYiuQGSWVBSBN5alJ8VDj4pMy81KA
+wQDUUZZaVJyZn6dkZQhUmVySCTLf0MTQxMDMwtzEQkcptaIgsyg1PhOkwtTczMIA
+CED2pJYBjUwzMjZOTEmzSDQ3NzVPS7JINjYwNjIyTbJIs0gyMkszTk00SDZNMkiz
+NDMEqkwxTTJPMzI1TLW0NEgxTzQ3BgVScWphXr6SlRnQmYnpQCOLM9PzEktKi1KV
+ark6GWVYGBiZGNhYmUAxycDFKQCL38m87P/zy2On7T++9v1618td8kerN37mkrFX
+3hjd0Hzl8652gYcrxOJjzi+97+/5u1ZxsfjkbvbU365pAQ0udaYVrKc2r7QWZs45
+w32ga8/TUwV9t+yyrs1M8L7xaIXih4IQlgPKj9MzhGJ49ky/I/M7QnOWjaj5Vi3m
+6qwZHGb/Qznd0n3e7ZbRmiamVXSN71XQ21CVIp8bcXOC+v4rKHu2rD5Vrv/feZFK
+QdBL0bwFd4QWS+QFz6hc4CKk3XdaZeafRD4vzqZJTEFbE5y/CZ4tn3/fTrROY2t7
+oOSvr1+MKiT64l2ir/s51++/71itu7Zh8+I1pT/0ql/pb2Vb39Chm7NIv1no28rv
+wW3rknqEAQ==
+=woMQ
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/martintrojer
+
+==================================================================
