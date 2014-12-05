@@ -11,6 +11,8 @@ Recently I gave a talk at the [Clojure eXchange 2014](https://skillsmatter.com/c
 
 [Download the slides here](/assets/images/devcloud/developing-clojure-in-the-cloud.pdf)
 
+[Video recording here](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud)
+
 The basic idea is to move your entire development environment into a VM and thus creating a controlled environment for all your dependencies (OS distribution, Java version, database version etc). You also provision this VM with your dotfiles and run your text editor inside it. In both projects I've been able to use the same provisioning scripts (in both cases puppet) to build my devboxes as was used to build the production environments. It's been a bit of revelation for myself to be able to practically 'develop in prod', and during this time I've never once uttered the dreaded words 'But it works on my machine!'.
 
 I've created a [repository on github](https://github.com/martintrojer/devbox) which I used as starting point for my last project. One highlight of this example is that it supports multiple users and pairing out of the box. That reason alone is usually enough to adopt it.
