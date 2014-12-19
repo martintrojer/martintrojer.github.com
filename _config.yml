@@ -9,6 +9,8 @@ auto: true
 pygments: true
 
 markdown: redcarpet
+extensions: [fenced_code_blocks]
+excerpt_separator: "<!--more-->"
 
 # Themes are encouraged to use these universal variables
 # so be sure to set them if your theme uses them.
@@ -19,6 +21,8 @@ author :
   name : Martin Trojer
   github : martintrojer
   twitter : martintrojer
+
+twitter_username : martintrojer
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt

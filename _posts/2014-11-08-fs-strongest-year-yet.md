@@ -11,6 +11,8 @@ Tradition demands that I write down some subjective thoughts on how my old frien
 
 All I can really say is this; wow, what a year.
 
+<!--more-->
+
 * The [F# foundation](http://fsharp.org) has matured into a great ambassador for the language, its a great collection of tutorial, guide videos and more. Also, there is a new [shiny logo](https://twitter.com/ReedCopsey/status/517471434759630850)! The foundation is now taking steps towards becoming a [non profit organization](http://www.gofundme.com/fsharp).
 * Microsoft is open sourcing the [CLR and all the core libraries](http://news.microsoft.com/2014/11/12/microsoft-takes-net-open-source-and-cross-platform-adds-new-development-capabilities-with-visual-studio-2015-net-2015-and-visual-studio-online/) and working on ports of the CLR to [OSX and Linux](http://www.theregister.co.uk/2014/11/12/microsoft_to_open_source_dot_net/)! The new management at Microsoft seems to take open source seriously, so I have pretty high hopes that this initiative will materialize into something useful. I think this is huge for F# developers, pretty soon it will be a perfectly viable option to deploy (with confidence) your F# assemblies to Linux servers.
 * Xamarin is doing an awesome job promoting F#, it is now a [supported language](http://developer.xamarin.com/guides/cross-platform/fsharp/fsharp_support_overview/) on all Xamarin platforms. Mono also keeps getting better, I personally wouldn't hesitate putting a F#/Mono server side application in production. As I've stated many times before on this blog, I think this is an absolutely crucial enabler for taking F# to 'the next level'. I couldn't be happier with the progress, F# development in Xamarin Studio is now a viable option.

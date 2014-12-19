@@ -9,6 +9,8 @@ tags: [clojure, core.async, go]
 
 One particularly annoying difference between the core.async and [Go](http://golang.org) is that you can't wrap function calls with the `go` macro. This is due to implementation details of core.async, which can only see the body 'inside' the macro and not the functions it may call. This is obviously not a problem if the called function doesn't interact with any channels, but if it does when you might be in trouble. I've touched on this subject in a [previous post](http://martintrojer.github.io/clojure/2013/07/17/non-tailrecursive-functions-in-coreasync/).
 
+<!--more-->
+
 Anyway, let me explain what I mean.
 
 Let's say we have a complicated `get-result` function that hits some external services (waits for the result) and then feeds the input to a big calculation function multiple times. All examples below simplified for brevity.

@@ -9,6 +9,8 @@ tags: [clojure, aws, cloud]
 
 Recently I gave a talk at the [Clojure eXchange 2014](https://skillsmatter.com/conferences/1956-clojure-exchange-2014) titled 'Developing Clojure in the Cloud'. I described a way of creating and using (Clojure) development environments inside VMs, I've been developing like this for the last year (spanning 2 projects).
 
+<!--more-->
+
 [Download the slides here](/assets/images/devcloud/developing-clojure-in-the-cloud.pdf)
 
 [Video recording here](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud)

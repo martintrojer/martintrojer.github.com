@@ -9,6 +9,8 @@ tags: [.net, jvm, c#, f#, mono, ocaml]
 
 For the third year running, here's my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what's been happening was on my wish-list outlined in [last year's post](http://martintrojer.github.io/fsharp/2012/10/24/the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/). What are the highlights?
 
+<!--more-->
+
 Let's start with the [F# foundation](http://fsharp.org/). This is a fantastic move in the right direciton, and as the [mission statement](http://fsharp.org/foundation.html) hints at, all about making F# a viable technology no matter whatever Microsoft does next. If you haven't looked at the site yet please do, its an impressive collection of docs (like getting started guides), real world testimonials and more.
 
 One thing I want to point out is the [F# organization on github](https://github.com/fsharp/). This is already an impressive collection of projects, and most importantly it hosts the open source edition of the F# compiler and core libraries. This is a nice improvement over the once-every-3-year code drop approach that F# have adopted so far. I'm still waiting for the official announcement that this github repo is now the official (and only) version of F#, something tells me it's just around the corner.

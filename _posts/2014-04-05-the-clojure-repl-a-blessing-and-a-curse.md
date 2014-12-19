@@ -9,6 +9,8 @@ tags: [clojure]
 
 All Clojure developers swear by their REPL, its one of the most powerful tools in our arsenal. Coming from traditional edit/compile/launch languages it also a great productivity boost. The Clojure community takes non-aot (ahead of time compilation) to the extreme. By default, we ship Clojure source code in our development and production jars and thus leave compilation to the very last minute (when the program launches). This gives us lots of power and flexibility, if you ever navigated into a library in Emacs and fixed a bug, re-evaled the form and carried on working you know what I'm talking about.
 
+<!--more-->
+
 <div style="float:right"><img style="padding: 10px" src="/assets/images/repl/compiling.png"/></div>
 
 However, there is a flip side to this approach; increased time to launch a fresh REPL session (or production jar for that matter). Clojure launch time has been debated for a long time (see references below) and I'd like to break it down into two distinct categories; launch time for production programs (on servers and android phones) and launch time of the REPL in a development setting. In this post I want to focus on the latter, because I believe that Clojure have now reached the point where REPL launch time is impeding developer productivity.
