@@ -18,7 +18,7 @@ Benchmarking figures for most of these runtimes are available on [Alioth](http:/
 ### Option 1/ Heavy-weight full blown generic runtime - Mono (.NET)
 Mono is an open-source implementation of the [Microsoft's Common Language Runtime (CLR)](http://msdn.microsoft.com/en-us/vstudio/aa569283.aspx) and a few tools such as a C# compiler etc. The project has been going for 8 years now and has been making steady progress. Version 3 introduced a new [generational garbage collector](http://www.mono-project.com/Generational_GC), and overall it's performant and stable. It is possible to [embed into your application](http://www.mono-project.com/Embedding_Mono), but you have to realise that Mono/CLR is a generic VM specified at byte-code level. It's intended to be the target of many languages compilers, even if C# is the most commonly known. .NET is one of the corner-stones of Windows, so it comes with mechanisms for versioning and signing it's "assemblies" (executables / libraries) and storing them in a central depot (the global assembly cache, GAC). Mono includes most of these features as well.
 
-<table border="1">
+<table class="table-bordered">
 <tbody>
 <tr><td>Pros</td>
 <td>General purpose, supports many languages
@@ -48,14 +48,15 @@ Hard to static-link (embed) into your app
 <tr><td>Time of running hello world example</td><td>70ms</td></tr>
 <tr><td>License</td><td>LGPL</td></tr>
 <tr><td>Future proof (10 years from now)</td><td>3 out of 5</td></tr>
-</tbody></table>
+</tbody>
+</table>
 <br/>
 The static-link issue can be a major headache when embedding Mono. Other than this it's a very powerful and stable runtime. Mono can also use LLVM for it's JIT code generation making is suitable for many different CPU architectures. The fact that C# and F# "scripts" need to be shipped / stored as binary assemblies can be a deal-breaker if you're looking for a easily editable/patchable script solution. Note that this is only true for the compiled CLR languages as C# / F#, IronPython/Clojure for instance can be shipped in source.
 
 ### Option 2/ Medium-weight, not-so generic runtime - Javascript V8
 Javascript is [huge language nowadays](http://www.tiobe.com/index.php/content/paperinfo/tpci/index.html) and the runtime implementations in the big browsers (except maybe IE) are now very sofisticated and fast. In fact, [v8 is on par with Mono/C#](http://benchmarksgame.alioth.debian.org/u32/benchmark.php?test=all&lang=v8&lang2=csharp), that is a quite astonishing fact if you consider the nature of the Javascript language and what v8 has to do in order to run that fast. V8 has been [designed to be embeddable](https://developers.google.com/v8/get_started) and offers also [nice and easy interrop](https://developers.google.com/v8/embed).
 
-<table border="1">
+<table class="table-bordered">
 <tbody>
 <tr><td>Pros</td>
 <td>Fast
@@ -90,7 +91,7 @@ Due to the fact that all browsers can run javascript, the language have unmatche
 ### Option 3/ Medium-weight, generic runtime - Guile
 Guile is the official extension language in the GNU universe. Originally it's been a <a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a>, but with guile2.0 parsers for Javascript, [Emacs lisp](http://en.wikipedia.org/wiki/Emacs_Lisp) was added. Support for Lua is also in the works. The idea is to expose the innards of your app to scheme programs, in the form of Scheme functions, and thus making it possible for you and your users to use the software in a very flexible way.
 
-<table border="1">
+<table class="table-bordered">
 <tbody>
 <tr><td>Pros</td>
 <td>Good interrop
@@ -120,7 +121,7 @@ Picking a Lisp for you scripting might seem controversial, but the level of expr
 ### Option 4/ Light-weight, single-language runtime - Lua
 Lua is a popular embedded scripting language in games ([world of warcraft](http://www.wowwiki.com/Lua)) and many embedded systems. It's extremely small and draws a lot of it's power from it's simplicity. It's also very easy to interrop with your existing code. Lua was specifically designed to be embedded and interrop easily.
 
-<table border="1">
+<table class="table-bordered">
 <tbody>
 <tr><td>Pros</td>
 <td>Extremely lightweight

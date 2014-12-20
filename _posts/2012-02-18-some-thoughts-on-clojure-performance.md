@@ -16,15 +16,17 @@ Measuring the speed of code is quite tricky, because there are many parts to a p
 ## Getting going...
 The slow startup time is probably what you will notice first when starting to code in Clojure. Anything from running your first "hello worlds" to starting the REPL is painful. Here's some average numbers for a simple "Hello world" program taken on a 2.5GHz Core2Duo MacBook Pro;
 
-<table align="center" border="1">
-<tbody>
+<table class="table-bordered">
+<thead>
 <tr>
-<td>Language</td>
-<td>Total running time OSX</td>
-<td>Relative</td>
-<td>Total running time Ubuntu</td>
-<td>Relative</td>
+<th>Language</th>
+<th>Total running time OSX</th>
+<th>Relative</th>
+<th>Total running time Ubuntu</th>
+<th>Relative</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td>C (printf)</td>
 <td>0.011s</td>

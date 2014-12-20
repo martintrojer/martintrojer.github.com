@@ -45,7 +45,7 @@ Finally, JVM hot-swapping is less useful in Scala than Java, due to how many cla
 Let's compare the execution speed (using a silly little benchmark) of these interpreters I've written (and a native scheme implementation). All run on Linux, JDK1.7.0_21 x64, Mono 2.10.8.1. Results in milliseconds.
 
 <div align="center">
-<table border="1">
+<table class="table-bordered">
 <tbody>
 <tr><td/><td>100 x (fact 50)</td><td>10000 x (fact 50)</td></tr>
 <tr><td><a href="https://github.com/martintrojer/scheme-scala">Scala</a> (2.10.1)</td><td>580</td><td>58800</td></tr>
