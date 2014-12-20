@@ -7,6 +7,10 @@ body {
     padding-right: 15%;
 }
 
+.gist .line-numbers {
+    line-height: inherit !important;
+}
+
 .gist .highlight {
     border: 0;
 }
