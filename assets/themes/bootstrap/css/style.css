@@ -2,7 +2,12 @@ body {
     font-size: 1.6em;
 }
 
-.container {
+.row {
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.page-header {
     padding-left: 15%;
     padding-right: 15%;
 }
