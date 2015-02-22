@@ -30,7 +30,7 @@ The setup consists of the following emacs modes (all available on [Melpa](http:/
 ## init.el
 Here's some relevant snippets from my `init.el`, the full file can be found [here](https://github.com/martintrojer/dotfiles/blob/master/.emacs.d/full-init.el);
 
-<script src="https://gist.github.com/martintrojer/14ebb9b2a51b8e53a6e5.js"> </script>
+<script src="https://gist.github.com/martintrojer/14ebb9b2a51b8e53a6e5.js?file=init.el"> </script>
 
 ## A repl session with this setup
 I typically start with loading the `project.clj` file of the project I want to work on. Then I'll do a `M-x run-lisp`, this will launch a repl in the `*inferior-lisp*` buffer. Now you can go ahead and type what you like in that buffer. Typically I would do `(load-dev)` and `(reset)` to start my [component](https://github.com/stuartsierra/component) system.
@@ -41,6 +41,7 @@ Edit text like normal, `C-c C-e` to eval sexpr under point and `C-c C-k` to eval
 
 Running tests are done manually in the REPL buffer. I typically do `(run-tests)` or `(test-vars [...])`. I strongly recommend having [humane test output](https://github.com/pjstadig/humane-test-output) enabled.
 
+<div id="navigate"></div>
 ## Code navigation and auto-complete
 Make sure you have [Exuberant ctags](http://ctags.sourceforge.net) installed on your system; `apt-get install exuberant-ctags` or `brew install ctags`.
 
