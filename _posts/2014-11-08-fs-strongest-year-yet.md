@@ -26,4 +26,4 @@ Some great F# talks and blogs you need to see;
 
 * [F# weekly](http://sergeytihon.wordpress.com/category/f-weekly/)
 * [F# for fun and profit](http://fsharpforfunandprofit.com/site-contents/)
-* Don Symes talk "The F# Approach to Relaxation" from CodeMesh 2014 was great. I will post a link to a recording of this talk as soon as I can find it.
+* Don Symes talk [The F# Approach to Relaxation](https://www.youtube.com/watch?v=W-D6W7EA8gw)
