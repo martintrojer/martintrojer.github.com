@@ -6,7 +6,7 @@ group: navigation
 ---
 {% include JB/setup %}
 
-<div style="float:right"><img style="padding: 10px" src="/assets/images/martin.png"/></div>
+<div style="float:right"><img style="padding: 10px; max-width:100%; height:auto;" src="/assets/images/martin.png"/></div>
 
 My name is Martin Trojer and I'm a software contractor based in the UK. I am currently focusing on software development in functional programming languages (mainly [Clojure](http://clojure.org) and [F#](http://fsharp.org/)). I have a keen interest in new programming languages and frameworks.
 

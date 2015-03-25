@@ -15,7 +15,7 @@ By reading the title of this post you might think this entry is about using some
 
 Let me set the scene, I tend to do all my development inside VMs and/or Docker containers. Why? well see [here](http://martintrojer.github.io/clojure/2014/12/04/developing-clojure-in-the-cloud/) and [here](http://martintrojer.github.io/software/2015/02/22/moving-my-devboxes-to-docker/). My host OS is OSX and my guests Linux, I use [VirtualBox](http://virtualbox.org) for local VM-ing. After upgrading to OSX 10.10 I saw strange glitches when using Emacs terminal-mode in my VMs;
 
-<p align="center"><img src="/assets/images/emacs/garbled.png"></p>
+<p align="center"><img style="max-width:100%; height:auto;" src="/assets/images/emacs/garbled.png"></p>
 
 First port of call when Emacs draws garbled text to the terminal is to check the TERM / TERMCAP environment variables. If Emacs is outputting control chars that the terminal can't understand then you found your problem. One way to check this is to do `C-l` when your screen is garbled, this causes Emacs to re-draw the screen. In my case the re-draw command rendered the screen correctly.
 
