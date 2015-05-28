@@ -12,14 +12,6 @@ body {
     padding-right: 10%;
 }
 
-.gist .line-numbers {
-    line-height: inherit !important;
-}
-
-.gist .highlight {
-    border: 0;
-}
-
 img {
     max-width:100%;
     height:auto;

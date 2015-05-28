@@ -6,4 +6,5 @@ RUN gem install jekyll rake
 RUN apt-get -y install tmux
 
 WORKDIR /work
-CMD jekyll serve --force_polling --host $(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+# --force_polling
+CMD jekyll serve --host $(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
