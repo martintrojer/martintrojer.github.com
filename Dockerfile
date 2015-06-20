@@ -7,4 +7,4 @@ RUN apt-get -y install tmux
 
 WORKDIR /work
 # --force_polling
-CMD jekyll serve --host $(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+CMD jekyll serve --drafts --host $(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
