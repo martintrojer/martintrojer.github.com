@@ -6,16 +6,16 @@ I hereby claim:
 
   * I am an admin of https://martintrojer.github.io
   * I am martintrojer (https://keybase.io/martintrojer) on keybase.
-  * I have a public key with fingerprint B707 4DB9 6A05 78CD EAB3  8E59 DDD9 60EB 6E97 E544
+  * I have a public key ASDrzkwAX4TaHmqAz6qQohnjJEPgZTuxge1n0DvaI2LKAgo
 
-To claim this, I am signing this object:
+To do so, I am signing this object:
 
 {
     "body": {
         "key": {
-            "fingerprint": "b7074db96a0578cdeab38e59ddd960eb6e97e544",
+            "eldest_kid": "0120ebce4c005f84da1e6a80cfaa90a219e32443e0653bb181ed67d03bda2362ca020a",
             "host": "keybase.io",
-            "key_id": "ddd960eb6e97e544",
+            "kid": "0120ebce4c005f84da1e6a80cfaa90a219e32443e0653bb181ed67d03bda2362ca020a",
             "uid": "db36913b86774393ceef9c4163400d00",
             "username": "martintrojer"
         },
@@ -26,35 +26,25 @@ To claim this, I am signing this object:
         "type": "web_service_binding",
         "version": 1
     },
-    "ctime": 1414068748,
-    "expire_in": 157680000,
-    "prev": "f233adf8a7757fb8c303225b8f8b26f3ea0c5b0f961233d5b7f251e990d7a734",
-    "seqno": 6,
+    "client": {
+        "name": "keybase.io go client",
+        "version": "1.0.9"
+    },
+    "ctime": 1455034457,
+    "expire_in": 504576000,
+    "merkle_root": {
+        "ctime": 1455034437,
+        "hash": "4a21af58406e2ae7bd086794ef37cf9d005056c2cdeb5dec36ef3b6bd3b8fdc4986e6e8e77a380d75bb260e3a99635487bd1820fc8d28f318e9147a439b8705f",
+        "seqno": 378854
+    },
+    "prev": "b249247d482ad3591ea9b99fca0b9947fc660b9e394c2701f76e353bc62a3c0f",
+    "seqno": 24,
     "tag": "signature"
 }
 
-with the aforementioned key, yielding the PGP signature:
+which yields the signature:
 
------BEGIN PGP MESSAGE-----
-Version: GnuPG v1
-
-owGbwMvMwMR492bC67zpT10YTx9kTGII8fglWK2UlJ9SqWRVrZSdCqbSMvPSU4sK
-ijLzSpSslJLMDcxNUpIszRINTM0tklNSE5OMLVJNLVNSUizNDFKTzFItzVNNTUyU
-dJQy8otBOoDGJCUWp+pl5gPFgJz4zBSgKBb1pRCJJGMzS0PjJAszc3MTY0vj5NTU
-NMtkE0MzYxMDgxQDA5DC4tSivMTcVKDq3MSiEqDDivKzUouUanWUgDJlmcmpIHeD
-rMeiSi89sySjNAninIKi/JL85PwcoJqMkpKCYiuQGSWVBSBN5alJ8VDj4pMy81KA
-wQDUUZZaVJyZn6dkZQhUmVySCTLf0MTQxMDMwtzEQkcptaIgsyg1PhOkwtTczMIA
-CED2pJYBjUwzMjZOTEmzSDQ3NzVPS7JINjYwNjIyTbJIs0gyMkszTk00SDZNMkiz
-NDMEqkwxTTJPMzI1TLW0NEgxTzQ3BgVScWphXr6SlRnQmYnpQCOLM9PzEktKi1KV
-ark6GWVYGBiZGNhYmUAxycDFKQCL38m87P/zy2On7T++9v1618td8kerN37mkrFX
-3hjd0Hzl8652gYcrxOJjzi+97+/5u1ZxsfjkbvbU365pAQ0udaYVrKc2r7QWZs45
-w32ga8/TUwV9t+yyrs1M8L7xaIXih4IQlgPKj9MzhGJ49ky/I/M7QnOWjaj5Vi3m
-6qwZHGb/Qznd0n3e7ZbRmiamVXSN71XQ21CVIp8bcXOC+v4rKHu2rD5Vrv/feZFK
-QdBL0bwFd4QWS+QFz6hc4CKk3XdaZeafRD4vzqZJTEFbE5y/CZ4tn3/fTrROY2t7
-oOSvr1+MKiT64l2ir/s51++/71itu7Zh8+I1pT/0ql/pb2Vb39Chm7NIv1no28rv
-wW3rknqEAQ==
-=woMQ
------END PGP MESSAGE-----
+g6Rib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg685MAF+E2h5qgM+qkKIZ4yRD4GU7sYHtZ9A72iNiygIKp3BheWxvYWTFAwJ7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwZWJjZTRjMDA1Zjg0ZGExZTZhODBjZmFhOTBhMjE5ZTMyNDQzZTA2NTNiYjE4MWVkNjdkMDNiZGEyMzYyY2EwMjBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwZWJjZTRjMDA1Zjg0ZGExZTZhODBjZmFhOTBhMjE5ZTMyNDQzZTA2NTNiYjE4MWVkNjdkMDNiZGEyMzYyY2EwMjBhIiwidWlkIjoiZGIzNjkxM2I4Njc3NDM5M2NlZWY5YzQxNjM0MDBkMDAiLCJ1c2VybmFtZSI6Im1hcnRpbnRyb2plciJ9LCJzZXJ2aWNlIjp7Imhvc3RuYW1lIjoibWFydGludHJvamVyLmdpdGh1Yi5pbyIsInByb3RvY29sIjoiaHR0cHM6In0sInR5cGUiOiJ3ZWJfc2VydmljZV9iaW5kaW5nIiwidmVyc2lvbiI6MX0sImNsaWVudCI6eyJuYW1lIjoia2V5YmFzZS5pbyBnbyBjbGllbnQiLCJ2ZXJzaW9uIjoiMS4wLjkifSwiY3RpbWUiOjE0NTUwMzQ0NTcsImV4cGlyZV9pbiI6NTA0NTc2MDAwLCJtZXJrbGVfcm9vdCI6eyJjdGltZSI6MTQ1NTAzNDQzNywiaGFzaCI6IjRhMjFhZjU4NDA2ZTJhZTdiZDA4Njc5NGVmMzdjZjlkMDA1MDU2YzJjZGViNWRlYzM2ZWYzYjZiZDNiOGZkYzQ5ODZlNmU4ZTc3YTM4MGQ3NWJiMjYwZTNhOTk2MzU0ODdiZDE4MjBmYzhkMjhmMzE4ZTkxNDdhNDM5Yjg3MDVmIiwic2Vxbm8iOjM3ODg1NH0sInByZXYiOiJiMjQ5MjQ3ZDQ4MmFkMzU5MWVhOWI5OWZjYTBiOTk0N2ZjNjYwYjllMzk0YzI3MDFmNzZlMzUzYmM2MmEzYzBmIiwic2Vxbm8iOjI0LCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQIue/9Qz7uH3WRJ1lZpXxMIMTwwe6fzXryM4vKWCV4/6ULAU8Fb5qK0iPMtMaDReiKVVvWSnjeoHXwgFyhs96waoc2lnX3R5cGUgo3RhZ80CAqd2ZXJzaW9uAQ==
 
 And finally, I am proving ownership of this host by posting or
 appending to this document.
