@@ -12,7 +12,9 @@ I recently tried to use Datomic in anger in a project, here are some things I le
 <!--more-->
 
 # Do
+
 #### Keep metrics on your query times
+
 Datomic lacks query planning. Queries that look harmless can be real hogs. The solution is usually blindly swapping lines in your query until you get an order of magnitude speedup.
 
 #### Always use memcached with Datomic

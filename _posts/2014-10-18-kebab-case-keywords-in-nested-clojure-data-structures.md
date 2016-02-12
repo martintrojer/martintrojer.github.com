@@ -7,4 +7,4 @@ tags: [clojure]
 ---
 {% include JB/setup %}
 
-{% gist martintrojer/d438e26dfcb0166aef8c %}
+<script src="https://gist.github.com/martintrojer/d438e26dfcb0166aef8c.js"> </script>
