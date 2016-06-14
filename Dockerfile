@@ -1,4 +1,4 @@
-FROM ubuntu:wily
+FROM ubuntu:xenial
 
 RUN apt-get -y update
 RUN apt-get -y install net-tools build-essential tmux ruby ruby-dev nodejs python
