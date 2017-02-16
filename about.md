@@ -8,7 +8,7 @@ group: navigation
 
 <div style="float:right"><img style="padding: 10px; max-width:100%; height:auto;" src="/assets/images/martin.png"/></div>
 
-My name is Martin Trojer and I'm a software contractor based in the UK. I am currently focusing on software development in functional programming languages (mainly [Clojure](http://clojure.org) and [F#](http://fsharp.org/)). I have a keen interest in new (and old!) programming languages and frameworks.
+My name is Martin Trojer and I'm a software contractor based in the UK. I am currently focusing on software development in functional programming languages (mainly [Haskell](https://www.haskell.org/)), [Purescript](http://www.purescript.org/), [Elm](http://elm-lang.org/) and [Clojure](http://clojure.org)).
 
 In this blog I write about various topics related to programming that have caught my attention, both technical and musings about the software industry. I try to make code examples and other resources publicly available, both for future reference and to assist readers.
 
