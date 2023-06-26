@@ -7,67 +7,75 @@ tags: [klee, llvm, sat, symbolic execution]
 ---
 {% include JB/setup %}
 
-A while back I worked with a colleague (Philippe Gabriel) on a research project looking into automating defect finding and improving over-all test coverage. The main defect of concern at that particular time was null pointer dereferences, which could cause system wide crashes. We looked at many different strategies and tools (both free and commercial). What really piqued our interest was a field of research called "Symbolic execution". Here's the elevator pitch; what if you had a tool that automatically found "nasty bugs" by analysing your source code, with very little or no false positives, and produced the input stimuli to provoke that bug?
+A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called "Symbolic execution." Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.
 
-[Dawson Engler](http://www.stanford.edu/~engler/) at Stanford along with [Patrice Godefroid](http://research.microsoft.com/en-us/um/people/pg/) at Microsoft Research have made great contributions to this field of research. Their detailed papers are a thrilling read.
+I want to acknowledge the significant contributions made by Dawson Engler at Stanford and Patrice Godefroid at Microsoft Research in advancing this field of research. Their detailed papers are captivating and offer valuable insights.
 
-This article contains some background information about what symbolic execution is, and in a future post I'll explain how this can be applied in practice (using frameworks such as <a href="http://llvm.org/">LLVM</a> and <a href="http://klee.llvm.org/">klee</a>).
+In this article, I provide background information about symbolic execution. In a future post, I will delve into its practical applications, utilizing frameworks such as <a href="http://llvm.org/">LLVM</a> and <a href="http://klee.llvm.org/">klee</a>).
 
 ### Introduction
-Static code analysis has made a lot of progress in recent years, and can now be applied to large real-world code bases and generate valid results. One of the key metrics is the ratio between actual defects to the false positives. Optimizing this ratio is a very hard problem to solve and includes a lot of heuristics, optimization and tweaking. One of the biggest benefits of Static code analysis is that it is done by analyzing the source code itself. There is no requirement to build, link and run the code in question, analyzing “snippets” of code perfectly valid.
+In recent years, static code analysis has made remarkable progress, allowing its application to large real-world codebases and generating reliable results. A crucial metric for success in this area is the ratio of actual defects to false positives. Achieving an optimal ratio is an incredibly challenging problem that involves employing heuristics, optimization techniques, and fine-tuning. One of the most significant advantages of static code analysis is that it analyzes the source code itself, eliminating the need to build, link, and run the code under scrutiny. It operates on "snippets" of code, which are perfectly valid in isolation.
 
-Unlike other code analysis tools, a symbolic executor runs the code under test in a “sandbox” or virtual machine. The main difference with normal execution is that some input are treated as symbolic (allowed to be “anything”), and for the code dependent on symbolic input the symbolic executor builds up boolean expressions (path constraints) used to force the code down previously unexplored paths.
+Unlike other code analysis tools, symbolic execution executes the code under test in a controlled environment or virtual machine. The key distinction from normal execution is that certain inputs are treated as symbolic, meaning they can be "anything." For code that depends on symbolic input, the symbolic executor constructs boolean expressions (known as path constraints) to explore previously uncharted paths.
 
 ### Symbolic Execution
-With symbolic execution, the program is "executed" in an abstracted manner. Let’s describe this process, with the following code fragment;
+Symbolic execution involves "executing" a program in an abstracted manner. Let's examine the process using the following code fragment:
 <script src="https://gist.github.com/1698165.js?file=example1.c"> </script>
-Say we want to insure that func always returns a valid (non-null) pointer.
+Suppose our goal is to ensure that `func` always returns a valid (non-null) pointer.
 
 ### Control Flow Graph
-The first step in symbolic execution is to generate a Control Flow Graph or CFG. A CFG is an abstract representation of the code in the form of a directed graph. Each node is a "basic block" terminated in a conditional (here an if statement). Each edge is a boolean "truth value" for the condition.
+The first step in symbolic execution is to generate a Control Flow Graph (CFG), which provides an abstract representation of the code in the form of a directed graph. In the CFG, each node represents a "basic block" terminated by a conditional statement (in this case, an if statement). Each edge corresponds to a boolean "truth value" for the condition.
 <p align="center"><img src="/assets/images/symbolic/cfg.png"></p>
 
-Once the code is expressed in this way it is easier to see the paths of execution. Note that CFGs are not specific to symbolic execution; all compilers generates a CFG when building the code, as this representation lends itself well to optimization techniques.
+Generating the CFG helps visualize the paths of execution. It's worth noting that CFGs are not specific to symbolic execution; compilers also generate CFGs during code compilation as they lend themselves well to optimization techniques.
 
 ### Analysing the CFG with symbolic values
-With symbolic execution we are interested in finding feasible paths which result in "bad things" happening. In this case we are interested in finding path(s) that lead to returning p without it first being allocated. We are interested to understand how the value of p changes, so taking the same CFG we state the value of p at each node. Or more precisely, we state the symbolic value of p, we do not actually care about which specific memory location p points to. Instead we only care whether p is null or non-null.
+With symbolic execution, our objective is to identify feasible paths that lead to undesirable outcomes or "bad things." In this scenario, we aim to find the path(s) that result in returning `p` without it being allocated first. To understand how the value of `p` changes, we assign a symbolic value to `p` at each node in the CFG. In other words, we're interested in the symbolic value of `p`; we don't care about the specific memory location it points to. Our focus is solely on whether `p` is null or non-null.
 <p align="center"><img src="/assets/images/symbolic/cfg-annotated.png"></p>
 
-Note that we also draw implicit code paths, as they lead to different symbolic value of p. Now with the CFG rewritten as above, it is trivial to see that there is indeed a path that leads to returning p without prior initialization. This simple example illustrates in practice 2 basic techniques;
+By annotating the CFG accordingly, we can easily identify a path that leads to returning p without prior initialization. This simple example demonstrates two fundamental techniques in practice:
+
 * Transformation to CFG
 * Reasoning on symbolic values
 
-### Scalability and Accuracy
-Anyone designing a "symbolic tool" is faced with many hard problems. At a very high level, the problems can be put in one of these 2 categories;
-* Scalability / speed of analysis, because any non trivial function has a large number of paths.<br />Ideally we want the tool to finish before the end of the universe.
-* Accuracy, because not all these paths are actually feasible and any defect reported along an infeasible path is a false positive.
+Note that we also draw implicit code paths, as they lead to different symbolic value of `p`.
 
-If you look a much simpler "lint" tool, it's usability is greatly reduced by the cheer&nbsp;amount&nbsp;of "garbage" it produces. An ideal tool will only report "real" errors, and as you will see further on, test vectors that triggers the error.
+### Scalability and Accuracy
+Developing a "symbolic tool" poses numerous challenging problems. Broadly speaking, these problems can be classified into two categories:
+
+1. Scalability and speed of analysis: Analyzing a non-trivial function involves a large number of paths. Ideally, we want the tool to complete its analysis within a reasonable timeframe, avoiding prolonged execution.
+2. Accuracy: Not all paths are feasible, and reporting defects along infeasible paths leads to false positives. A practical tool should only report genuine errors and provide test vectors to reproduce those errors.
+
+Consider a simpler tool like a "lint" tool, which becomes less useful as it generates excessive "garbage" output. An ideal tool, on the other hand, would report only real errors and provide test vectors to trigger those errors, as you'll see later in this article.
 
 ### Scalability and Inter-Procedural analysis
-The scalability problem is compounded by the fact that for any non trivial analysis, we cannot limit the analysis to the paths contained within a single function. For instance, in the previous example, it doesn't matter the `func` above returns a null pointer if all callers of `func` actually checks for this. For a meaningful analysis we need to follow the path until the pointer is actually used. In order to check that, we need to analyse paths going in and out of the function (inter-procedural analysis). The upside of doing inter-procedural analysis is that it increases the accuracy. The downside is that it&nbsp;exponentially&nbsp;increases the number of paths to analyse. Taking into account inter-procedural analysis, a real life a CFG is more likely to look like:
+The scalability problem is compounded by the fact that we can't limit the analysis to paths within a single function for any non-trivial analysis. For example, in the previous code snippet, it doesn't matter if func returns a null pointer if all callers of func properly check for this possibility. To conduct a meaningful analysis, we must follow the path until the pointer is actually used. This necessitates analyzing paths that span multiple functions, which is known as inter-procedural analysis.
+
+Performing inter-procedural analysis enhances accuracy, but it exponentially increases the number of paths to analyze. A real-life CFG, taking inter-procedural analysis into account, is likely to be more complex:
 <p align="center"><img src="/assets/images/symbolic/cfg-real.png"></p>
 
-A symbolic execution engine that would naively enumerate paths exhaustively through this CFG would never complete. Knowing how to prune the CFG and identifying the small number of "interesting" paths is a very lively domain of academic research and a large bibliography exists on the topic. Heuristics to limit the path explosion problem come from either graph theory or are based on inferring more information from the context of execution.
+An exhaustive enumeration of paths through such a CFG would never complete. Consequently, researchers and practitioners in this field focus on techniques to prune the CFG and identify a small set of "interesting" paths. The path explosion problem can be mitigated using heuristics derived from graph theory or by inferring additional information from the execution context.
 
 ### Accuracy
-An added complication that comes from having to analyze long paths is that the "Path conditions" along the paths are can be non-satisfiable. Let's examine this fact in greater detail, as this leads us to introducing another big idea that underpins symbolic execution.
+Analyzing long paths introduces a complication: the path conditions along those paths may be unsatisfiable. Let's explore this concept in more detail, as it leads us to another fundamental idea underlying symbolic execution.
 
 ### Path Condition
-Let's revisit our previous example and explain what path conditions are. We now rewrite the CFG with the truth value for all the conditions that we encountered along given paths. The path condition is the boolean equation that synthesises the truth values for conditional expressions we encountered at each node.
+Let's revisit the previous example and discuss path conditions. We'll rewrite the CFG, incorporating the truth values of the encountered conditions along the given paths. The path condition represents the boolean equation that synthesizes the truth values of the encountered conditional expressions at each node.
 <p align="center"><img src="/assets/images/symbolic/cfg-annotated2.png"></p>
 
-Here for the path of interest (leading to a null p), this expression is: ```x*y==0 && y!=0```. Hence we can now associate a set of boolean equations with each edges along a given path. In the example above, we can now state,  ```x*y==0 && y!=0``` implies that ```p==0```
+For the path of interest (leading to a null p), the corresponding expression is ```x * y == 0 && y != 0```. Thus, we can associate a set of boolean equations with each edge along a given path. In this example, we can conclude that ```x * y == 0 && y != 0``` implies ```p == 0```.
 
 ### Inter-Procedural analysis and Path condition
-Now that we know what path conditions are, let's see how we use these to solve the accuracy problem. We need to find out whether the path that is feasible in the narrow context of this function is actually valid in the larger context of a program, (i.e. when you perform interprocedural analysis). For instance, we might find that on all the paths containing call to this function, prior to the call there is a ASSERT statement that checks: ```x!=0```
+Now that we understand path conditions, let's explore how they help solve the accuracy problem. We need to determine whether a path that appears feasible within the narrow context of a single function is valid in the larger context of the entire program, which involves interprocedural analysis. For instance, we might discover that all paths containing a call to func have an ASSERT statement before the call, checking if x is not equal to 0.
+
 <script src="https://gist.github.com/1698165.js?file=example2.c"> </script>
-The path condition has become: ```x*y!=0 && y!=0 && x!=0```. It is clear to see that this boolean equation cannot be solved, or according to the lingo there is no assignment of boolean terms that satisfy this equation. This is otherwise known as the <a href="http://en.wikipedia.org/wiki/Boolean_satisfiability_problem">Boolean Satisfiability Problem</a>.
+The path condition now becomes ```x * y != 0 && y != 0 && x != 0```. It is evident that this boolean equation cannot be satisfied, which aligns with the concept known as the <a href="http://en.wikipedia.org/wiki/Boolean_satisfiability_problem">Boolean Satisfiability Problem</a>.
 
 ### Boolean SAT applied to Symbolic Execution
-Now, there's good news and bad news...
+Now, let's delve into the good news and the bad news...
 
-The bad news is that this is an NP Complete problem, or in other words a fiendishly complex problem to solve, with no upper limit to it's running complexity. This is not really apparent in this simple example, but any non-trivial path will be summarized by a path condition with 100s of terms, which means that simply iterating through possible assignment for boolean variables would never complete.
+The bad news is that solving the Boolean Satisfiability Problem is an NP-complete problem, meaning it is inherently complex and does not have an upper limit on its running time. Although not explicitly apparent in this simple example, any non-trivial path can be summarized by a path condition with hundreds of terms. Therefore, simply iterating through all possible assignments for boolean variables would lead to infinite execution.
 
-The good news is that there are solutions for it. Most notably, solving boolean equation with large number of terms is something that the VLSI industry has been doing for years and have developed fairly efficient software along the way, aka SAT solvers. In fact there is a surprisingly large number of people constantly refining algorithms for their SAT solvers to solve ever larger boolean equations ever faster.<br />
-As a result all modern symbolic execution engines can now incorporate them. A boolean SAT solver would tell you in no time that ```x*y!=0 && y!=0 && x!=0``` is indeed unsatisfiable and that there is no point reporting such a defect which is clearly a false positive.
+The good news is that there are solutions to this problem. The Very Large Scale Integration (VLSI) industry, for instance, has been dealing with solving boolean equations with a large number of terms for years. They have developed fairly efficient software, known as SAT solvers, to tackle this challenge. In fact, researchers continually refine algorithms for SAT solvers to solve ever larger boolean equations in a more efficient manner.
+
+Consequently, modern symbolic execution engines incorporate these SAT solvers. A boolean SAT solver can quickly determine that ```x * y != 0 && y != 0 && x != 0``` is unsatisfiable, thus avoiding the reporting of a false positive defect.
