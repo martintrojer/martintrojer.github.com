@@ -7,13 +7,14 @@ tags: [sicp]
 ---
 {% include JB/setup %}
 
-Having worked on many software projects and with a lot of different people, one thing that strikes me is the lack of understanding of what software is and how it's created. Even among us developers, there's is still this belief lurking, that if you senior enough, you can design and size a problem, before you hand it over to some less senior developers to implement. (Some) people still believe that building software is the same as building cars on an assembly line.
+Having gained experience through numerous software projects and collaborations with diverse individuals, I've observed a recurring issue: a lack of understanding regarding the nature and process of software development. Surprisingly, even among developers, there persists a belief that seniority alone enables one to design and plan a problem, leaving less experienced developers to implement it. Some individuals still equate software development to assembly line production in the automotive industry.
 
-Abelsson and Sussman speaks about a _sorcerer's spirit_ in chapter 1 of [SICP](http://mitpress.mit.edu/sicp/);
+
+In chapter 1 of "Structure and Interpretation of Computer Programs" [SICP](http://mitpress.mit.edu/sicp/), Abelsson and Sussman describe a concept they call the "sorcerer's spirit"
 
 > A computational process is indeed much like a sorcerer's idea of a spirit. It cannot be seen or touched. It is not composed of matter at all. However, it is very real. It can perform intellectual work. It can answer questions. It can affect the world by disbursing money at a bank or by controlling a robot arm in a factory. The programs we use to conjure processes are like a sorcerer's spells. They are carefully composed from symbolic expressions in arcane and esoteric _programming languages_ that prescribe the tasks we want our processes to perform.
 
-Some years back I say the great presentation by [Brian Cantrill](http://dtrace.org/blogs/bmc/) (then DTrace developer at Sun). The whole presentation is really interesting (DTrace is awesome btw), but the first "philosophical" part really stuck with me, and goes some ways to explain what software is. Here's a transcript of the first part, and the full presentation is [here](http://www.youtube.com/watch?v=TgmA48fILq8&feature=gv).
+Years ago, I encountered an enlightening presentation by [Brian Cantrill](http://dtrace.org/blogs/bmc/), who was then a DTrace developer at Sun Microsystems. Although the entire presentation is captivating (DTrace is truly remarkable, by the way), the initial "philosophical" segment left a lasting impression and shed light on the essence of software. Here is a transcript of the first part, and the full presentation can be found at [link](http://www.youtube.com/watch?v=TgmA48fILq8&feature=gv)
 
 > Software is really different, it's unique. It is different from everything else that we (as humans) have made. And when we try to draw analogies between software and other things we built, those analogies always come apart, the are always loaded with fallacies. So what is it that makes software so special? <...>
 
