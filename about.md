@@ -8,8 +8,9 @@ group: navigation
 
 <div style="float:right"><img style="padding: 10px; max-width:100%; height:auto;" src="/assets/images/martin.png"/></div>
 
-My name is Martin Trojer and I'm a software contractor based in the UK. I am currently focusing on software development in functional programming languages (mainly [Haskell](https://www.haskell.org/)), [Purescript](http://www.purescript.org/), [Elm](http://elm-lang.org/) and [Clojure](http://clojure.org)).
 
-In this blog I write about various topics related to programming that have caught my attention, both technical and musings about the software industry. I try to make code examples and other resources publicly available, both for future reference and to assist readers.
+I am Martin Trojer, a software contractor based in the UK, specializing in software development using functional programming languages such as Haskell, Purescript, Elm, and Clojure.
 
-Feel free to get in touch if you're interested in any of my posts or if you are looking for assistance with software development. See my [linked in profile](http://uk.linkedin.com/in/martintrojer) for more details about my professional assignments.
+On this blog, I cover a range of programming topics that have captured my interest, including technical discussions and reflections on the software industry. I aim to provide code examples and other resources that are publicly accessible, serving as both a reference for the future and a helpful aid for readers.
+
+If you find any of my posts intriguing or if you require assistance with software development, please don't hesitate to reach out. For more information about my professional assignments, please refer to my [LinkedIn profile](http://uk.linkedin.com/in/martintrojer).
