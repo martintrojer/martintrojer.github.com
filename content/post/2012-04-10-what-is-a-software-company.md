@@ -1,0 +1,28 @@
+---
+categories:
+- software
+date: "2012-04-10T00:00:00Z"
+description: ""
+tags:
+- software
+title: What is a software company?
+---
+{% include JB/setup %}
+
+Software is <a href="http://martinsprogrammingblog.blogspot.co.uk/2011/10/what-is-software.html">different from most other things humans build</a>, hence companies creating/selling/licensing software must be different from other 'production' companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software? Why haven't most software companies learnt the hard lessons and started to operate like <a href="http://www.valvesoftware.com/company/Valve_Handbook_LowRes.pdf">Valve</a>?
+
+The financial costs of developing, deploying and having software in production is one big factor of software development being kept in the shackles of dusty old engineering practices. If we are spending all this money on development, we instinctively want to know exactly when it's going to be ready, with what functionality and quality. If the plan is detailed and rigid enough, surely the <strike>car factory</strike> website will open in exactly 6 months and 12 days from now! This belief is so infested in management that it seems impossible to argue against, and what's worse; it constantly gets in the way of developers actually writing code and innovating new features. It's my experience that successful software projects deliver on time despite all planning, not because of it.
+
+However, the times are a-changin'. SaaS, PaaS, IaaS provides are challenging some of the old financial truths about developing and having software in production. The cost of data centres is completely removed, and the costs of production scales with usage and popularity of the product. A new breed of software companies are emerging.
+
+The "half life" of software is very short, and it's getting shorter. A software product is in practice worthless (from a technical standpoint) the moment it's shipped, it's very easy for competitors to copy and improve. What's is true this quarter is not necessarily true the next. New languages and frameworks come along all the time, and can drastically change the landscape of possible solutions to a given problem. A company that starts coasting on existing technologies and investments becomes obsolete very quickly.
+
+So what is the true value of a software company? It's the rapport built up with its customers. It's the products that's currently being worked on. It's the awesome demos of new features/products. It's the ideas in the heads of its employees. It's the company's ability to change / alter / transform the existing products. Already shipped products are easy to clone, but the ideas and innovation are much harder for competitors to keep up with.
+
+Also, good software companies create <a href="http://www.infoq.com/presentations/Simple-Made-Easy">high quality and simple products</a>. While it's easy to copy a program's functionality, it's harder to copy a program that is very well written. Why? The well written, and simpler original, can more easily be changed and altered to meet new requirements. Any poorly written copy will suffer from alot of accidental complexity and will not be able to keep up with a constantly evolving original.
+
+Most companies in the software space will from time to time ask themselves if they should start a big re-write project versus keep on tweaking the&nbsp;existing stuff. My view is that a well functioning software company is constantly re-writing it's products. It's constantly looking at what's happening in the language/framework space and trying to apply them to its own problem space. They are on a never ending quest to find the simplest, cleanest, most agile implementation of the particular problem.
+
+So what about the developer community? <a href="http://www.confreaks.com/videos/860-railsconf2012-keynote-simplicity-matters">Rich Hickey speaks about the self-obsessed meta culture</a> that has sprung up amongst developers, where the convenience and ease of the developers is paramount. To the detriment of what really matters, the functionality and quality of the software produced. This culture is wide spread up the management hierarchy. The language / framework cargo cult that is so strong in the software developer community is an symptom of this culture. <a href="http://www.paulgraham.com/icad.html">Middle management is obsessed about using industry standards and "we can't possibly use technology X, because we can't hire cheap grads with that knowledge"</a> is very limiting on their company's capability to produce new and exiting products.
+
+In conclusion, companies in the software space have to make up their minds. Are they software companies? If yes, are they - in order to be truly successful - ready to break the shackles of conventional wisdom and set their developer talent free? Or, are they a service providers? Licensing and outsourcing their software needs in order to bring a appealing product / brand together. If they are service providers, they are most likely wasting a lot of money on in-house (frustrated) developers when they should just realize that kind of business they are actually running, and act accordingly. Both are perfectly valid business models, but are too often mixed up.

@@ -1,0 +1,24 @@
+baseURL: https://martintrojer.github.io/
+disablePathToLower: true
+languageCode: en-us
+title: Martin Trojer
+theme: smol
+params:
+  subtitle: Ramblings on programming
+  dateFmt: 2006-01-02
+
+menus:
+  main:
+  - name: Categories
+    pageRef: /categories/
+    weight: 10
+  - name: Tags
+    pageRef: /tags/
+    weight: 20
+  footer:
+  - name: Github
+    url: https://github.com/martintrojer
+    weight: 1
+  - name: LinkedIn
+    url: https://uk.linkedin.com/in/martintrojer
+    weight: 2
