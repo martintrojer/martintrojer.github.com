@@ -14,7 +14,35 @@ Overall, the Scala solution is very similar to the [F# one](https://github.com/m
 
 Here's the eval / apply functions;
 
-{{< gist martintrojer 5707573 eval-apply.scala >}}
+{{< highlight scala >}}
+def eval(env: Env, expr: ExprT): (Env, ExprT) = expr match {
+  case NullExpr()       => throw new IllegalStateException("invalid interpreter state")
+  case Comb(List())     => throw new IllegalStateException("invalid combination")
+  case Comb(h :: t)     =>
+    eval(env, h) match {
+      case (_, Proc(f))             => apply(f, t, env)
+      case (nEnv, Func(args, body)) => {
+        if (args.length != t.length) throw new IllegalArgumentException("invalid number or arguments")
+        val newEnv = (args zip t).foldLeft(nEnv.expand())((acc, av) => bindArg(acc, av._1, av._2))
+        evalAll(newEnv, body)
+      }
+      case (nEnv, expr)             => (nEnv, expr)
+    }
+  case Proc(f)          => (env, Proc(f))
+  case Func(args, body) => throw new IllegalArgumentException("invalid function call")
+  case v @ Value(_)     => (env, v)
+  case l @ List(_)      => (env, l)
+  case Symbol(s)        =>
+    env.lookUp(s) match {
+      case Some(e)  => (env, e)
+      case None     => throw new IllegalArgumentException("unbound symbol '" + s +"'")
+  }
+}
+
+private def apply(f: ((Env, List[ExprT]) => (Env, ExprT)),
+                  args: List[ExprT], env: Env) =
+  f(env, args)
+{{< /highlight >}}
 
 ## OO vs. FP
 
@@ -30,7 +58,24 @@ It can be argued that time is better spend working on the problems/functions the
 
 I'm really impressed by [scala.util.parsing.combinator](http://www.scala-lang.org/api/current/index.html#scala.util.parsing.combinator.Parsers). The code below is the entire parser, both readable (once you get the hang of it) and powerful.
 
-{{< gist martintrojer 5707573 Parser.scala >}}
+{{< highlight scala >}}
+
+import scala.util.parsing.combinator._
+
+object Parser extends JavaTokenParsers {
+  def value: Parser[ValueT] = stringLiteral ^^ (x => Name(x.tail.init)) |
+                              floatingPointNumber ^^ (x => Num(BigDecimal(x)))
+  def expression: Parser[ExprT] = value ^^ (x => Value(x)) |
+                                  """[^()\s]+""".r ^^ (x => Symbol(x)) |
+                                  combination
+  def combination: Parser[Comb] = "(" ~> rep(expression) <~ ")" ^^ (x => Comb(x))
+  def program: Parser[List[ExprT]] = rep(expression)
+
+  // ---
+
+  def parse(source: String) = parseAll(program, source).get
+}
+{{< /highlight >}}
 
 The way you map the parse results onto your own type domain is fantastic. Contrast this is an example of a [hand rolled parser](https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/HandRolledParser.scala), which still is pretty neat if you ask me, but much more code.
 
@@ -48,20 +93,15 @@ Finally, JVM hot-swapping is less useful in Scala than Java, due to how many cla
 
 Let's compare the execution speed (using a silly little benchmark) of these interpreters I've written (and a native scheme implementation). All run on Linux, JDK1.7.0_21 x64, Mono 2.10.8.1. Results in milliseconds.
 
-<div align="center">
-<table class="table-bordered">
-<tbody>
-<tr><td/><td>100 x (fact 50)</td><td>10000 x (fact 50)</td></tr>
-<tr><td><a href="https://github.com/martintrojer/scheme-scala">Scala</a> (2.10.1)</td><td>580</td><td>58800</td></tr>
-<tr><td><a href="https://github.com/martintrojer/scheme-clojure">Clojure</a> (1.5.1)</td><td>300</td><td>29700</td></tr>
-<tr><td><a href="https://github.com/martintrojer/scheme-fsharp">F#</a> (3.0)</td><td>80</td><td>6600</td></tr>
-<tr><td><a href="https://github.com/martintrojer/scheme-python">Python</a> (2.7.4)</td><td>420</td><td>40500</td></tr>
-<tr><td><a href="http://www.call-cc.org/">Chicken Scheme</a> (4.8.0)</td><td>4</td><td>150</td></tr>
-<tr><td><a href="https://github.com/martintrojer/scheme-clojure">Clojure embedded</a></td><td>1</td><td>40</td></tr>
-</tbody>
-</table>
-</div>
-<br/>
+| (fact 50)                                                          |        | 100x | 10000x |
+|--------------------------------------------------------------------|--------|:----:|:------:|
+| [Scala](https://github.com/martintrojer/scheme-scala)              | 2.10.1 | 580  | 58800  |
+| [Clojure](https://github.com/martintrojer/scheme-clojure)          | 1.5.1  | 300  | 29700  |
+| [F#](https://github.com/martintrojer/scheme-fsharp)                | 3.0    | 80   | 6600   |
+| [Python](https://github.com/martintrojer/scheme-python)            | 2.7.4  | 420  | 40500  |
+| [Chicken Scheme](http://www.call-cc.org/)                          | 4.8.0  | 4    | 150    |
+| [Clojure embedded](https://github.com/martintrojer/scheme-clojure) | 1.5.1  | 1    | 40     |
+
 I'm a bit surprised with the results here, Scala is quite slow and F# is very fast. If you consider that the F# and Scala implementations are fundamentally identical, my only conclusion can be that Scala pattern matching is slow. Daniel Spiewak alluded to this in a [recent talk](http://2013.flatmap.no/spiewak.html), if I understand him correctly, it is much faster (in Scala) to replace pattern matches with 'polymorphic operators' -- [here's an example](https://gist.github.com/martintrojer/5646283).
 
 If you watch that talk, it boils down to different ways to tackle the expression problem, where pattern matches and 'polymorphic operators' are on different extremes on the spectrum. However, it doesn't explain why pattern matching in Scala is so much slower than F#.

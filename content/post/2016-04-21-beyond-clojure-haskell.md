@@ -83,22 +83,81 @@ Throughout this blog series I'll use a simple TodoMVC-ish example for both backe
 
 With my Clojure glasses on I'm quite happy with the layout of the web app I get with Snap. For a very simple app like this, I really have no complaints. The routing functionality looks deep enough to cover my needs, and its straightforward to factor out model and handler functions.
 
-{{< gist martintrojer 1803f11f9994656bd0b0b763f1a42854 routes.hs >}}
+{{< highlight haskell >}}
+-- Setting up the routes
+appInit = makeSnaplet "app" "a player db backend" Nothing $ do
+  addRoutes [ ("", ifTop $ writeText "Welcome to the Players API v0.1")
+            , ("players", method GET getPlayersHandler)
+            , ("players/:player", method GET getPlayerHandler <|>
+                                  method POST createPlayerHandler <|>
+                                  method DELETE deletePlayerHandler)
+            ]
+  d <- nestSnaplet "db" db $ initSqlite setupDB
+  return $ App d
+
+-- A simple handler
+getPlayersHandler = do
+  users <- runPersist getAllPlayers
+  writeJSON users
+
+-- A model/db function
+getAllPlayers = do
+  players <- select $ from $ \player -> do
+    orderBy [asc (player ^. PlayerName)]
+    return player
+  return $ map entityVal players
+{{< /highlight >}}
 
 JSON marshaling works nicely and ties into Haskell data in a good way.
 
-{{< gist martintrojer 1803f11f9994656bd0b0b763f1a42854 json.hs >}}
+{{< highlight haskell >}}
+[persistLowerCase|
+Player
+  name String
+  level Int
+  deriving Show
+  deriving Generic
+|]
+
+instance ToJSON Player
+instance FromJSON Player
+{{< /highlight >}}
 
 Getting migrations 'for free' from Persistent is a nice touch.
 
-{{< gist martintrojer 1803f11f9994656bd0b0b763f1a42854 migrate.hs >}}
+{{< highlight haskell >}}
+setupDB = do
+  runMigration migrateAll
+  insert_ $ Player "Sally" 2
+  insert_ $ Player "Lance" 1
+  insert_ $ Player "Aki" 3
+  insert_ $ Player "Maria" 4
+{{< /highlight >}}
 
 I am also really enjoying using pattern matching for situations with many cases
 
-{{< gist martintrojer 1803f11f9994656bd0b0b763f1a42854 patterns.hs >}}
+{{< highlight haskell >}}
+createPlayerHandler = do
+  player <- getPlayer'
+  name <- getParam "player"
+  level <- getPostParam "level"
+  case (player, name, level) of
+    (Nothing, Just n, Just l) -> do
+      runPersist $ createPlayer (BS.unpack n) $ read (BS.unpack l)
+      modifyResponse $ setResponseStatus 201 "Created"
+    (Just _, _, _) -> modifyResponse $ setResponseStatus 400 "Player exists"
+    _ -> notFound
+{{< /highlight >}}
 
 ... and in MaybeT to simplify code that in Clojure would be big cond blocks.
 
-{{< gist martintrojer 1803f11f9994656bd0b0b763f1a42854 maybet.hs >}}
+{{< highlight haskell >}}
+-- Flattening 2 nested calls that returns Maybe
+getPlayer' = do
+  player <- runMaybeT $ do
+    param <- MaybeT $ getParam "player"
+    MaybeT . runPersist . getPlayer $ BS.unpack param
+  return player
+  {{< /highlight >}}
 
 Finally, Snap comes with a handy test module to testing your handlers, which kept me happy for this little experiment.
