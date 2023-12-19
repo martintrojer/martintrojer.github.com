@@ -83,7 +83,7 @@ Throughout this blog series I'll use a simple TodoMVC-ish example for both backe
 
 With my Clojure glasses on I'm quite happy with the layout of the web app I get with Snap. For a very simple app like this, I really have no complaints. The routing functionality looks deep enough to cover my needs, and its straightforward to factor out model and handler functions.
 
-{{< highlight haskell >}}
+```haskell
 -- Setting up the routes
 appInit = makeSnaplet "app" "a player db backend" Nothing $ do
   addRoutes [ ("", ifTop $ writeText "Welcome to the Players API v0.1")
@@ -106,11 +106,11 @@ getAllPlayers = do
     orderBy [asc (player ^. PlayerName)]
     return player
   return $ map entityVal players
-{{< /highlight >}}
+```
 
 JSON marshaling works nicely and ties into Haskell data in a good way.
 
-{{< highlight haskell >}}
+```haskell
 [persistLowerCase|
 Player
   name String
@@ -121,22 +121,22 @@ Player
 
 instance ToJSON Player
 instance FromJSON Player
-{{< /highlight >}}
+```
 
 Getting migrations 'for free' from Persistent is a nice touch.
 
-{{< highlight haskell >}}
+```haskell
 setupDB = do
   runMigration migrateAll
   insert_ $ Player "Sally" 2
   insert_ $ Player "Lance" 1
   insert_ $ Player "Aki" 3
   insert_ $ Player "Maria" 4
-{{< /highlight >}}
+```
 
 I am also really enjoying using pattern matching for situations with many cases
 
-{{< highlight haskell >}}
+```haskell
 createPlayerHandler = do
   player <- getPlayer'
   name <- getParam "player"
@@ -147,17 +147,17 @@ createPlayerHandler = do
       modifyResponse $ setResponseStatus 201 "Created"
     (Just _, _, _) -> modifyResponse $ setResponseStatus 400 "Player exists"
     _ -> notFound
-{{< /highlight >}}
+```
 
 ... and in MaybeT to simplify code that in Clojure would be big cond blocks.
 
-{{< highlight haskell >}}
+```haskell
 -- Flattening 2 nested calls that returns Maybe
 getPlayer' = do
   player <- runMaybeT $ do
     param <- MaybeT $ getParam "player"
     MaybeT . runPersist . getPlayer $ BS.unpack param
   return player
-  {{< /highlight >}}
+```
 
 Finally, Snap comes with a handy test module to testing your handlers, which kept me happy for this little experiment.

@@ -11,7 +11,7 @@ tags:
 - quickcheck
 title: Some thoughts on clojure.spec
 ---
-Some of the readers of my [Beyond Clojure](http://martintrojer.github.io/categories.html#beyond-clojure-ref) blog series have asked about my opinion on clojure.spec, and if it solves Clojure's 'type problem'. Implying whether its presence makes me look more favorably on Clojure. Here are some of my thoughts.
+Some of the readers of my [Beyond Clojure](/categories/beyond-clojure/) blog series have asked about my opinion on clojure.spec, and if it solves Clojure's 'type problem'. Implying whether its presence makes me look more favorably on Clojure. Here are some of my thoughts.
 
 <!--more-->
 

@@ -8,6 +8,26 @@ tags:
 title: Kebab-case keywords in nested Clojure data structures
 ---
 
-{{< gist martintrojer d438e26dfcb0166aef8c >}}
+```clojure
+(ns kebab
+  (:require [camel-snake-kebab :as kebab]
+            [schema.coerce :as c]
+            [schema.core :as s]))
 
-<script src="https://gist.github.com/martintrojer/d438e26dfcb0166aef8c.js"> </script>
+(def Data (s/either s/Keyword
+                    {(s/recursive #'Data) (s/recursive #'Data)}
+                    [(s/recursive #'Data)]
+                    #{(s/recursive #'Data)}
+                    s/Any))
+
+(def ->kebab-keys-coercer
+  (c/coercer Data {s/Keyword (coerce/safe #(kebab/->kebab-case %))}))
+
+(def ->snake-keys-coercer
+  (c/coercer Data {s/Keyword (coerce/safe #(kebab/->snake_case %))}))
+
+
+
+(->kebab-keys-coercer {[:f_o_o] :a_b :b_a_r {:b_a_z {:y_z #{'([:y_e_s])}}}})
+;; => {[:f-o-o] :a-b :b-a-r {:b-a-z {:y-z #{[[:y-e-s]]}}}}
+```

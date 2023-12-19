@@ -53,7 +53,7 @@ Another thing you are giving up is (remote) pairing support.
 
 Sticking to the docker mantra of one-service-per-container you will naturally build hybrid setups as described above (with the same drawbacks). You basically start on container for each service you want to use and connect to them as usual. It does make the setup extremely simple. Something like;
 
-```bash
+```sh
 $ boot2docker start
 $ docker run -d postgres
 $ docker run -d dockerfile/elasticsearch

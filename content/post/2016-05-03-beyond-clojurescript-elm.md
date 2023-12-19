@@ -10,7 +10,7 @@ tags:
 title: 'Beyond ClojureScript: Elm'
 ---
 
-This is a post in the [Beyond Clojure](http://martintrojer.github.io/categories.html#beyond-clojure-ref) blog series, in which a Clojure developer looks at typed languages for web app development. In this episode we look at front-end development in the language Elm.
+This is a post in the [Beyond Clojure](/categories/beyond-clojure/) blog series, in which a Clojure developer looks at typed languages for web app development. In this episode we look at front-end development in the language Elm.
 
 Front end development targeting web browsers is a ghetto, everybody seems to agree. The core tools at our disposal are the amalgamation of ideas and accidents thrown together without much overall strategy. One positive development in recent years has been the drastic improvement of the JavaScript (JS) engines in popular browsers. They have now gotten so good that its a valid option to treat JS as a compilation target. This fact is one of the drivers behind the explosion of JS transpilers, there are now literally hundreds of languages that (either primarily or as an after-though) can compile to JS. These languages range from light syntax improvements (ala [CoffeScript](http://coffeescript.org/)) to full blown languages with big runtimes and everything in between.
 
