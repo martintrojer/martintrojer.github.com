@@ -11,8 +11,6 @@ title: 'Book Review: Clojure Cookbook'
 
 {{< figure src="/assets/images/cookbook/cover.png" >}}
 
-<div style="float:right"><img style="padding: 10px" src="/assets/images/cookbook/cover.png"/></div>
-
 The Clojure Cookbook is part of the O'Reilly cookbook series. I'd describe this format as a 'curated wiki in print'. The wiki analogy is especially true for this volume since its contents was contributed by some 60 different developers. It's packed with small bite-sized recipes for solving common problems in Clojure. This is useful for developers in the entire spectrum from beginner to expert.
 
 <!--more-->

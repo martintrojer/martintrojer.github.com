@@ -3,9 +3,13 @@ layout: page
 title: About
 header: About the author
 group: navigation
+date: "2011-10-01"
 menus:
 - main
+weight: 1
 ---
+
+{{< figure src="/assets/images/martin.png" >}}
 
 I am Martin Trojer, a software contractor based in the UK, specializing in software development using functional programming languages such as Haskell, Purescript, Elm, and Clojure.
 

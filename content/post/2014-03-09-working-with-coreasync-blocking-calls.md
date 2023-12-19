@@ -16,8 +16,42 @@ But what is blocking anyway? If an API you are using claims to be non-blocking, 
 
 The only way to be sure is to measure / profile the functions you call inside your go blocks, under different circumstances; different loads of internal and external systems. Here's a neat little trick I used to clearly mark the functions I suspect with meta data, and then instrument and profile while the system is running.
 
-{{< gist martintrojer 9436582 blocking.clj >}}
+```clojure
 
-<script src="https://gist.github.com/martintrojer/9436582.js?file=blocking.clj"> </script>
+;; ------------------------
+
+(defn- log-time [{:keys [ns name line]} f & args]
+  (let [start   (System/nanoTime)
+        res     (apply f args)
+        elapsed (quot (- (System/nanoTime) start) 1000)]
+    (log/debug (format "%s/%s:%s %dus" ns name line elapsed))
+    res))
+
+(defn enable-timing [var]
+  (log/debug "enabling timings" var)
+  (robert.hooke/add-hook var (partial log-time (meta var))))
+
+(defn enable-timing-on-blocking-functions []
+  (->> (all-ns)
+       (mapcat ns-interns)
+       (map second)
+       (filter #(:blocking (meta %)))
+       ;; No dups
+       (remove #(:robert.hooke/hook (meta (deref %))))
+       (map enable-timing)
+       doall))
+
+;; ------------------------
+
+(defn- ^:blocking request-data [s]
+  (client/get (str "http://some.query?q=s") {:throw-exceptions true}))
+
+(defn get-data [s]
+  (async/go (try
+              (request-data s)
+              ;; catch and put exception on the channel
+              (catch Exception e
+                w))))
+```
 
 If you're interested in how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).

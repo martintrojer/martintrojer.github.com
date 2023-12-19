@@ -4,7 +4,7 @@ languageCode: en-us
 title: Martin Trojer
 theme: smol
 params:
-  subtitle: Ramblings on programming
+  subtitle: A computer programming blog
   dateFmt: 2006-01-02
 
 menus:

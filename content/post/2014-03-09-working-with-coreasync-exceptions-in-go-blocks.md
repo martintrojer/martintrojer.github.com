@@ -15,6 +15,29 @@ Dealing with exceptions in go blocks/threads is different from normal clojure co
 
 I find myself wanting to know the cause of problem at the consumer side of a channel. That means the go block needs to catch the exception, put it (the exception) on the channel before it dies. [David Nolen has written about this pattern](http://swannodette.github.io/2013/08/31/asynchronous-error-handling/), and I've been using the proposed `<?` quite happily.
 
-{{< gist martintrojer 9436582 throw-err.clj >}}
+```clojure
+(defn throw-err [e]
+  (when (instance? Throwable e) (throw e))
+  e)
+
+(defmacro <? [ch]
+  `(throw-err (async/<! ~ch)))
+
+(defn get-data [s]
+  (async/go (try
+              (client/get (str "http://some.query?q=s") {:throw-exceptions true})
+              ;; catch and put exception on the channel
+              (catch Exception e
+                e))))
+
+(async/go (try
+            (let [data      (<? (get-data "clojure"))
+                  more-data (<? (get-data "core.async")]
+              ;; process all data
+              )
+            ;; Handle exceptions for all '<? calls'
+            (catch Exception e
+              (log/error "error getting data"))))
+```
 
 If you're interested in how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).
