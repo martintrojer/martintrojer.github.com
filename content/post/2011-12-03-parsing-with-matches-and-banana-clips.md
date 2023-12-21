@@ -4,7 +4,7 @@ categories:
 date: "2011-12-03T00:00:00Z"
 description: ""
 tags:
-- f#
+- fsharp
 title: Parsing with Matches and Banana Clips
 ---
 

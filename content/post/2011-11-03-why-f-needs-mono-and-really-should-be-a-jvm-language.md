@@ -5,8 +5,8 @@ date: "2011-11-03T00:00:00Z"
 description: ""
 tags:
 - .net
-- c#
-- f#
+- csharp
+- fsharp
 - jvm
 - llvm
 - mono

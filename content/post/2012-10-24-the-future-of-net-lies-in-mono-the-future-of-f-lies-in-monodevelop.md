@@ -6,7 +6,7 @@ description: ""
 tags:
 - .net
 - mono
-- f#
+- fsharp
 title: The future of .NET lies in Mono. The future of F# lies in MonoDevelop.
 ---
 

@@ -24,6 +24,8 @@ Full source code available on <a href="https://github.com/martintrojer/frinj">gi
 
 To wet your apatite head straight over to the <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj">sample calculations</a> page to see what Frinj can do!
 
+Also check the [live clojuresript page](/frinj-demo/index.html)
+
 I also want to explain that despite it's name, Frinj was never intended to be a clone of Fink, and thus does not support the entire Frink language. But since it's a Clojure DSL, it doesn't have to!
 
 There was a couple of reasons I decided to create frinj;

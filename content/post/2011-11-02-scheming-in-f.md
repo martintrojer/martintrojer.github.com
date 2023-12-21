@@ -4,7 +4,7 @@ categories:
 date: "2011-11-02T00:00:00Z"
 description: ""
 tags:
-- f#
+- fsharp
 - sicp
 title: Scheming in F#
 ---

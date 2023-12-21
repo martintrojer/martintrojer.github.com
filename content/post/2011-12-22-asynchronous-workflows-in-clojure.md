@@ -6,7 +6,7 @@ description: ""
 tags:
 - .net
 - clojure
-- f#
+- fsharp
 - jvm
 title: Asynchronous workflows in Clojure
 ---

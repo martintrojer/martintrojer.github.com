@@ -4,15 +4,13 @@ categories:
 date: "2013-06-01T00:00:00Z"
 description: ""
 tags:
-- f#
+- fsharp
 - scala
 - clojure
 - sicp
 title: Scala and me
 ---
 {{< figure src="/assets/images/scalame/martin.png" class="floatright" >}}
-
-<div style="float:right"><img src="/assets/images/scalame/martin.png"/></div>
 
 This epic journey (yeah right) began at Uni with discovering the mighty [SICP](http://mitpress.mit.edu/sicp/), still the best book on programming I've read (and let's face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in [Scheme](http://plt-scheme.org/), [ELisp](http://en.wikipedia.org/wiki/Emacs_Lisp), [OCaml](http://ocaml.org/) every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren't very applicable to real-world software problems. While very clever and mind expanding, they seemed mainly an academic exercise. There were zero jobs out there using these languages. Heck, hardly anybody of my peers have heard nor cared about them.
 

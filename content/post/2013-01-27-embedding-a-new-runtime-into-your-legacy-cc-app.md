@@ -5,8 +5,8 @@ date: "2013-01-27T00:00:00Z"
 description: ""
 tags:
 - .net
-- c#
-- f#
+- csharp
+- fsharp
 - gnu
 - guile
 - javascript

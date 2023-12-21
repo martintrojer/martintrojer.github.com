@@ -6,8 +6,8 @@ description: ""
 tags:
 - .net
 - jvm
-- c#
-- f#
+- csharp
+- fsharp
 - mono
 - ocaml
 title: This year in F#

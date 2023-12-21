@@ -13,8 +13,6 @@ title: Clojure Hacking on the Samsung ARM Chromebook
 
 {{< figure src="/assets/images/chromebook/cb.jpg" >}}
 
-<p align="center"><img src="/assets/images/chromebook/cb.jpg"></p>
-
 I recently switched to the [Samsung ARM Chromebook](http://www.samsung.com/uk/consumer/pc-peripherals/chrome-devices/chrome-devices/XE303C12-A01UK) for all my laptop needs. The pitch it's quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it's quite limited RAM size, just 2GB. But with a decent swap file, I'm running multiple JVMs (with Datomic, Elasicsearch, [CLJS](https://github.com/clojure/clojurescript) compiler etc without any hickups).
 
 Out of the box it runs [ChromeOS](http://en.wikipedia.org/wiki/Google_Chrome_OS), which I have to say is pretty stellar for browsing and consuming content on the web. It is also possible to run any Linux you wish on this machine, google has an [outspoken strategy](http://www.chromium.org/chromium-os/chromiumos-design-docs/developer-mode) to enable it.

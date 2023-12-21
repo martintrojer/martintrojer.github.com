@@ -5,7 +5,7 @@ date: "2012-01-28T00:00:00Z"
 description: ""
 tags:
 - clojure
-- f#
+- fsharp
 - lisp
 - sicp
 title: Scheme as an external DSL in Clojure

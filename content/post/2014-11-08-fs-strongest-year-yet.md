@@ -5,7 +5,7 @@ date: "2014-11-08T00:00:00Z"
 description: ""
 tags:
 - .net
-- f#
+- fsharp
 - mono
 title: F#'s strongest year yet
 ---

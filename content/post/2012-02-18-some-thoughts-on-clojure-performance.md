@@ -5,9 +5,9 @@ date: "2012-02-18T00:00:00Z"
 description: ""
 tags:
 - .net
-- c#
+- csharp
 - clojure
-- f#
+- fsharp
 - javascript
 - jvm
 - mono

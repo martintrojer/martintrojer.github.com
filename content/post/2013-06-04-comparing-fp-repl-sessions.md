@@ -6,10 +6,9 @@ description: ""
 tags:
 - scala
 - clojure
-- f#
+- fsharp
 title: Comparing FP REPL Sessions
 ---
-{% include JB/setup %}
 
 Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.
 

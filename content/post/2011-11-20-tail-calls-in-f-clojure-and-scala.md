@@ -6,7 +6,7 @@ description: ""
 tags:
 - .net
 - clojure
-- f#
+- fsharp
 - jvm
 - scala
 title: Tail Calls in F#, Clojure and Scala
@@ -28,8 +28,6 @@ let rec sum n =
 This implementation is both very easy to understand and correct, so what's the problem? Well, this implementation is not "tail recursive". A tail recursive function has the recursive call at it's tail and noting else (immediately returning the result of the call). In this case the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results "bubble up".
 
 {{< figure src="/assets/images/tailcalls/recur1.png" >}}
-
-<p align="center"><img src="/assets/images/tailcalls/recur1.png"></p>
 
 When n is large this will lead to a “Stack Overflow” exception
 
