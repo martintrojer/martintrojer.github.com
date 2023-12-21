@@ -9,7 +9,7 @@ menus:
 weight: 1
 ---
 
-{{< figure src="/assets/images/martin.png" >}}
+{{< figure src="/assets/images/martin.png" class="floatright" >}}
 
 I am Martin Trojer, a software contractor based in the UK, specializing in software development using functional programming languages such as Haskell, Purescript, Elm, and Clojure.
 
