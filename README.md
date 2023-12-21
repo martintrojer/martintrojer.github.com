@@ -15,7 +15,7 @@ $ git push
 $ git checkout master
 
 $ cd public
-$ cp -r * ../
+$ yes | cp -r * ..
 
 $ git add .
 $ git commit
