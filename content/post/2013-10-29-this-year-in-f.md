@@ -13,7 +13,7 @@ tags:
 title: This year in F#
 ---
 
-For the third year running, here's my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what's been happening was on my wish-list outlined in [last year's post](http://martintrojer.github.io/fsharp/2012/10/24/the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/). What are the highlights?
+For the third year running, here's my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what's been happening was on my wish-list outlined in [last year's post]({{< ref "2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop.md" >}}. What are the highlights?
 
 <!--more-->
 

@@ -39,7 +39,7 @@ For the issue of launch time for production programs a number of solutions have 
 * [Rich Hickey Clojure/Conj 2011 keynote](https://www.youtube.com/watch?v=I5iNUtrYQSM)
 * [Clojure and Android - Daniel Solano Gomez](https://www.youtube.com/watch?v=1NptqU3bqZE)
 * [Daniel Solano Gomez - How Clojure Works: Understanding the Clojure Runtime](https://www.youtube.com/watch?v=8NUI07y1SlQ)
-* [Some thought on Clojure Performance](http://martintrojer.github.io/clojure/2012/02/18/some-thoughts-on-clojure-performance/)
+* [Some thought on Clojure Performance]({{< ref "2012-02-18-some-thoughts-on-clojure-performance.md" >}})
 * [The (Clojure) "JVM Slow Startup Time" Myth](http://nicholaskariniemi.github.io/2014/02/11/jvm-slow-startup.html)
 * [Why is Clojure bootstrapping so slow?](http://nicholaskariniemi.github.io/2014/02/25/clojure-bootstrapping.html)
 * [Solving Clojure Boot Time](http://nicholaskariniemi.github.io/2014/03/19/solving-clojure-boot-time.html)

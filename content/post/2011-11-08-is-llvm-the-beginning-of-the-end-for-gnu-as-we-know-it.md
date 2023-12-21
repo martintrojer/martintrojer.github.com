@@ -23,4 +23,4 @@ However, there's a new kid on the open source compiler block, and it's called [L
 
 Apple is the main benefactor of the LLVM project, and they have already replaced GCC as the default compiler in XCode4. GDB to being swapped over pretty soon as well. With Apple "gone", how long will it take for the Linux community to switch over? The technical inertia should be small, since the Clang boys has gone for drop-in GCC replacement capability. If the technical benefits are there, I think the switch should be pretty rapid.
 
-GNU without GCC is less relevant, the "GNU percentage" will drop even further. I believe we are witnessing the beginning of the end for GNU, at least in the form we know it.&nbsp;The free software foundation still has a role to play, as opinion makers, lobbyists and evangelists of the GPL.
+GNU without GCC is less relevant, the "GNU percentage" will drop even further. I believe we are witnessing the beginning of the end for GNU, at least in the form we know it. The free software foundation still has a role to play, as opinion makers, lobbyists and evangelists of the GPL.

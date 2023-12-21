@@ -38,7 +38,7 @@ First off, the race conditions; if the log is simply a file, or a in-memory data
 Please note that when emitting with timestamps, we take a snapshot of the time instantly (in the context of the calling thread), not in the agent-thread context later on.
 
 ### Tree Logging
-How do we apply structure to the log data? One idea is to put the log data into a tree instead of a flat vector (or file). &nbsp;Then log entries from different subsystems can be separated (for easier post-processing), and we can express dependancy between log events for latency calculations.
+How do we apply structure to the log data? One idea is to put the log data into a tree instead of a flat vector (or file). Then log entries from different subsystems can be separated (for easier post-processing), and we can express dependancy between log events for latency calculations.
 
 Lets say each log entry is associated with one id and multiple correlation ids. The id is typically an UUID which you assign to a request, operation, instruction that "travels" through multiple parts of your system. The correlation ids can be used a splitting your logs into categories of arbitrary depth, yield possibly more meaningful reports etc.
 

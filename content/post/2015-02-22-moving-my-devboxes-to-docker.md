@@ -8,7 +8,7 @@ tags:
 - devops
 title: Moving my devboxes to Docker
 ---
-I've been quite vocal about my opinions on development environments and automating the creation of them [on this blog](http://martintrojer.github.io/clojure/2014/12/04/developing-clojure-in-the-cloud/) and [elsewhere](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud). Boiling it down to the 2 points I feel most strongly about it would be;
+I've been quite vocal about my opinions on development environments and automating the creation of them [on this blog]({{< ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [elsewhere](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud). Boiling it down to the 2 points I feel most strongly about it would be;
 
 1. Always develop in a production-like environment
 2. Automate the creation of these environments

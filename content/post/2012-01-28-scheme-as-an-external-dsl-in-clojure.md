@@ -82,7 +82,7 @@ Now that we have our list of expressions we can evaluate it (or run it). I use t
   (f args env))
 ```
 
-One trick I use is to store all built-in functions (as closures) in an environment map. So when we evaluate a combination like \[:+ 1 1\] the head of that vector (:+) is looked up in the environment and a fn is returned and punted over to apply.&nbsp;User defined functions are represented by lists in the environment and become a separate cond-case in the code above.
+One trick I use is to store all built-in functions (as closures) in an environment map. So when we evaluate a combination like \[:+ 1 1\] the head of that vector (:+) is looked up in the environment and a fn is returned and punted over to apply. User defined functions are represented by lists in the environment and become a separate cond-case in the code above.
 
 In the interpreter then environment is a stack of maps, with ["roots" at the bottom](https://github.com/martintrojer/scheme-clojure/blob/master/external/src/mtscheme/interpreter.clj#L226) containing all the built-in functions. When evaluating a let statement for instance, the locals are added to a new environment map at the top of the stack, in this way bindings can be overloaded in the local context. This is also how the arguments to functional calls are bound (and how recursion can terminate).
 

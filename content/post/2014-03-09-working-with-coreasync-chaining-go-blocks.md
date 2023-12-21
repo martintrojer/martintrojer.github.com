@@ -10,7 +10,7 @@ tags:
 title: 'Working with core.async: Chaining go blocks'
 ---
 
-One particularly annoying difference between the core.async and [Go](http://golang.org) is that you can't wrap function calls with the `go` macro. This is due to implementation details of core.async, which can only see the body 'inside' the macro and not the functions it may call. This is obviously not a problem if the called function doesn't interact with any channels, but if it does when you might be in trouble. I've touched on this subject in a [previous post](http://martintrojer.github.io/clojure/2013/07/17/non-tailrecursive-functions-in-coreasync/).
+One particularly annoying difference between the core.async and [Go](http://golang.org) is that you can't wrap function calls with the `go` macro. This is due to implementation details of core.async, which can only see the body 'inside' the macro and not the functions it may call. This is obviously not a problem if the called function doesn't interact with any channels, but if it does when you might be in trouble. I've touched on this subject in a [previous post]({{< ref "2013-07-17-non-tailrecursive-functions-in-coreasync.md" >}}).
 
 <!--more-->
 
@@ -51,7 +51,7 @@ This is all fine and well, but lets say the calculation function also needs to w
 ;; => nil
 ```
 
-Nope, you can't to that, `Assert failed: <! used not in (go ...) block`. It's also 'returns' nil, [explained in this post](http://martintrojer.github.io/clojure/2014/03/09/working-with-coreasync-exceptions-in-go-blocks/). Let's try another way;
+Nope, you can't to that, `Assert failed: <! used not in (go ...) block`. It's also 'returns' nil, [explained in this post]({{< ref "2014-03-09-working-with-coreasync-exceptions-in-go-blocks.md" >}}). Let's try another way;
 
 ```clojure
 (defn calculation-go2 [ch]

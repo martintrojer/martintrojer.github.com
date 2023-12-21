@@ -9,7 +9,7 @@ tags:
 title: 'Working with core.async: Exceptions in go blocks'
 ---
 
-Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks -- all your exceptions are gone! Since the body of a go block is run on a thread pool, it's not much we can do with an exception, thus core.async will just eat them and close the channel. That's what happened in the second snippet [in this post](http://martintrojer.github.io/clojure/2014/03/09/working-with-coreasync-chaining-go-blocks/). The `nil` result is because the channel we read from is closed.
+Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks -- all your exceptions are gone! Since the body of a go block is run on a thread pool, it's not much we can do with an exception, thus core.async will just eat them and close the channel. That's what happened in the second snippet [in this post]({{< ref "2014-03-09-working-with-coreasync-chaining-go-blocks.md" >}}). The `nil` result is because the channel we read from is closed.
 
 <!--more-->
 

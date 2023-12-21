@@ -17,7 +17,7 @@ By reading the title of this post you might think this entry is about using some
 
 ## Background
 
-Let me set the scene, I tend to do all my development inside VMs and/or Docker containers. Why? well see [here](http://martintrojer.github.io/clojure/2014/12/04/developing-clojure-in-the-cloud/) and [here](http://martintrojer.github.io/software/2015/02/22/moving-my-devboxes-to-docker/). My host OS is OSX and my guests Linux, I use [VirtualBox](http://virtualbox.org) for local VM-ing. After upgrading to OSX 10.10 I saw strange glitches when using Emacs terminal-mode in my VMs;
+Let me set the scene, I tend to do all my development inside VMs and/or Docker containers. Why? well see [here]({{ ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [here]({{< ref "2015-02-22-moving-my-devboxes-to-docker.md" >}}). My host OS is OSX and my guests Linux, I use [VirtualBox](http://virtualbox.org) for local VM-ing. After upgrading to OSX 10.10 I saw strange glitches when using Emacs terminal-mode in my VMs;
 
 {{< figure src="/assets/images/emacs/garbled.png" >}}
 

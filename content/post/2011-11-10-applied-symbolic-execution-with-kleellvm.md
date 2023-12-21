@@ -13,7 +13,7 @@ tags:
 title: Applied Symbolic Execution with KLEE/LLVM
 ---
 
-This article serves as a follow-up to my previous post on symbolic execution, which can be found [here](/software/2011/11/02/symbolic-execution). In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.
+This article serves as a follow-up to my previous post on symbolic execution, which can be found [here]({{< ref "2011-11-02-symbolic-execution.md" >}}). In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.
 
 If you're interested in the changes we made for KLEE and LLVM, you can find them on [GitHub](https://github.com/martintrojer/symbolic-execution).
 

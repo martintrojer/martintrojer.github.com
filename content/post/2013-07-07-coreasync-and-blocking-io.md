@@ -10,7 +10,7 @@ tags:
 title: core.async and Blocking IO
 ---
 
-Some time ago I wrote about [Asynchronous workflows in Clojure](http://martintrojer.github.io/clojure/2011/12/22/asynchronous-workflows-in-clojure/). With the recent release and excitement of [core.async](https://github.com/clojure/core.async), I though it a good time to revisit that post.
+Some time ago I wrote about [Asynchronous workflows in Clojure]({{< ref "2011-12-22-asynchronous-workflows-in-clojure.md" >}}). With the recent release and excitement of [core.async](https://github.com/clojure/core.async), I though it a good time to revisit that post.
 
 While there are already some good example and comparison-with-[go](http://golang.org) posts out there, I'd like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It's important to understand the implications of blocking IO and it's effects on 'async code', in this case core.async.
 

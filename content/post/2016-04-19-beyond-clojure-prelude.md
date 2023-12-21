@@ -70,7 +70,7 @@ The killer app for dynlangs is the `eval` call, which enables REPLs. The data-ce
 
 In Clojure you start off as a single developer in the REPL and the first week you are tremendously productive. You have the entire program in your head, you are whizzing around without any blockers, like type checkers pointing out your logical fallacies. The problems comes later, when you want more people working on the code or if you get back to it a few weeks later; "What the hell was I thinking here?".
 
-All is not lost in typed land however, the languages I'm looking at do have REPLs (not using the strictest meaning of the word, but still, close enough). Further, F# is moving the needle with something called [type providers](https://msdn.microsoft.com/en-us/library/hh156509.aspx). I'm convinced this is a big deal, [here is an example](http://martintrojer.github.io/fsharp/2013/06/04/comparing-fp-repl-sessions). The difference is that while still being reasonably productive, you are building on a solid foundation.
+All is not lost in typed land however, the languages I'm looking at do have REPLs (not using the strictest meaning of the word, but still, close enough). Further, F# is moving the needle with something called [type providers](https://msdn.microsoft.com/en-us/library/hh156509.aspx). I'm convinced this is a big deal, [here is an example]({{< ref "2013-06-04-comparing-fp-repl-sessions.md" >}}). The difference is that while still being reasonably productive, you are building on a solid foundation.
 
 # Beyond Clojure
 

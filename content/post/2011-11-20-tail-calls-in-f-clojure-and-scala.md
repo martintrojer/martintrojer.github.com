@@ -12,7 +12,7 @@ tags:
 title: Tail Calls in F#, Clojure and Scala
 ---
 
-I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings.&nbsp;If you're new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
+I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you're new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
 
 TCO is a well documented topic in books and articles about functional programming and the TCO in .NET and the lack their of in the JVM has been debated "to death" on various programmer's boards. I don't indend to add any fuel to the fire here, rather some background and practical implications.
 

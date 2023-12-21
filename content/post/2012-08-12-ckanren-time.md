@@ -52,7 +52,7 @@ If you've followed this blog, you've perhaps seen my previous posts on solving N
 ```
 
 
-distinctfd (with infd) is a really nice addition to core.logic, they really help me personally write logic programs. How does this code perform? It's very similar in speed compared to the (non-fd) core.logic solution described in my [previous posting](/clojure/2012/07/17/replicating-datomicdatalog-queries-with-corelogic-take-2/), not bad, all extra cKanren expressive power without any performance drop!
+distinctfd (with infd) is a really nice addition to core.logic, they really help me personally write logic programs. How does this code perform? It's very similar in speed compared to the (non-fd) core.logic solution described in my [previous posting]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}}), not bad, all extra cKanren expressive power without any performance drop!
 
 ### Sudoku time
 How would you use core.logic to solve sudoku? Let's start by looking at a simple all-Clojure functional solution;

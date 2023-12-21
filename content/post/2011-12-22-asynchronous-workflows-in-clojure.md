@@ -123,7 +123,7 @@ def result (agent []))
      (fn[r] (send result #(conj % (:body r)))))))
 ```
 
-Errors will propagate on the result channel, so they can be handled in one place.&nbsp;Lamina also provides an async macro, taking is a little bit further to the F# example above.
+Errors will propagate on the result channel, so they can be handled in one place. Lamina also provides an async macro, taking is a little bit further to the F# example above.
 
 ```clojure
 

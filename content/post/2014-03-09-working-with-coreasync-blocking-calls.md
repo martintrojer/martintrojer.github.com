@@ -8,7 +8,7 @@ tags:
 - core.async
 title: 'Working with core.async: Blocking calls'
 ---
-You can't do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block -- *all* go blocks will stop! For a more in-depth explanation see [this previous post](http://martintrojer.github.io/clojure/2013/07/07/coreasync-and-blocking-io/).
+You can't do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block -- *all* go blocks will stop! For a more in-depth explanation see [this previous post]({{< ref "2013-07-07-coreasync-and-blocking-io.md" >}}).
 
 <!--more-->
 

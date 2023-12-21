@@ -9,7 +9,7 @@ tags:
 title: 'Beyond Clojure: Haskell'
 ---
 
-This is a post in the [Beyond Clojure](http://martintrojer.github.io/categories.html#beyond-clojure-ref) blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.
+This is a post in the  [Beyond Clojure](/categories/beyond-clojure/) blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.
 
 If you are interested in typed functional languages one stands taller than the rest. Its impossible not to get sucked into the Haskell vortex, but why fight it? In spite of its reputation of being extremely hard to learn and even harder to master, there are several excellent resources out there and you are guaranteed to learn a lots of very valuable lessons.
 
