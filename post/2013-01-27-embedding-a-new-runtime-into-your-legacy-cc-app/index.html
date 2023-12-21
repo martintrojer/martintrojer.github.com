@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Embedding a new runtime into your legacy C/C&#43;&#43; app</h1>
+			<b><time>2013-01-27</time></b>
+		       
+		           <a href="/tags/.net">.net</a>
+        	       
+		           <a href="/tags/csharp">csharp</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/gnu">gnu</a>
+        	       
+		           <a href="/tags/guile">guile</a>
+        	       
+		           <a href="/tags/javascript">javascript</a>
+        	       
+		           <a href="/tags/lisp">lisp</a>
+        	       
+		           <a href="/tags/lua">lua</a>
+        	       
+		           <a href="/tags/mono">mono</a>
+        	       
+
+			<div>
+				<p>Let&rsquo;s say you have a big / legacy C++ app, then you&rsquo;re undoubtedly covered by <a href="http://en.wikipedia.org/wiki/Greenspun's_tenth_rule">Greenspun&rsquo;s tenth rule</a>. Let&rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?</p>
+<p>As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular. There are famous examples from gaming where <a href="http://en.wikipedia.org/wiki/Game_Oriented_Assembly_Lisp">Lisps</a> and <a href="http://www.wowwiki.com/Lua">Lua</a> are widely used.</p>
+<p>In this post I&rsquo;ll focus on 4 options; <a href="http://www.mono-project.com/Main_Page">Mono</a>, <a href="http://code.google.com/p/v8/">JavaScript / v8</a>, <a href="http://www.gnu.org/software/guile/">Guile</a> and <a href="http://www.lua.org/">Lua</a>. I only picked runtimes where true &lsquo;scripting&rsquo; is possible, thus all of them are managed environments with garbage collection. I will try to categorize these 4 with some key metrics that is of interest when embedded runtimes. I assume that you need to &ldquo;properly&rdquo; embed these runtimes, i.e. creating a RESTful micro service is not an option.</p>
+<p>Benchmarking figures for most of these runtimes are available on <a href="http://benchmarksgame.alioth.debian.org/">Alioth</a>.</p>
+<h3 id="option-1-heavy-weight-full-blown-generic-runtime---mono-net">Option 1/ Heavy-weight full blown generic runtime - Mono (.NET)</h3>
+<p>Mono is an open-source implementation of the <a href="http://msdn.microsoft.com/en-us/vstudio/aa569283.aspx">Microsoft&rsquo;s Common Language Runtime (CLR)</a> and a few tools such as a C# compiler etc. The project has been going for 8 years now and has been making steady progress. Version 3 introduced a new <a href="http://www.mono-project.com/Generational_GC">generational garbage collector</a>, and overall it&rsquo;s performant and stable. It is possible to <a href="http://www.mono-project.com/Embedding_Mono">embed into your application</a>, but you have to realise that Mono/CLR is a generic VM specified at byte-code level. It&rsquo;s intended to be the target of many languages compilers, even if C# is the most commonly known. .NET is one of the corner-stones of Windows, so it comes with mechanisms for versioning and signing it&rsquo;s &ldquo;assemblies&rdquo; (executables / libraries) and storing them in a central depot (the global assembly cache, GAC). Mono includes most of these features as well.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pros</td>
+<td>- General purpose, supports many languages</td>
+</tr>
+<tr>
+<td></td>
+<td>- Speed</td>
+</tr>
+<tr>
+<td></td>
+<td>- Big eco-system with <a href="https://www.nuget.org">ready-made libraries</a></td>
+</tr>
+<tr>
+<td></td>
+<td>- Multi threaded applications</td>
+</tr>
+<tr>
+<td></td>
+<td>- Great IDE support</td>
+</tr>
+<tr>
+<td>Cons</td>
+<td>- Big</td>
+</tr>
+<tr>
+<td></td>
+<td>- Somewhat clunky <a href="https://www.mono-project.com/docs/advanced/pinvoke/">interrop with native code</a></td>
+</tr>
+<tr>
+<td></td>
+<td>- Assemblies needs to be stored/shipped in binar form, not as simple scripts</td>
+</tr>
+<tr>
+<td></td>
+<td>- No natural way to work with the GAC from the embedded VM</td>
+</tr>
+<tr>
+<td></td>
+<td>- C# and F# are statically typed languages (might not be a great fit for scripting purposes)</td>
+</tr>
+<tr>
+<td></td>
+<td>- Hard to static-link (embed) into your app</td>
+</tr>
+<tr>
+<td>Size of (static-linked) hello world example</td>
+<td>12MB</td>
+</tr>
+<tr>
+<td>Time of running hello world example</td>
+<td>70ms</td>
+</tr>
+<tr>
+<td>License</td>
+<td>LGPL</td>
+</tr>
+<tr>
+<td>Future proof (10 years from now)</td>
+<td>3 out of 5</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The static-link issue can be a major headache when embedding Mono. Other than this it&rsquo;s a very powerful and stable runtime. Mono can also use LLVM for it&rsquo;s JIT code generation making is suitable for many different CPU architectures. The fact that C# and F# &ldquo;scripts&rdquo; need to be shipped / stored as binary assemblies can be a deal-breaker if you&rsquo;re looking for a easily editable/patchable script solution. Note that this is only true for the compiled CLR languages as C# / F#, IronPython/Clojure for instance can be shipped in source.</p>
+<h3 id="option-2-medium-weight-not-so-generic-runtime---javascript-v8">Option 2/ Medium-weight, not-so generic runtime - Javascript V8</h3>
+<p>Javascript is <a href="http://www.tiobe.com/index.php/content/paperinfo/tpci/index.html">huge language nowadays</a> and the runtime implementations in the big browsers (except maybe IE) are now very sofisticated and fast. In fact, <a href="http://benchmarksgame.alioth.debian.org/u32/benchmark.php?test=all&amp;lang=v8&amp;lang2=csharp">v8 is on par with Mono/C#</a>, that is a quite astonishing fact if you consider the nature of the Javascript language and what v8 has to do in order to run that fast. V8 has been <a href="https://developers.google.com/v8/get_started">designed to be embeddable</a> and offers also <a href="https://developers.google.com/v8/embed">nice and easy interrop</a>.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pros</td>
+<td>- Fast</td>
+</tr>
+<tr>
+<td></td>
+<td>- Small</td>
+</tr>
+<tr>
+<td></td>
+<td>- Wide industry usage</td>
+</tr>
+<tr>
+<td></td>
+<td>- Big ecosystem (node.js is a great source)</td>
+</tr>
+<tr>
+<td></td>
+<td>- Easy to embed / interrop (again, node.js is a great example)</td>
+</tr>
+<tr>
+<td></td>
+<td>- Reads scripts in source format so they can be stored/shipped in that manner</td>
+</tr>
+<tr>
+<td></td>
+<td>- Dynamically typed</td>
+</tr>
+<tr>
+<td></td>
+<td>- Huge industry uptake, you can safely assume that all your new devs will know it</td>
+</tr>
+<tr>
+<td>Cons</td>
+<td>- Single threaded</td>
+</tr>
+<tr>
+<td></td>
+<td>- <a href="http://www.youtube.com/watch?v=kXEgk1Hdze0">Quirky syntax and other language artefacts</a></td>
+</tr>
+<tr>
+<td>Size of (static-linked) hello world example</td>
+<td>5.5MB</td>
+</tr>
+<tr>
+<td>Time of running hello world example</td>
+<td>25ms</td>
+</tr>
+<tr>
+<td>License</td>
+<td>New BSD License</td>
+</tr>
+<tr>
+<td>Future proof (10 years from now)</td>
+<td>5 out of 5</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Due to the fact that all browsers can run javascript, the language have unmatched reach. Over the last couple of years it has become the &ldquo;bytecode of the web&rdquo;, meaning that lots of languages/compilers has emerged that targets javascript. For example; <a href="http://coffeescript.org/">CoffeScript</a>, <a href="https://github.com/clojure/clojurescript">ClojureScript</a>, <a href="http://www.typescriptlang.org/">TypeScript</a> to mention just a few.</p>
+<h3 id="option-3-medium-weight-generic-runtime---guile">Option 3/ Medium-weight, generic runtime - Guile</h3>
+<p>Guile is the official extension language in the GNU universe. Originally it&rsquo;s been a <a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a>, but with guile2.0 parsers for Javascript, <a href="http://en.wikipedia.org/wiki/Emacs_Lisp">Emacs lisp</a> was added. Support for Lua is also in the works. The idea is to expose the innards of your app to scheme programs, in the form of Scheme functions, and thus making it possible for you and your users to use the software in a very flexible way.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pros</td>
+<td>- Good interrop</td>
+</tr>
+<tr>
+<td></td>
+<td>- Very powerful language</td>
+</tr>
+<tr>
+<td></td>
+<td>- Dynamically typed</td>
+</tr>
+<tr>
+<td>Cons</td>
+<td>- Quite slow, order of magnitude slower than Mono/v8</td>
+</tr>
+<tr>
+<td></td>
+<td>- Hard to static-link (embed) into your app</td>
+</tr>
+<tr>
+<td></td>
+<td>- Small ecosystem of ready-made libraries</td>
+</tr>
+<tr>
+<td></td>
+<td>- Restrictive licensing</td>
+</tr>
+<tr>
+<td>Size of (static-linked) hello world example</td>
+<td>5MB</td>
+</tr>
+<tr>
+<td>Time of running hello world example</td>
+<td>20ms</td>
+</tr>
+<tr>
+<td>License</td>
+<td>GPL</td>
+</tr>
+<tr>
+<td>Future proof (10 years from now)</td>
+<td>5 out of 5</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Picking a Lisp for you scripting might seem controversial, but the level of expressiveness it gives in unmatched by any other language. If licensing is problem, there are other Scheme implementations worth considering, <a href="http://www.call-cc.org/">Chicken</a>, <a href="http://gambitscheme.org/wiki/index.php/Main_Page">Gambit</a>, <a href="http://www-sop.inria.fr/indes/fp/Bigloo/">Bigloo</a>. <a href="http://www.cs.utah.edu/%7Emflatt/benchmarks-20100126/log3/Benchmarks.html">Guile tends to be slowest</a> of them all. Guile also shares some of the headaches with Mono when it comes to static compile it into your app.</p>
+<h3 id="option-4-light-weight-single-language-runtime---lua">Option 4/ Light-weight, single-language runtime - Lua</h3>
+<p>Lua is a popular embedded scripting language in games (<a href="http://www.wowwiki.com/Lua">world of warcraft</a>) and many embedded systems. It&rsquo;s extremely small and draws a lot of it&rsquo;s power from it&rsquo;s simplicity. It&rsquo;s also very easy to interrop with your existing code. Lua was specifically designed to be embedded and interrop easily.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pros</td>
+<td>- Extremely lightweight</td>
+</tr>
+<tr>
+<td></td>
+<td>- Amazing interrop</td>
+</tr>
+<tr>
+<td></td>
+<td>- Simple yet powerful language</td>
+</tr>
+<tr>
+<td></td>
+<td>- Broad industry uptake</td>
+</tr>
+<tr>
+<td></td>
+<td>- Dynamically typed</td>
+</tr>
+<tr>
+<td>Cons</td>
+<td>- Slow (about 30x slower than v8/mono)</td>
+</tr>
+<tr>
+<td></td>
+<td>- Single threaded</td>
+</tr>
+<tr>
+<td></td>
+<td>- Small ecosystem of ready-made libraries</td>
+</tr>
+<tr>
+<td>Size of (static-linked) hello world example</td>
+<td>198KB</td>
+</tr>
+<tr>
+<td>Time of running hello world example</td>
+<td>12ms</td>
+</tr>
+<tr>
+<td>License</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>Future proof (10 years from now)</td>
+<td>5 out of 5</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The slowness of Lua has been adressed in the <a href="http://luajit.org/">LuaJIT project</a>, which indeed produces some very impressive numbers, well worth a look.</p>
+<h3 id="summary">Summary</h3>
+<p>While these 4 aren&rsquo;t a complete list, I believe they cover many bases. Other popular embeddable languages include Python and Ruby, I&rsquo;d put them in the same group as Guile when it comes to complexity and performance. The safest option in most cases is IMHO Javascript / v8. It&rsquo;s got the speed, industry acceptance and developer familiarity. If you have a resource constrained system, Lua is very attractive. Finally, if you&rsquo;re looking for maximum expressiveness in your embedded language Scheme/Guile is hard to beat.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

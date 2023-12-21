@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Replicating Datomic/Datalog queries with core.logic</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Replicating Datomic/Datalog queries with core.logic</h1>
+			<b><time>2012-07-16</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.logic">core.logic</a>
+        	       
+		           <a href="/tags/datomic">datomic</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve been toying with <a href="http://datomic.com/">Datomic</a> recently, and I particularly like the power of it&rsquo;s query language (~<a href="http://en.wikipedia.org/wiki/Datalog">Datalog</a>). Mr <a href="https://twitter.com/stuarthalloway">Halloway</a> showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, <a href="https://gist.github.com/2645453">gist here</a>. Here is an example from that page of a simple join;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>A question you might ask yourself is how can I use <a href="https://github.com/clojure/core.logic">core.logic</a> to do the same kind of queries? It turns out that it&rsquo;s pretty straight forward, and also very fast. Core.logic provides some convenient helper functions for <a href="https://github.com/clojure/core.logic#unification">unification</a>, that we are going to use. Here&rsquo;s an example of how to get a binding map for some logical variables over a collection;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">binding-map</span> <span style="color:#f92672">&#39;</span>(<span style="color:#a6e22e">?first</span> ?last) [<span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;Doe&#34;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; {?last &#34;Doe&#34;, ?first &#34;John&#34;}</span>
+</span></span></code></pre></div><p>Let&rsquo;s write a little helper function that maps binding-map over all elements of a seq (of tuples) (I&rsquo;m using binding-map* so I only need to prep the rule once)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>query [rule xs]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[prule (<span style="color:#a6e22e">prep</span> rule)]
+</span></span><span style="display:flex;"><span>    (map <span style="color:#f92672">#</span>(<span style="color:#a6e22e">binding-map*</span> prule (<span style="color:#a6e22e">prep</span> %)) xs)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">query</span> <span style="color:#f92672">&#39;</span>(<span style="color:#a6e22e">?answer</span>) (<span style="color:#a6e22e">repeatedly</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">#</span>(vector <span style="color:#ae81ff">42</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ({?answer 42} {?answer 42} {?answer 42} {?answer 42} {?answer 42})</span>
+</span></span></code></pre></div><p>We can use clojure.set/join to perform the natural join of 2 sets of binding maps like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>join-test [xs ys]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[rx (<span style="color:#a6e22e">query</span> <span style="color:#f92672">&#39;</span>(<span style="color:#a6e22e">?last</span> ?first ?email) xs)
+</span></span><span style="display:flex;"><span>        ry (<span style="color:#a6e22e">query</span> <span style="color:#f92672">&#39;</span>(<span style="color:#a6e22e">?email</span> ?height) ys)
+</span></span><span style="display:flex;"><span>        r (<span style="color:#a6e22e">clojure.set/join</span> rx ry)]
+</span></span><span style="display:flex;"><span>    (map (<span style="color:#a6e22e">juxt</span> <span style="color:#e6db74">&#39;?first</span> <span style="color:#e6db74">&#39;?height</span>) r)))
+</span></span></code></pre></div><p>Note that I also pick out just the first/height lvars here, this corresponds to the :find clause in the datomic query. That&rsquo;s it really, not as generic (and data driven) as the datomic query, but working;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">join-test</span>
+</span></span><span style="display:flex;"><span> [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>  [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span> [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>  [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;John&#34; 71] [&#34;Jane&#34; 73])</span>
+</span></span></code></pre></div><p>Here&rsquo;s the kicker, for this join query the datomic.api/q&rsquo;s time complexity estimates to O(n2) (actually 22n2-50n) where as the time complexity for core.logic/unify + clojure.set/join solution is O(n) (10n). That means that for a run over a modest dataset of size 5000 the <strong>difference is 50x</strong>!</p>
+<p><em>Edit</em>: The Datomic query used in the benchmark is not optimal as it turns out. In the example below you&rsquo;ll see a more optimal version that&rsquo;s infact ~18x faster than the core.logic + clojure.set/join solution.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>bench [n f]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[rand-str <span style="color:#f92672">#</span>(str (<span style="color:#a6e22e">java.util.UUID/randomUUID</span>))
+</span></span><span style="display:flex;"><span>        emails (<span style="color:#a6e22e">repeatedly</span> n rand-str)
+</span></span><span style="display:flex;"><span>        name-email (reduce (<span style="color:#66d9ef">fn </span>[res em]
+</span></span><span style="display:flex;"><span>                             (conj res (vector (<span style="color:#a6e22e">rand-str</span>) (<span style="color:#a6e22e">rand-str</span>) em)))
+</span></span><span style="display:flex;"><span>                           [] emails)
+</span></span><span style="display:flex;"><span>        email-height (reduce (<span style="color:#66d9ef">fn </span>[res em]
+</span></span><span style="display:flex;"><span>                               (conj res (vector em (rand-int <span style="color:#ae81ff">100</span>))))
+</span></span><span style="display:flex;"><span>                             [] emails)]
+</span></span><span style="display:flex;"><span>    (time (count (<span style="color:#a6e22e">f</span> name-email email-height)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> (partial q <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 14757.248824 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> join-test)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 185.604 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Optimised Datomic query</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> (partial q <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:in</span> $a $b
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:where</span> [$a ?last ?first ?email] [$b ?email ?height]]))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 10.869 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span></code></pre></div><p>Obviously this little example doesn&rsquo;t convey the true power of either datomic/datalog or core.logic/unifier. Be careful writing your Datomic queries, the running time can be vastly different!</p>
+<p><a href="https://gist.github.com/3122375">Here some more of the datomic queries converted in a similar fashion</a>.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

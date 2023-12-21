@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Is LLVM the beginning of the end for GNU (as we know it)?</h1>
+			<b><time>2011-11-08</time></b>
+		       
+		           <a href="/tags/clang">clang</a>
+        	       
+		           <a href="/tags/gcc">gcc</a>
+        	       
+		           <a href="/tags/gnu">gnu</a>
+        	       
+		           <a href="/tags/llvm">llvm</a>
+        	       
+
+			<div>
+				<p><a href="http://en.wikipedia.org/wiki/GNU_Project">GNU</a> and <a href="http://en.wikipedia.org/wiki/Richard_stallman">Richard Stallman</a> was a real catalyst for the open source movement and it&rsquo;s crown jewel; the Linux kernel. Not only did <a href="http://en.wikipedia.org/wiki/Linus_Torvalds">Mr Torvalds</a> early Linux releases have near 100% GNU &ldquo;user-land&rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&rsquo;s head with the <a href="http://en.wikipedia.org/wiki/Copyleft">copy-left</a> licenses. The <a href="http://www.fsf.org/">Free Software Foundation</a>, the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.</p>
+<p>As the years have progressed, the &ldquo;<a href="http://pedrocr.net/text/how-much-gnu-in-gnu-linux">GNU percentage</a>&rdquo; of the popular Linux distributions has dwindled, quite naturally if you ask me. GNU focuses on core *ix command line and developer tools. The most important project is the <a href="http://gcc.gnu.org">GNU Compiler Collection</a> (or GCC), used by pretty much everybody in the Linux community (and other platforms) for compiling C/C++ code. Since GCC (with binutils) can generate code for pretty much any CPU, the term &ldquo;Linux community&rdquo; in this context includes smartphones (Android, Linaro, Meego etc), and countless other embedded systems.</p>
+<p>When Apple transformed <a href="http://en.wikipedia.org/wiki/NeXT">NeXT</a> (<a href="http://en.wikipedia.org/wiki/Mach_(kernel)">mach micro-kernel</a> and BSD user-land) into OSX, the whole tools suite was based on GCC and it&rsquo;s debugger GDB (targetting PowerPC). They made significant contributions to GDB to make it sing in the <a href="http://en.wikipedia.org/wiki/Xcode">XCode IDE</a>.</p>
+<p>Even though there is a plethora of GNU projects, it&rsquo;s GCC (and perhaps Emacs) that kept GNU relevant moving into the 21st century.</p>
+<p>However, there&rsquo;s a new kid on the open source compiler block, and it&rsquo;s called <a href="http://llvm.org/">LLVM </a>and <a href="http://clang.llvm.org/">Clang</a>. LLVM is real breath of fresh air in the compiler space. It features a beautiful modular architecture making it ideal for research and innovation. It already outperforms GCC in both compiler speed, and more importantly, quality of the generated code. The GCC code base has always been known to be almost impossible to work on, and LLVM has really called that bluff. LLVM/Clang is moving ahead in lightning speed, already supporting C/C++/Obj-C, features a debugger and having it&rsquo;s own c++ std library.</p>
+<p>Apple is the main benefactor of the LLVM project, and they have already replaced GCC as the default compiler in XCode4. GDB to being swapped over pretty soon as well. With Apple &ldquo;gone&rdquo;, how long will it take for the Linux community to switch over? The technical inertia should be small, since the Clang boys has gone for drop-in GCC replacement capability. If the technical benefits are there, I think the switch should be pretty rapid.</p>
+<p>GNU without GCC is less relevant, the &ldquo;GNU percentage&rdquo; will drop even further. I believe we are witnessing the beginning of the end for GNU, at least in the form we know it. The free software foundation still has a role to play, as opinion makers, lobbyists and evangelists of the GPL.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

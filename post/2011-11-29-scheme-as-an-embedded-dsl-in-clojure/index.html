@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Scheme as an embedded DSL in Clojure</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Scheme as an embedded DSL in Clojure</h1>
+			<b><time>2011-11-29</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/jvm">jvm</a>
+        	       
+		           <a href="/tags/lisp">lisp</a>
+        	       
+		           <a href="/tags/sicp">sicp</a>
+        	       
+
+			<div>
+				<blockquote>
+<p>If you give someone Fortran, he has Fortran.</p>
+</blockquote>
+<blockquote>
+<p>If you give someone Lisp, he has any language he pleases.</p>
+</blockquote>
+<blockquote>
+<p>&ndash; Guy Steele</p>
+</blockquote>
+<p>Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</p>
+<p>When you write programs in Lisp, you tend to solve problems very differently from how you would solve them with OO languages, and also different how you would in other functional languages. Where in ML you would write a set of types and functions to operate (match) on them, in Lisp and Clojure specifically you are more likely to stick to the core data types and write functions and macros that make up a Domain Specific Language (DSL) for the problem at hand. More specifically, an internal/embedded DSL using the Lisp syntax but with new functionality that makes the solution or logic simple and clear. The ability to transform code in Lisp is very powerful indeed, and makes you think of code in a different way.</p>
+<p>One big benefit of internal DSLs are the speed of execution. Since we map to Clojures native constructs, the examples below will run at the same speed as one defined directly in Clojure (they are infact the same!). In future posts, when we look at external DSLs using interpreters which are much slower.</p>
+<p>So here&rsquo;s an example of how (a subset of) Scheme can be written as an internal DSL in Clojure. The full code is <a href="https://github.com/martintrojer/scheme-clojure">available on github</a>.</p>
+<p>As you might suspect, this is pretty simple since a lot of functions are exactly the same in Scheme and Clojure.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">; addition</span>
+</span></span><span style="display:flex;"><span>(+ <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>(+ <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">; division</span>
+</span></span><span style="display:flex;"><span>(/ <span style="color:#ae81ff">9</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>(/ <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">; equality</span>
+</span></span><span style="display:flex;"><span>(= <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>(= <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>(= <span style="color:#ae81ff">1</span> (+ <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">1</span>) <span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><p>Some Scheme functions simply has a different name in Clojure, and can be bound to a new var like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>display println)
+</span></span></code></pre></div><p>Scheme&rsquo;s define form is called def in Clojure, and since def is a special form, we can&rsquo;t use the same strategy as with display, rather we need a macro to transform define code to use def;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>define [<span style="color:#f92672">&amp;</span> args]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>(<span style="color:#66d9ef">def </span><span style="color:#f92672">~@</span>args))</span></span></code></pre></div>
+<p>This uses syntax quotes to get a new list and unquote slicing to get back to the argument list that def requires. Note that this example ignores the fact that in Scheme &ldquo;define&rdquo; is used for simple var bindings and function definitions <a href="https://github.com/martintrojer/scheme-clojure/blob/master/internal/src/mtscheme/core.clj#L38">see full source code</a> for a macro that handles both cases.</p>
+<p>A slightly more involved example is Scheme&rsquo;s cond form which uses a extra pair of parens for each case;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;Scheme</span>
+</span></span><span style="display:flex;"><span>(cond ((&gt; <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span>) <span style="color:#e6db74">&#39;greater</span>)
+</span></span><span style="display:flex;"><span>      ((&lt; <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span>) <span style="color:#e6db74">&#39;less</span>)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">else</span> equal))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;Clojure</span>
+</span></span><span style="display:flex;"><span>(cond (&gt; <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span>) <span style="color:#e6db74">:greater</span>
+</span></span><span style="display:flex;"><span>      (&lt; <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span>) <span style="color:#e6db74">:less</span>)
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">:else</span> <span style="color:#e6db74">:equal</span>)
+</span></span></code></pre></div><p>In Clojure cond is a macro that transforms the code to a list of nested if statements. So we can write a macro for the Scheme-cond that loops over the list of cases and transforms them directly to nested ifs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>cond [<span style="color:#f92672">&amp;</span> args]
+</span></span><span style="display:flex;"><span>  (when args
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">let </span>[fst# (ffirst args)]
+</span></span><span style="display:flex;"><span>     (list <span style="color:#f92672">`</span><span style="color:#66d9ef">if </span>(<span style="color:#66d9ef">if </span>(= fst# (symbol <span style="color:#e6db74">&#34;else&#34;</span>)) <span style="color:#e6db74">:else</span> fst#)
+</span></span><span style="display:flex;"><span>           (second (first args))
+</span></span><span style="display:flex;"><span>           (cons <span style="color:#e6db74">&#39;cond</span> (next args))))))</span></span></code></pre></div>
+<p>As you can see we also replace the &ldquo;else&rdquo; symbol with a Clojure keyword (which actually can be any keyword since they are all &ldquo;true&rdquo;, :else is used to clarity).</p>
+<p>Clojure provides a simple but powerful &ldquo;debug&rdquo; functionality for macros, macroexpand. It returns the expanded code for each step in the recursion like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">macroexpand-1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#39;</span>(cond ((&lt; x <span style="color:#ae81ff">0</span>) (- <span style="color:#ae81ff">0</span> x)) ((= x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">100</span>) (<span style="color:#a6e22e">else</span> x)))
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#66d9ef">if </span>(&lt; x <span style="color:#ae81ff">0</span>) (- <span style="color:#ae81ff">0</span> x) (cond ((= x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">100</span>) (<span style="color:#a6e22e">else</span> x)))
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">clojure.walk/macroexpand-all</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#39;</span>(cond ((&lt; x <span style="color:#ae81ff">0</span>) (- <span style="color:#ae81ff">0</span> x)) ((= x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">100</span>) (<span style="color:#a6e22e">else</span> x)))
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#66d9ef">if </span>(&lt; x <span style="color:#ae81ff">0</span>) (- <span style="color:#ae81ff">0</span> x) (<span style="color:#66d9ef">if </span>(= x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">100</span> (<span style="color:#66d9ef">if </span><span style="color:#e6db74">:else</span> x nil)))
+</span></span></code></pre></div><p>Here we can observe the recursive nature of the macro, any errors in the macro will be clear.</p>
+<p>One note on this cond macro in particular is that replacing build-in function in the &ldquo;host language&rdquo; is a bad idea for an internal DSL. The user of the DSL expects to use the power of that host language and the extra functionality provided by the DSL. Replacing Clojure&rsquo;s cond can be very confusing!</p>
+<p>Not everything is a macro, if we look at the cons funcion, there is a subtle difference between Scheme and Clojure;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;Scheme</span>
+</span></span><span style="display:flex;"><span>(cons <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;Clojure</span>
+</span></span><span style="display:flex;"><span>(cons <span style="color:#ae81ff">1</span> [<span style="color:#ae81ff">2</span>])
+</span></span></code></pre></div><p>The second parameter in clojure is a sequence. A function is more suited than a macro to translate this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>cons [fst snd]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">clojure.core/cons</span> fst (<span style="color:#66d9ef">if </span>(seq? snd) snd [snd])))
+</span></span></code></pre></div><p>We put the second parameter in a vector unless it&rsquo;s already a collection. The trick here is the recursive nature of cons; (cons 1 (cons 2 3)).</p>
+<p>This will call our new cons function twice, from the &ldquo;inside out&rdquo;. The number 3 will be put in a vector, but the result of the nested cons will not.</p>
+<p>Finally the read-eval-print-loop is very simple;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>mtscheme-repl
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:refer-clojure</span> <span style="color:#e6db74">:exclude</span> [cond cons let])   <span style="color:#75715e">; our DSL re-defines these</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:use</span> mtscheme))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>repl [res]
+</span></span><span style="display:flex;"><span>  (println res)
+</span></span><span style="display:flex;"><span>  (print <span style="color:#e6db74">&#34;=&gt; &#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">flush</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">clojure.core/let</span> [l (<span style="color:#a6e22e">read-line</span>)]
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">recur</span> (eval (<span style="color:#a6e22e">read-string</span> l)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">repl</span> <span style="color:#e6db74">&#34;mtscheme 0.1&#34;</span>)
+</span></span></code></pre></div><p>Since our DSL have name clashes with Clojure, we need to exclude those when defining the repl namespace. The REPL itself is a simple recursive loop that reads a line, evals it and prints the result. That&rsquo;s it!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>mtscheme v0.1
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#a6e22e">define</span> (<span style="color:#a6e22e">factorial</span> x) (<span style="color:#66d9ef">if </span>(= x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">1</span> (* x (<span style="color:#a6e22e">factorial</span> (- x <span style="color:#ae81ff">1</span>)))))
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#e6db74">&#39;mtscheme-repl/factorial</span>
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#a6e22e">factorial</span> <span style="color:#ae81ff">9</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">362880.00</span>
+</span></span><span style="display:flex;"><span>=&gt;
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

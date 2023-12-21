@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Tail Calls in F#, Clojure and Scala</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Tail Calls in F#, Clojure and Scala</h1>
+			<b><time>2011-11-20</time></b>
+		       
+		           <a href="/tags/.net">.net</a>
+        	       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/jvm">jvm</a>
+        	       
+		           <a href="/tags/scala">scala</a>
+        	       
+
+			<div>
+				<p>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)</p>
+<p>TCO is a well documented topic in books and articles about functional programming and the TCO in .NET and the lack their of in the JVM has been debated &ldquo;to death&rdquo; on various programmer&rsquo;s boards. I don&rsquo;t indend to add any fuel to the fire here, rather some background and practical implications.</p>
+<h3 id="background">Background</h3>
+<p>Recursion is a fundamental corner stone of programming and is particularly emphasised in functional programming. It is the idiomatic way to loop over sequences in languages like Clojure. Here&rsquo;s a classic example of a function calculating the sum of all natural number less or equal to n.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> rec sum n <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> n <span style="color:#f92672">=</span> 0 <span style="color:#66d9ef">then</span> 0
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> n <span style="color:#f92672">+</span> sum<span style="color:#f92672">(</span>n<span style="color:#f92672">-</span>1<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>This implementation is both very easy to understand and correct, so what&rsquo;s the problem? Well, this implementation is not &ldquo;tail recursive&rdquo;. A tail recursive function has the recursive call at it&rsquo;s tail and noting else (immediately returning the result of the call). In this case the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results &ldquo;bubble up&rdquo;.</p>
+<figure><img src="/assets/images/tailcalls/recur1.png"/>
+</figure>
+
+<p>When n is large this will lead to a “Stack Overflow” exception</p>
+<pre tabindex="0"><code>fsi&gt; sum 1000000;;
+Process is terminated due to StackOverflowException.
+</code></pre><p>Every functional programmer have two handy tools in his toolbox to solve this problem; re-write using accumulators (folding) and continuation passing style.</p>
+<p>If we look at the sum function&rsquo;s loop, and think how we would implement this using imperative programming, we would probably write a for loop like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> sumImperative<span style="color:#f92672">(</span>n<span style="color:#66d9ef">:</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">)</span><span style="color:#66d9ef">:</span><span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">var</span> res <span style="color:#66d9ef">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#66d9ef">&lt;-</span> n to<span style="color:#f92672">(</span><span style="color:#ae81ff">0</span><span style="color:#f92672">,</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#66d9ef">=</span> res <span style="color:#f92672">+</span> i
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  res
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>The recursive variant of this will look like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> sum2<span style="color:#f92672">(</span>acc<span style="color:#66d9ef">:</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">,</span> n<span style="color:#66d9ef">:</span><span style="color:#66d9ef">Int</span><span style="color:#f92672">)</span><span style="color:#66d9ef">:</span><span style="color:#66d9ef">Int</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span><span style="color:#f92672">)</span> acc
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> sum2<span style="color:#f92672">((</span>n<span style="color:#f92672">+</span>acc<span style="color:#f92672">),(</span>n<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>By passing around the result we have a tail recursive solution.</p>
+<p>Continuation passing style is a bit more tricky to understand, but basically instead of passing the result as parameter we are passing a calculation (or continuation). This continuation will be a chain of closures which can be completely resolved when we reach the end of the recursion. Here is an example;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>sum3[k n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">if</span>
+</span></span><span style="display:flex;"><span>    (= n <span style="color:#ae81ff">0</span>) (<span style="color:#a6e22e">k</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">sum3</span> (<span style="color:#66d9ef">fn </span>[m] (<span style="color:#a6e22e">k</span> (+ n m))) (dec n))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">sum3</span> identity <span style="color:#ae81ff">10</span>)
+</span></span></code></pre></div><p>If we call it with the id function as shown above, result of the &ldquo;closure-chain&rdquo; will be the result we are looking for. As you can see, this is also a tail recursive solution.</p>
+<h3 id="clever-compilers">Clever compilers</h3>
+<p>We have now converted our simple example to a tail recursive version, so now it should run with very big n-s without any problem right? Well, not always. To understand why we need to dig into how our compiler and runtimes work (in this case .NET and JVM).</p>
+<p>If we look at what the F# compiler produces for a accumulator-tail-recursive sum function above we&rsquo;ll see this (de-compiled into C# with <a href="http://wiki.sharpdevelop.net/ILSpy.ashx">ILSpy</a>).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> sum(<span style="color:#66d9ef">int</span> acc, <span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">while</span> (n != <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> arg_12_0 = n + acc;
+</span></span><span style="display:flex;"><span>    n--;
+</span></span><span style="display:flex;"><span>    acc = arg_12_0;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s is great, the compiler has realised that the tail recursion can be converted to a while loop and removed any recursive calls. The Scala compiler does the same (de-compiled to java with <a href="http://java.decompiler.free.fr/">Java Decompiler</a>)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sum2</span>(<span style="color:#66d9ef">int</span> acc, <span style="color:#66d9ef">int</span> n) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">==</span> 0)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> acc;
+</span></span><span style="display:flex;"><span>      n <span style="color:#f92672">-=</span> 1; acc <span style="color:#f92672">=</span> n <span style="color:#f92672">+</span> acc;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span></code></pre></div><p>However, Clojure does not! The clojure compiler require an explicit form to convert &ldquo;mundane&rdquo; recursion into a non-recurisve loop (Scala also support explicit tail call checking with the @tailrec annotation). This is the loop/recur form;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>sum2[acc n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">if</span>
+</span></span><span style="display:flex;"><span>    (= n <span style="color:#ae81ff">0</span>) acc
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">recur</span> (+ n acc) (dec n))))
+</span></span></code></pre></div><p>Awesome, problem solved, what&rsquo;s all this fuss about TCO then?<!-- raw HTML omitted --></p>
+<h3 id="tco">TCO</h3>
+<p>Let&rsquo;s say we have two functions a and b calling each other recursively;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> a <span style="color:#f92672">(</span>f<span style="color:#f92672">:</span>int<span style="color:#f92672">-&gt;</span>int<span style="color:#f92672">)</span> n <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>   f <span style="color:#f92672">(</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> rec b n <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>   a b <span style="color:#f92672">(</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>This is called mutual recursion, and are commonly used in functional implementations of finite state machines. Even though the a+b functions are tail recursive, we cannot convert to while loops but must proceed with the recursive calls. Quite naturally this will blow up with stack overflow quite quickly. Steele and Sussman realised in their famous <a href="http://library.readscheme.org/page1.html">lambda papers</a> back in the 70&rsquo;s, that a tail-recursive functions&rsquo; stack resources can be freed as soon as the call is made, there is not point of keeping that stack frame around.</p>
+<figure><img src="/assets/images/tailcalls/recur2.png"/>
+</figure>
+
+<p>For a tail recursive sum example, with TCO we don&rsquo;t build up a chain of stacks and can thus handle summations of any depth (value of n).</p>
+<p>The &ldquo;dealloc-on-call&rdquo; functionality is something the runtime have to support, which .NET does. If we look at the byte code for the function &ldquo;b&rdquo; above (compiled with tailcall-optimization on) we see;</p>
+<pre tabindex="0"><code> IL_0000: nop
+ IL_0001: newobj instance void Program/b@12::.ctor()
+ IL_0006: ldarg.0
+ IL_0007: ldc.i4.1
+ IL_0008: add
+ IL_0009: tail.
+ IL_000b: call int32 Program::a(class [FSharp.Core]Microsoft.FSharp.Core.FSharpFunc`2&lt;int32, int32=&#34;&#34;&gt;, int32)
+ IL_0010: ret
+</code></pre><p>Please note the &ldquo;tail.&rdquo; op code, that&rsquo;s the secret sauce! The F# compiler has found a tail call and inserted the &ldquo;tail.&rdquo; op code. This tells the .NET runtime to destroy the caller&rsquo;s resources and proceed &ldquo;in&rdquo; the callee&rsquo;s stack. This allows the a/b example above to run indefinitely without any stack overflows.</p>
+<p>So what about the JVM? The bad news is that there is no &ldquo;tail.&rdquo; java byte code (even if experimental implementations do <a href="http://blogs.oracle.com/jrose/entry/tail_calls_in_the_vm">exist</a>). Here is a what the Clojure compiler produced for the b function (the invokeinterface is the recursive call to a);</p>
+<pre tabindex="0"><code> 0 getstatic #27 &lt;app stack$b.const__0=&#34;&#34;&gt;
+ 3 invokevirtual #54 &lt;clojure lang=&#34;&#34; var.getrawroot=&#34;&#34;&gt;
+ 6 checkcast #56 &lt;clojure ifn=&#34;&#34; lang=&#34;&#34;&gt;
+ 9 getstatic #31 &lt;app stack$b.const__1=&#34;&#34;&gt;
+12 invokevirtual #54 &lt;clojure lang=&#34;&#34; var.getrawroot=&#34;&#34;&gt;
+15 aload_1
+16 aconst_null
+17 astore_1
+18 lconst_1
+19 invokestatic #62 &lt;clojure lang=&#34;&#34; numbers.add=&#34;&#34;&gt;
+22 invokeinterface #65 &lt;clojure ifn.invoke=&#34;&#34; lang=&#34;&#34;&gt; count 3
+27 areturn
+</code></pre><p>Clojure solves the mutual recursion problem with a &ldquo;trampoline&rdquo;. The idea is that instead of a and b calling each other directly, they return a closure (or a thunk) containing that call. The trampoline will then run those closures in it&rsquo;s own stack-frame eliminating the stack build up.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>a[f n]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">#</span>(<span style="color:#a6e22e">f</span> (inc n)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>b[n]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">#</span>(<span style="color:#a6e22e">a</span> b (inc n)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">trampoline</span> b <span style="color:#ae81ff">0</span>)
+</span></span></code></pre></div><p>Similar examples exist for Scala, a trampoline is infact trivial to implement.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>General TCO is always best, so F# and .NET has the upper hand here. However Clojure and Scala are still fit for use, even if you follow a &ldquo;strict&rdquo; functional paradigm with lots of recursion. You have to be more explicit in the JVM languages and be careful to remember trampolines in cases of mutual recursion (this is especially true for FSMs that change state slowly and can act as time bombs for your program). Being explicit about tail calls is not necessarily a bad thing, it shows the programmer have thought about his code, and highlighted the behaviour.</p>
+<p><em>Update</em>; I should point that using Continuation Passing Style in Clojure, although being tail recursive, still suffers from the TCO problem. You will get Stack Overflows when the &ldquo;closure chain&rdquo; gets too big.</p>
+<p><em>Update 2</em>; A clever compiler can convert mutual recursion into while loops. The a/b example above can be transformed into something like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>bool inA <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (inA) {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// do A stuff</span>
+</span></span><span style="display:flex;"><span>  inA <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// do B stuff</span>
+</span></span><span style="display:flex;"><span>  inA <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>However, I don&rsquo;t know of any compiler that does this!</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

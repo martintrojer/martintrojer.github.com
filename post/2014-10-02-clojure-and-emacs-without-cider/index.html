@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Clojure and Emacs without Cider</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Clojure and Emacs without Cider</h1>
+			<b><time>2014-10-02</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/emacs">emacs</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve been hacking Clojure for many years now, and I&rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will &lsquo;make your day&rsquo;.</p>
+<p>However, the last couple of months have been rough for the Cider project. I&rsquo;ve experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler &amp; snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is &rsquo;re-inventing&rsquo; an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out <a href="https://cursiveclojure.com">Cursive Clojure</a>, its great.</p>
+<p>In this post I&rsquo;ll describe a simpler Emacs/Clojure setup that I&rsquo;ve been using for the last couple of weeks. It&rsquo;s much closer to &lsquo;vanilla Emacs&rsquo; and thus have much fewer features. On the flip side, it&rsquo;s very fast and super stable.</p>
+<p>It&rsquo;s based on Emacs standard way to talk to Lisp REPLs, <code>inferior-lisp-mode</code>. This setup bypasses nREPL completely, it simply launches <code>lein repl</code> in a buffer and communicates via stdin/stdout.</p>
+<p>The setup consists of the following emacs modes (all available on <a href="http://melpa.milkbox.net/#/">Melpa</a>);</p>
+<ul>
+<li><a href="https://github.com/clojure-emacs/clojure-mode">clojure-mode</a></li>
+<li>paredit</li>
+<li><a href="https://github.com/bbatsov/projectile">projectile</a></li>
+<li><a href="https://github.com/company-mode/company-mode">company-etags</a></li>
+<li><a href="https://github.com/clojure-emacs/clj-refactor.el">clj-refactor</a></li>
+<li><a href="https://github.com/mpenet/clojure-snippets">clojure-snippets</a></li>
+<li><a href="https://github.com/gstamp/align-cljlet">align-cljlet</a></li>
+</ul>
+<h2 id="initel">init.el</h2>
+<p>Here&rsquo;s some relevant snippets from my <code>init.el</code>, the full file can be found <a href="https://github.com/martintrojer/dotfiles/blob/master/.emacs.d/full-init.el">here</a>;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-el" data-lang="el"><span style="display:flex;"><span><span style="color:#75715e">;; Clojure</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clojure-mode</span>)
+</span></span><span style="display:flex;"><span>(setq auto-mode-alist (<span style="color:#a6e22e">cons</span> <span style="color:#f92672">&#39;</span>(<span style="color:#e6db74">&#34;\\.cljs$&#34;</span> <span style="color:#f92672">.</span> clojure-mode) auto-mode-alist))
+</span></span><span style="display:flex;"><span>(setq inferior-lisp-program <span style="color:#e6db74">&#34;lein repl&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; clj-refactor</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clj-refactor</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> (lambda ()
+</span></span><span style="display:flex;"><span>                               (clj-refactor-mode <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>                               (cljr-add-keybindings-with-prefix <span style="color:#e6db74">&#34;C-c C-o&#34;</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; align-cljlet</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;align-cljlet</span>)
+</span></span><span style="display:flex;"><span>(global-set-key (kbd <span style="color:#e6db74">&#34;C-c C-a&#34;</span>) <span style="color:#e6db74">&#39;align-cljlet</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; paredit</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;paredit</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> <span style="color:#e6db74">&#39;paredit-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; projectile</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;projectile</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> <span style="color:#e6db74">&#39;projectile-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; company-mode</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;company</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;after-init-hook</span> <span style="color:#e6db74">&#39;global-company-mode</span>)
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;company-etags</span>)
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;company-etags-modes</span> <span style="color:#e6db74">&#39;clojure-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun get-clj-completions (prefix)
+</span></span><span style="display:flex;"><span>  (let* ((proc (inferior-lisp-proc))
+</span></span><span style="display:flex;"><span>         (comint-filt (<span style="color:#a6e22e">process-filter</span> proc))
+</span></span><span style="display:flex;"><span>         (kept <span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">set-process-filter</span> proc (lambda (proc <span style="color:#a6e22e">string</span>) (setq kept (<span style="color:#a6e22e">concat</span> kept <span style="color:#a6e22e">string</span>))))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">process-send-string</span> proc (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;(complete.core/completions \&#34;%s\&#34;)\n&#34;</span>
+</span></span><span style="display:flex;"><span>                                      (<span style="color:#a6e22e">substring-no-properties</span> prefix)))
+</span></span><span style="display:flex;"><span>    (while (<span style="color:#a6e22e">accept-process-output</span> proc <span style="color:#ae81ff">0.1</span>))
+</span></span><span style="display:flex;"><span>    (setq completions (<span style="color:#a6e22e">read</span> kept))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">set-process-filter</span> proc comint-filt)
+</span></span><span style="display:flex;"><span>    completions))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun company-infclj (command <span style="color:#66d9ef">&amp;optional</span> arg <span style="color:#66d9ef">&amp;rest</span> ignored)
+</span></span><span style="display:flex;"><span>  (interactive (<span style="color:#a6e22e">list</span> <span style="color:#e6db74">&#39;interactive</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  (cl-case command
+</span></span><span style="display:flex;"><span>    (interactive (company-begin-backend <span style="color:#e6db74">&#39;company-infclj</span>))
+</span></span><span style="display:flex;"><span>    (prefix (and (<span style="color:#a6e22e">eq</span> major-mode <span style="color:#e6db74">&#39;inferior-lisp-mode</span>)
+</span></span><span style="display:flex;"><span>                 (company-grab-symbol)))
+</span></span><span style="display:flex;"><span>    (candidates (get-clj-completions arg))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;company-backends</span> <span style="color:#e6db74">&#39;company-infclj</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; yasnippet</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;yasnippet</span>)
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clojure-snippets</span>)
+</span></span><span style="display:flex;"><span>(yas-global-mode <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;yas-snippet-dirs</span> <span style="color:#e6db74">&#34;~/.emacs.d/snippets&#34;</span>)
+</span></span><span style="display:flex;"><span>(yas-load-directory <span style="color:#e6db74">&#34;~/.emacs.d/snippets&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Some handly key bindings</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(global-set-key (kbd <span style="color:#e6db74">&#34;C-c C-s&#34;</span>) <span style="color:#e6db74">&#39;clojure-toggle-keyword-string</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun reload-current-clj-ns ()
+</span></span><span style="display:flex;"><span>  (interactive)
+</span></span><span style="display:flex;"><span>  (let ((current-point (<span style="color:#a6e22e">point</span>)))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">goto-char</span> (<span style="color:#a6e22e">point-min</span>))
+</span></span><span style="display:flex;"><span>    (let ((ns-idx (<span style="color:#a6e22e">re-search-forward</span> clojure-namespace-name-regex <span style="color:#66d9ef">nil</span> <span style="color:#66d9ef">t</span>)))
+</span></span><span style="display:flex;"><span>      (when ns-idx
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">goto-char</span> ns-idx)
+</span></span><span style="display:flex;"><span>        (let ((sym (symbol-at-point)))
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">message</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;Loading %s ...&#34;</span> sym))
+</span></span><span style="display:flex;"><span>          (lisp-eval-string (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;(require &#39;%s :reload)&#34;</span> sym))
+</span></span><span style="display:flex;"><span>          (lisp-eval-string (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;(in-ns &#39;%s)&#34;</span> sym)))))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">goto-char</span> current-point)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun find-tag-without-ns (next-p)
+</span></span><span style="display:flex;"><span>  (interactive <span style="color:#e6db74">&#34;P&#34;</span>)
+</span></span><span style="display:flex;"><span>  (find-tag (first (last (split-string (<span style="color:#a6e22e">symbol-name</span> (symbol-at-point)) <span style="color:#e6db74">&#34;/&#34;</span>)))
+</span></span><span style="display:flex;"><span>            next-p))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun erase-inf-buffer ()
+</span></span><span style="display:flex;"><span>  (interactive)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">erase-buffer</span>)
+</span></span><span style="display:flex;"><span>  (lisp-eval-string <span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#39;</span>(lambda ()
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\C-c\C-k&#34;</span> <span style="color:#e6db74">&#39;reload-current-clj-ns</span>)
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\M-.&#34;</span> <span style="color:#e6db74">&#39;find-tag-without-ns</span>)))
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;inferior-lisp-mode-hook</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#39;</span>(lambda ()
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> inferior-lisp-mode-map <span style="color:#e6db74">&#34;\C-cl&#34;</span> <span style="color:#e6db74">&#39;erase-inf-buffer</span>)))
+</span></span></code></pre></div><h2 id="a-repl-session-with-this-setup">A repl session with this setup</h2>
+<p>I typically start with loading the <code>project.clj</code> file of the project I want to work on. Then I&rsquo;ll do a <code>M-x run-lisp</code>, this will launch a repl in the <code>*inferior-lisp*</code> buffer. Now you can go ahead and type what you like in that buffer. Typically I would do <code>(load-dev)</code> and <code>(reset)</code> to start my <a href="https://github.com/stuartsierra/component">component</a> system.</p>
+<p>I also have a growing number of snippets for REPL convenience, see <a href="https://github.com/martintrojer/dotfiles/tree/master/.emacs.d/snippets">here</a>.</p>
+<p>Edit text like normal, <code>C-c C-e</code> to eval sexpr under point and <code>C-c C-k</code> to eval a file (see above).</p>
+<p>Running tests are done manually in the REPL buffer. I typically do <code>(run-tests)</code> or <code>(test-vars [...])</code>. I strongly recommend having <a href="https://github.com/pjstadig/humane-test-output">humane test output</a> enabled.</p>
+<!-- raw HTML omitted -->
+<p>You will also need to add <code>--langmap=Lisp:+.clj.cljs</code> into <code>~/.ctags</code>; <a href="https://github.com/martintrojer/dotfiles/blob/master/.ctags">see here</a>.</p>
+<p>Then use <code>C-c p R</code> to rebuild your TAGS file (this works when you&rsquo;re in projectile mode). After that just can either do <code>M-.</code> to jump to definition (and <code>C-u M-.</code> for next match), remember that <code>M-*</code> takes you back. One great thing about tags is that you don&rsquo;t have to be &lsquo;jacked in&rsquo; to use them! That goes for both navigation and auto-complete.</p>
+<p>That&rsquo;s it really, nice and simple! If you have any additions to make this setup even better I&rsquo;d love to hear about them.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

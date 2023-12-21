@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>ASCII Mandelbrot Set</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>ASCII Mandelbrot Set</h1>
+			<b><time>2012-02-21</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+
+			<div>
+				<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>c+ [[re1 im1] [re2 im2]] [(+ re1 re2) (+ im1 im2)])
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>c* [[re1 im1] [re2 im2]]
+</span></span><span style="display:flex;"><span>  [(- (* re1 re2) (* im1 im2)) (+ (* re1 im2) (* im1 re2))])
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>c2 [c] (<span style="color:#a6e22e">c*</span> c c))
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span><span style="color:#960050;background-color:#1e0010">|</span>c<span style="color:#960050;background-color:#1e0010">|</span> [[re im]] (<span style="color:#a6e22e">Math/sqrt</span> (+ (* re re) (* im im))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-mandel-set [im-range re-range max-iter]
+</span></span><span style="display:flex;"><span>  (for [im im-range
+</span></span><span style="display:flex;"><span>        re re-range
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">:let</span> [c [re im]]]
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">loop </span>[z [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>], cnt <span style="color:#ae81ff">-1</span>]
+</span></span><span style="display:flex;"><span>      (<span style="color:#66d9ef">let </span>[z (<span style="color:#a6e22e">c+</span> (<span style="color:#a6e22e">c2</span> z) c)
+</span></span><span style="display:flex;"><span>            cnt (inc cnt)]
+</span></span><span style="display:flex;"><span>        (if-not (and (&lt; (<span style="color:#960050;background-color:#1e0010">|</span>c<span style="color:#960050;background-color:#1e0010">|</span> z) <span style="color:#ae81ff">4</span>) (&lt; cnt max-iter))
+</span></span><span style="display:flex;"><span>          cnt
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">recur</span> z cnt))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>print-mandel [sz data]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[cs [<span style="color:#e6db74">&#34;.&#34;</span> <span style="color:#e6db74">&#34;,&#34;</span> <span style="color:#e6db74">&#34;\&#34;&#34;</span> <span style="color:#e6db74">&#34;-&#34;</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#e6db74">&#34;(&#34;</span> <span style="color:#e6db74">&#34;*&#34;</span> <span style="color:#e6db74">&#34;|&#34;</span> <span style="color:#e6db74">&#34;$&#34;</span> <span style="color:#e6db74">&#34;#&#34;</span> <span style="color:#e6db74">&#34;@&#34;</span> <span style="color:#e6db74">&#34;%&#34;</span> <span style="color:#e6db74">&#34;~&#34;</span>]]
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">loop </span>[ds data]
+</span></span><span style="display:flex;"><span>      (when-not (<span style="color:#a6e22e">empty?</span> ds)
+</span></span><span style="display:flex;"><span>        (<span style="color:#66d9ef">let </span>[cs (map <span style="color:#f92672">#</span>(nth cs (dec %)) (take sz ds))]
+</span></span><span style="display:flex;"><span>          (doseq [c cs] (print c))
+</span></span><span style="display:flex;"><span>          (println <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">recur</span> (drop sz ds)))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">-&gt;&gt;</span>
+</span></span><span style="display:flex;"><span> (<span style="color:#a6e22e">get-mandel-set</span> (range <span style="color:#ae81ff">-1.2</span> <span style="color:#ae81ff">1.2</span> <span style="color:#ae81ff">0.05</span>) (range <span style="color:#ae81ff">-2</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">0.04</span>) <span style="color:#ae81ff">14</span>)
+</span></span><span style="display:flex;"><span> (<span style="color:#a6e22e">print-mandel</span> <span style="color:#ae81ff">75</span>))
+</span></span></code></pre></div><p>Credit to <a href="http://futureboy.us/frinkdocs/">Frink</a> for inspiration.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

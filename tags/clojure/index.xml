@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>clojure on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/clojure/</link>
+    <description>Recent content in clojure on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 14 Jun 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/clojure/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some thoughts on clojure.spec</title>
+      <link>https://martintrojer.github.io/post/2016-06-14-some-thoughts-on-clojurespec/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-06-14-some-thoughts-on-clojurespec/</guid>
+      <description>&lt;p&gt;Some of the readers of my &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series have asked about my opinion on clojure.spec, and if it solves Clojure&amp;rsquo;s &amp;rsquo;type problem&amp;rsquo;. Implying whether its presence makes me look more favorably on Clojure. Here are some of my thoughts.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Beyond ClojureScript: Elm</title>
+      <link>https://martintrojer.github.io/post/2016-05-03-beyond-clojurescript-elm/</link>
+      <pubDate>Tue, 03 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-05-03-beyond-clojurescript-elm/</guid>
+      <description>&lt;p&gt;This is a post in the &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series, in which a Clojure developer looks at typed languages for web app development. In this episode we look at front-end development in the language Elm.&lt;/p&gt;&#xA;&lt;p&gt;Front end development targeting web browsers is a ghetto, everybody seems to agree. The core tools at our disposal are the amalgamation of ideas and accidents thrown together without much overall strategy. One positive development in recent years has been the drastic improvement of the JavaScript (JS) engines in popular browsers. They have now gotten so good that its a valid option to treat JS as a compilation target. This fact is one of the drivers behind the explosion of JS transpilers, there are now literally hundreds of languages that (either primarily or as an after-though) can compile to JS. These languages range from light syntax improvements (ala &lt;a href=&#34;http://coffeescript.org/&#34;&gt;CoffeScript&lt;/a&gt;) to full blown languages with big runtimes and everything in between.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Beyond Clojure: Haskell</title>
+      <link>https://martintrojer.github.io/post/2016-04-21-beyond-clojure-haskell/</link>
+      <pubDate>Thu, 21 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-04-21-beyond-clojure-haskell/</guid>
+      <description>&lt;p&gt;This is a post in the  &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.&lt;/p&gt;&#xA;&lt;p&gt;If you are interested in typed functional languages one stands taller than the rest. Its impossible not to get sucked into the Haskell vortex, but why fight it? In spite of its reputation of being extremely hard to learn and even harder to master, there are several excellent resources out there and you are guaranteed to learn a lots of very valuable lessons.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Beyond Clojure: Prelude</title>
+      <link>https://martintrojer.github.io/post/2016-04-19-beyond-clojure-prelude/</link>
+      <pubDate>Tue, 19 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-04-19-beyond-clojure-prelude/</guid>
+      <description>&lt;p&gt;Here we are, after five years of learning and later doing Clojure full time, I&amp;rsquo;ve come to the point where I am seriously looking around for alternatives. I&amp;rsquo;ve gotten very comfortable working in Clojure, and it has and will continue to serve me very well. But getting comfortable has a flip-side, you stop caring.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Datomic Do&#39;s and Don&#39;ts</title>
+      <link>https://martintrojer.github.io/post/2015-06-03-datomic-dos-and-donts/</link>
+      <pubDate>Wed, 03 Jun 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2015-06-03-datomic-dos-and-donts/</guid>
+      <description>&lt;p&gt;I recently tried to use Datomic in anger in a project, here are some things I learned.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Clojure and Emacs without Cider redux</title>
+      <link>https://martintrojer.github.io/post/2015-02-14-clojure-and-emacs-without-cider-redux/</link>
+      <pubDate>Sat, 14 Feb 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2015-02-14-clojure-and-emacs-without-cider-redux/</guid>
+      <description>&lt;p&gt;Its been a couple of months since I&amp;rsquo;ve stopped using &lt;a href=&#34;https://github.com/clojure-emacs/cider&#34;&gt;Cider&lt;/a&gt; for Clojure development in Emacs. I find a simple &amp;lsquo;inferior lisp&amp;rsquo; setup faster and more reliable. For a good summary of why one would consider not using Cider, see &lt;a href=&#34;https://gist.github.com/levand/b1012bb7bdb5fcc6486f&#34;&gt;Luke VanderHart&amp;rsquo;s excellent summary&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Developing Clojure in the Cloud</title>
+      <link>https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/</link>
+      <pubDate>Thu, 04 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/</guid>
+      <description>&lt;p&gt;Recently I gave a talk at the &lt;a href=&#34;https://skillsmatter.com/conferences/1956-clojure-exchange-2014&#34;&gt;Clojure eXchange 2014&lt;/a&gt; titled &amp;lsquo;Developing Clojure in the Cloud&amp;rsquo;. I described a way of creating and using (Clojure) development environments inside VMs, I&amp;rsquo;ve been developing like this for the last year (spanning 2 projects).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Kebab-case keywords in nested Clojure data structures</title>
+      <link>https://martintrojer.github.io/post/2014-10-18-kebab-case-keywords-in-nested-clojure-data-structures/</link>
+      <pubDate>Sat, 18 Oct 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-10-18-kebab-case-keywords-in-nested-clojure-data-structures/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Clojure and Emacs without Cider</title>
+      <link>https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/</link>
+      <pubDate>Thu, 02 Oct 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve been hacking Clojure for many years now, and I&amp;rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will &amp;lsquo;make your day&amp;rsquo;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Book Review: Clojure Cookbook</title>
+      <link>https://martintrojer.github.io/post/2014-04-06-book-review-clojure-cookbook/</link>
+      <pubDate>Sun, 06 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-04-06-book-review-clojure-cookbook/</guid>
+      <description>The Clojure Cookbook is part of the O&amp;rsquo;Reilly cookbook series. I&amp;rsquo;d describe this format as a &amp;lsquo;curated wiki in print&amp;rsquo;. The wiki analogy is especially true for this volume since its contents was contributed by some 60 different developers. It&amp;rsquo;s packed with small bite-sized recipes for solving common problems in Clojure. This is useful for developers in the entire spectrum from beginner to expert.&#xA;The content is organized into 11 chapters each containing a number of recipes.</description>
+    </item>
+    <item>
+      <title>The Clojure REPL; a blessing and a curse</title>
+      <link>https://martintrojer.github.io/post/2014-04-05-the-clojure-repl-a-blessing-and-a-curse/</link>
+      <pubDate>Sat, 05 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-04-05-the-clojure-repl-a-blessing-and-a-curse/</guid>
+      <description>&lt;p&gt;All Clojure developers swear by their REPL, its one of the most powerful tools in our arsenal. Coming from traditional edit/compile/launch languages it also a great productivity boost. The Clojure community takes non-aot (ahead of time compilation) to the extreme. By default, we ship Clojure source code in our development and production jars and thus leave compilation to the very last minute (when the program launches). This gives us lots of power and flexibility, if you ever navigated into a library in Emacs and fixed a bug, re-evaled the form and carried on working you know what I&amp;rsquo;m talking about.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Working with core.async: Blocking calls</title>
+      <link>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-blocking-calls/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-blocking-calls/</guid>
+      <description>&lt;p&gt;You can&amp;rsquo;t do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block &amp;ndash; &lt;em&gt;all&lt;/em&gt; go blocks will stop! For a more in-depth explanation see &lt;a href=&#34;https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/&#34;&gt;this previous post&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Working with core.async: Chaining go blocks</title>
+      <link>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/</guid>
+      <description>&lt;p&gt;One particularly annoying difference between the core.async and &lt;a href=&#34;http://golang.org&#34;&gt;Go&lt;/a&gt; is that you can&amp;rsquo;t wrap function calls with the &lt;code&gt;go&lt;/code&gt; macro. This is due to implementation details of core.async, which can only see the body &amp;lsquo;inside&amp;rsquo; the macro and not the functions it may call. This is obviously not a problem if the called function doesn&amp;rsquo;t interact with any channels, but if it does when you might be in trouble. I&amp;rsquo;ve touched on this subject in a &lt;a href=&#34;https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Working with core.async: Exceptions in go blocks</title>
+      <link>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-exceptions-in-go-blocks/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-exceptions-in-go-blocks/</guid>
+      <description>&lt;p&gt;Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks &amp;ndash; all your exceptions are gone! Since the body of a go block is run on a thread pool, it&amp;rsquo;s not much we can do with an exception, thus core.async will just eat them and close the channel. That&amp;rsquo;s what happened in the second snippet &lt;a href=&#34;https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/&#34;&gt;in this post&lt;/a&gt;. The &lt;code&gt;nil&lt;/code&gt; result is because the channel we read from is closed.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Testing an API with Simulant</title>
+      <link>https://martintrojer.github.io/post/2013-09-29-testing-an-api-with-simulant/</link>
+      <pubDate>Sun, 29 Sep 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-09-29-testing-an-api-with-simulant/</guid>
+      <description>tl;dr I present a new Simulant example project, testing a simple web API.&#xA;All programs are simulation tested, atleast once. &amp;mdash; Stu Halloway&#xA;Simulating testing is an interesting field that has a lot going for it. While most web site/api developers write many tests at the unit level (an old Rails habit) testing and understanding a whole system is often not done. Most systems we build nowadays consists of many (mega/micro) services/databases glued together.</description>
+    </item>
+    <item>
+      <title>Retrofitting the Reloaded pattern into Clojure projects</title>
+      <link>https://martintrojer.github.io/post/2013-09-07-retrofitting-the-reloaded-pattern-into-clojure-projects/</link>
+      <pubDate>Sat, 07 Sep 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-09-07-retrofitting-the-reloaded-pattern-into-clojure-projects/</guid>
+      <description>Stuart Sierra has done a great job with clojure.tools.namespace and the reloaded leiningen template. If you haven&amp;rsquo;t heard about this before please have a look at c.t.n readme and watch this presentation.&#xA;I&amp;rsquo;ve have retrofitted this pattern into two rather big clojure projects (20k and 5k lines) with several modules and here are some of my findings.&#xA;Removing global state The first step is to find all resources that needs to be &amp;ldquo;lifecycled&amp;rdquo;.</description>
+    </item>
+    <item>
+      <title>Non tail-recursive functions in core.async go blocks</title>
+      <link>https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/</link>
+      <pubDate>Wed, 17 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/</guid>
+      <description>I&amp;rsquo;ve been using various Go examples / tutorials to take a deeper look into core.async. The CSP pattern is a very interesting and powerful, it&amp;rsquo;s good move for Clojure to &amp;ldquo;throw in&amp;rdquo; with Go and push this style of programming.&#xA;core.sync works at s-expression level, where some other JVM solutions (Kilim, Pulsar) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell.</description>
+    </item>
+    <item>
+      <title>core.async and Blocking IO</title>
+      <link>https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/</link>
+      <pubDate>Sun, 07 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/</guid>
+      <description>Some time ago I wrote about Asynchronous workflows in Clojure. With the recent release and excitement of core.async, I though it a good time to revisit that post.&#xA;While there are already some good example and comparison-with-go posts out there, I&amp;rsquo;d like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It&amp;rsquo;s important to understand the implications of blocking IO and it&amp;rsquo;s effects on &amp;lsquo;async code&amp;rsquo;, in this case core.</description>
+    </item>
+    <item>
+      <title>Datomic Bootstrap</title>
+      <link>https://martintrojer.github.io/post/2013-07-05-datomic-bootstrap/</link>
+      <pubDate>Fri, 05 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-05-datomic-bootstrap/</guid>
+      <description>&lt;p&gt;A simple SQL scenario;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Comparing FP REPL Sessions</title>
+      <link>https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/</link>
+      <pubDate>Tue, 04 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/</guid>
+      <description>Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.&#xA;Most languages comes with a REPL (or &amp;lsquo;interactive&amp;rsquo; prompt), where you can play with these features at your leisure. Dynamically typed languages are a bit more convenient in the REPL, but not by as much as you might think. Also, F# type providers closes the gap even further.&#xA;Here&amp;rsquo;s a typical, hit-a-JSON-endpoint-and-look-at-the-data session in Clojure;&#xA;$ lein repl user=&amp;gt; (def res (slurp &amp;#34;http://www.</description>
+    </item>
+    <item>
+      <title>Scala and me</title>
+      <link>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</link>
+      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</guid>
+      <description>This epic journey (yeah right) began at Uni with discovering the mighty SICP, still the best book on programming I&amp;rsquo;ve read (and let&amp;rsquo;s face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in Scheme, ELisp, OCaml every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren&amp;rsquo;t very applicable to real-world software problems.</description>
+    </item>
+    <item>
+      <title>Clojure Hacking on the Samsung ARM Chromebook</title>
+      <link>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</guid>
+      <description>I recently switched to the Samsung ARM Chromebook for all my laptop needs. The pitch it&amp;rsquo;s quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it&amp;rsquo;s quite limited RAM size, just 2GB. But with a decent swap file, I&amp;rsquo;m running multiple JVMs (with Datomic, Elasicsearch, CLJS compiler etc without any hickups).&#xA;Out of the box it runs ChromeOS, which I have to say is pretty stellar for browsing and consuming content on the web.</description>
+    </item>
+    <item>
+      <title>Flexible multi consumer/producer pipelines</title>
+      <link>https://martintrojer.github.io/post/2013-03-16-flexible-multi-consumerproducer-pipelines/</link>
+      <pubDate>Sat, 16 Mar 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-03-16-flexible-multi-consumerproducer-pipelines/</guid>
+      <description>TL;DR Pipejine - a lightweight Clojure library for multi-threaded producer/consumer pipelines supporting arbitrary DAG topologies.&#xA;Recently a colleague and I faced a problem where we needed to optimize the total running time of a complicated calculation. This calculation involved several asynchronous steps getting data from other systems (like elasticsearch and other home-grown services) and a bit of number crunching and tallying up the results at the end. Here is and simplified example of the system.</description>
+    </item>
+    <item>
+      <title>The M Word</title>
+      <link>https://martintrojer.github.io/post/2012-11-24-the-m-word/</link>
+      <pubDate>Sat, 24 Nov 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-11-24-the-m-word/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Some core.logic graph code</title>
+      <link>https://martintrojer.github.io/post/2012-09-27-some-corelogic-graph-code/</link>
+      <pubDate>Thu, 27 Sep 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-09-27-some-corelogic-graph-code/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Some more Datalog</title>
+      <link>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</link>
+      <pubDate>Tue, 28 Aug 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</guid>
+      <description>I&amp;rsquo;ve written about datalog and Datomic a bit recently. To conclude here&amp;rsquo;s another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found here.&#xA;The example I&amp;rsquo;m using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;&#xA;(q &amp;#39;[:find ?first ?height :in $a $b :where [$a ?last ?first ?email] [$b ?email ?height]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.</description>
+    </item>
+    <item>
+      <title>cKanren time!</title>
+      <link>https://martintrojer.github.io/post/2012-08-12-ckanren-time/</link>
+      <pubDate>Sun, 12 Aug 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-08-12-ckanren-time/</guid>
+      <description>Mr David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event I&amp;rsquo;m writing up some core.logic/cKanren stuff I&amp;rsquo;ve been looking at recently.&#xA;Enter the Queens If you&amp;rsquo;ve followed this blog, you&amp;rsquo;ve perhaps seen my previous posts on solving N-Queens in core.logic (part1 and part2). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here&amp;rsquo;s a core.</description>
+    </item>
+    <item>
+      <title>Untying the Recursive Knot</title>
+      <link>https://martintrojer.github.io/post/2012-07-23-untying-the-recursive-knot/</link>
+      <pubDate>Mon, 23 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-23-untying-the-recursive-knot/</guid>
+      <description>Here I present a couple of examples of the functional design pattern &amp;ldquo;untying the recursive knot&amp;rdquo;. I&amp;rsquo;ve found this useful in a couple of occasions, for instance when breaking apart mutually recursive functions. Material inspired by Jon Harrop&amp;rsquo;s excellent Visual F# to Technical Computing.&#xA;First, let&amp;rsquo;s look at a simple factorial implementation using direct recursion;&#xA;(defn fact [n] (if (= n 0) 1 (* n (fact (dec n))))) We can break the direct recursive dependency by replacing the recursive calls with calls to a function argument;</description>
+    </item>
+    <item>
+      <title>Replicating Datomic/Datalog queries with core.logic, take 2</title>
+      <link>https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/</link>
+      <pubDate>Tue, 17 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/</guid>
+      <description>This is a follow-up to my previous post on datalog-equivalent queries in core.logic.&#xA;Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, described here. First let&amp;rsquo;s consider this datomic query;&#xA;(q &amp;#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.com&amp;#34;]] [[&amp;#34;jane@example.com&amp;#34; 73] [&amp;#34;jdoe@example.com&amp;#34; 71]]) ;; #&amp;lt;HashSet [[&amp;#34;Jane&amp;#34; 73], [&amp;#34;John&amp;#34; 71]]&amp;gt; In core.</description>
+    </item>
+    <item>
+      <title>Replicating Datomic/Datalog queries with core.logic</title>
+      <link>https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/</link>
+      <pubDate>Mon, 16 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/</guid>
+      <description>I&amp;rsquo;ve been toying with Datomic recently, and I particularly like the power of it&amp;rsquo;s query language (~Datalog). Mr Halloway showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, gist here. Here is an example from that page of a simple join;&#xA;(q &amp;#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.com&amp;#34;]] [[&amp;#34;jane@example.com&amp;#34; 73] [&amp;#34;jdoe@example.</description>
+    </item>
+    <item>
+      <title>N Queens with core.logic, take 2</title>
+      <link>https://martintrojer.github.io/post/2012-07-11-n-queens-with-corelogic-take-2/</link>
+      <pubDate>Wed, 11 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-11-n-queens-with-corelogic-take-2/</guid>
+      <description>This post is a follow-up to my previous post on NQueens and core.logic, in which I tried to find the solutions using &amp;ldquo;pure&amp;rdquo; logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.&#xA;After some excellent feedback and hints from Mr David Nolen (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to good old Bratko.</description>
+    </item>
+    <item>
+      <title>N Queens with core.logic, take 1</title>
+      <link>https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/</link>
+      <pubDate>Sat, 07 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/</guid>
+      <description>I&amp;rsquo;ve been &amp;ldquo;hammock-reading&amp;rdquo; the excellent Reasoned Schemer book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.&#xA;My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&amp;rsquo;t a good fit, n-queens. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in cKanren.</description>
+    </item>
+    <item>
+      <title>Some thoughts on logging</title>
+      <link>https://martintrojer.github.io/post/2012-07-03-some-thoughts-on-logging/</link>
+      <pubDate>Tue, 03 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-03-some-thoughts-on-logging/</guid>
+      <description>Have you ever tried to log from multi threaded program? Have you tried to make sense of the log output which multiple subsystems were logging to? Have you tried to do average latency calculations based on that log file?&#xA;If you reading this blog, I am guessing you answered yes to a couple of the questions above.&#xA;There are multiple problems here; multiple producers (race conditions), out-of-order logs, conflated subsystem in the same logs etc.</description>
+    </item>
+    <item>
+      <title>Distributed Actors in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</link>
+      <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</guid>
+      <description>Here&amp;rsquo;s another post on a topic that have been discussed since the dawn-of-time, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&amp;rsquo;s post (above) still holds true today.&#xA;First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;&#xA;clojure-hadoop swamiji cacalog zookeeper-clj storm etc&amp;hellip; Akka and the Erlang legacy I am trying to write programs that solve problems in the areas where Erlang typically excels such as</description>
+    </item>
+    <item>
+      <title>Enumerate N Queens solutions</title>
+      <link>https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/</link>
+      <pubDate>Sun, 25 Mar 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Adding Live Unit Feeds to Frinj</title>
+      <link>https://martintrojer.github.io/post/2012-03-14-adding-live-unit-feeds-to-frinj/</link>
+      <pubDate>Wed, 14 Mar 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-03-14-adding-live-unit-feeds-to-frinj/</guid>
+      <description>A couple of weeks has passed since I&amp;rsquo;ve pushed Frinj to github and blogged/tweeted about it. The response have been pretty awesome, one highlight being when @stuarthalloway showed me a frinj+datomic example gist on the #datomic IRC channel. In short, the Clojure community is #badass.&#xA;Frinj comes with a big database of units and conversion factors, and while as many conversion factors are &amp;ldquo;eternal&amp;rdquo;, others aren&amp;rsquo;t. Exchange rates for instance has to be kept up to date to be relevant.</description>
+    </item>
+    <item>
+      <title>Announcing Frinj, a practical unit of measure calculator DSL for Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-03-03-announcing-frinj-a-practical-unit-of-measure-calculator-dsl-for-clojure/</link>
+      <pubDate>Sat, 03 Mar 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-03-03-announcing-frinj-a-practical-unit-of-measure-calculator-dsl-for-clojure/</guid>
+      <description>I am proud to announce a new Clojure project called &amp;ldquo;Frinj&amp;rdquo;.&#xA;Frinj is a practical unit-of-measure calculator DSL for Clojure.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Tries to combine Frink&amp;rsquo;s fluent calculation style with idiomatic Clojure Full source code available on github.&#xA;To wet your apatite head straight over to the sample calculations page to see what Frinj can do!</description>
+    </item>
+    <item>
+      <title>ASCII Mandelbrot Set</title>
+      <link>https://martintrojer.github.io/post/2012-02-21-ascii-mandelbrot-set/</link>
+      <pubDate>Tue, 21 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-02-21-ascii-mandelbrot-set/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Some thoughts on Clojure performance</title>
+      <link>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</link>
+      <pubDate>Sat, 18 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</guid>
+      <description>Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).&#xA;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.</description>
+    </item>
+    <item>
+      <title>Scheme as an external DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</link>
+      <pubDate>Sat, 28 Jan 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</guid>
+      <description>This is a follow-up post to my previous &amp;ldquo;Scheme in Clojure&amp;rdquo; post.&#xA;This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&amp;rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code).</description>
+    </item>
+    <item>
+      <title>Asynchronous workflows in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/</link>
+      <pubDate>Thu, 22 Dec 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/</guid>
+      <description>Asynchronous workflows is a very powerful feature of F#, and recently I wanted to explore the state of the JVM and in particular Clojure when it comes to replicate the functionality. In this post I&amp;rsquo;ll share some of my findings and I&amp;rsquo;ll include some background material to explain the problems.&#xA;Let&amp;rsquo;s start with an example of a webclient using &amp;ldquo;async&amp;rdquo; in F#.&#xA;let download url = async { let request = HttpWebRequest.</description>
+    </item>
+    <item>
+      <title>Scheme as an embedded DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</link>
+      <pubDate>Tue, 29 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</guid>
+      <description>If you give someone Fortran, he has Fortran.&#xA;If you give someone Lisp, he has any language he pleases.&#xA;&amp;ndash; Guy Steele&#xA;Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&amp;rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</description>
+    </item>
+    <item>
+      <title>Tail Calls in F#, Clojure and Scala</title>
+      <link>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</link>
+      <pubDate>Sun, 20 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</guid>
+      <description>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&amp;rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)&#xA;TCO is a well documented topic in books and articles about functional programming and the TCO in .</description>
+    </item>
+  </channel>
+</rss>

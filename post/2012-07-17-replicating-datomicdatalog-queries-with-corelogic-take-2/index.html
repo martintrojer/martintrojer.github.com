@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Replicating Datomic/Datalog queries with core.logic, take 2</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Replicating Datomic/Datalog queries with core.logic, take 2</h1>
+			<b><time>2012-07-17</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/datomic">datomic</a>
+        	       
+		           <a href="/tags/core.logic">core.logic</a>
+        	       
+
+			<div>
+				<p>This is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">previous post</a> on datalog-equivalent queries in core.logic.</p>
+<p>Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First let&rsquo;s consider this datomic query;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>In core.logic we start by defining the relationships between our 2 datasets;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">defrel</span> last-first-email p1 p2 p3)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defrel</span> email-height p1 p2)
+</span></span></code></pre></div><p>This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> email-height <span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> email-height <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">run*</span> [q]
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">fresh</span> [fst email height]
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">last-first-email</span> (<span style="color:#a6e22e">lvar</span>) fst email)
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">email-height</span> email height)
+</span></span><span style="display:flex;"><span>             (== q [fst height])))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;Jane&#34; 73] [&#34;John&#34; 71])</span>
+</span></span></code></pre></div><p>The join is accomplished by using the same lvar (email) is both defrel goals.</p>
+<p>Now consider a slightly more complicated query;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;; simple in-memory join, two database bindings</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> $db1 $db2
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:where</span> [$db1 ?e1 <span style="color:#e6db74">:firstName</span> ?first]
+</span></span><span style="display:flex;"><span>            [$db1 ?e1 <span style="color:#e6db74">:email</span> ?email]
+</span></span><span style="display:flex;"><span>            [$db2 ?e2 <span style="color:#e6db74">:email</span> ?email]
+</span></span><span style="display:flex;"><span>            [$db2 ?e2 <span style="color:#e6db74">:height</span> ?height]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#ae81ff">1</span> <span style="color:#e6db74">:firstName</span> <span style="color:#e6db74">&#34;John&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">1</span> <span style="color:#e6db74">:email</span>  <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">2</span> <span style="color:#e6db74">:firstName</span> <span style="color:#e6db74">&#34;Jane&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">2</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#ae81ff">100</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">100</span> <span style="color:#e6db74">:height</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">101</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">101</span> <span style="color:#e6db74">:height</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>Applying the same technique (with some more defrels) we get;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id-first p1 p2)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id-email p1 p2)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id2-email p1 p2)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id2-height p1 p2)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id-first <span style="color:#ae81ff">1</span> <span style="color:#e6db74">&#34;John&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id-email <span style="color:#ae81ff">1</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id-first <span style="color:#ae81ff">2</span> <span style="color:#e6db74">&#34;Jane&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id-email <span style="color:#ae81ff">2</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id2-email <span style="color:#ae81ff">100</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id2-height <span style="color:#ae81ff">100</span> <span style="color:#ae81ff">73</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id2-email <span style="color:#ae81ff">101</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> id2-height <span style="color:#ae81ff">101</span> <span style="color:#ae81ff">71</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">run*</span> [q]
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">fresh</span> [id id2 fst email height]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">id-first</span> id fst)
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">id-email</span> id email)
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">id2-email</span> id2 email)
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">id2-height</span> id2 height)
+</span></span><span style="display:flex;"><span>               (== q [fst height]))))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;John&#34; 71] [&#34;Jane&#34; 73])</span>
+</span></span></code></pre></div><p>Hmm, this looks suspiciously like a victim-of-a-macro(tm), maybe something like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>defquery [relname find rels]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[idx-syms (<span style="color:#a6e22e">-&gt;&gt;</span> (<span style="color:#a6e22e">repeatedly</span> gensym) (map <span style="color:#f92672">#</span>(with-meta % {<span style="color:#e6db74">:index</span> <span style="color:#e6db74">:t</span>})))
+</span></span><span style="display:flex;"><span>        relname (<span style="color:#66d9ef">fn </span>[r] (symbol (str relname <span style="color:#e6db74">&#34;-&#34;</span> (<span style="color:#a6e22e">-&gt;&gt;</span> r (map name) (<span style="color:#a6e22e">interpose</span> <span style="color:#e6db74">&#34;-&#34;</span>) (reduce str)))))
+</span></span><span style="display:flex;"><span>        lvars (<span style="color:#66d9ef">fn </span>[r] (<span style="color:#a6e22e">-&gt;&gt;</span> r (map name) (map symbol)))
+</span></span><span style="display:flex;"><span>        defrels (for [r rels] <span style="color:#f92672">`</span>(<span style="color:#a6e22e">defrel</span> <span style="color:#f92672">~</span>(<span style="color:#a6e22e">relname</span> r) <span style="color:#f92672">~@</span>(take (count r) idx-syms)))
+</span></span><span style="display:flex;"><span>        joins (for [r rels] <span style="color:#f92672">`</span>(<span style="color:#f92672">~</span>(<span style="color:#a6e22e">relname</span> r) <span style="color:#f92672">~@</span>(<span style="color:#a6e22e">lvars</span> r)))]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">`</span>(<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">~@</span>defrels
+</span></span><span style="display:flex;"><span>       (<span style="color:#66d9ef">defn </span><span style="color:#f92672">~</span>(<span style="color:#a6e22e">relname</span> [<span style="color:#e6db74">:run</span>]) []
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">run*</span> [q#]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">fresh</span> [<span style="color:#f92672">~@</span>(set (mapcat lvars rels))]
+</span></span><span style="display:flex;"><span>                      <span style="color:#f92672">~@</span>joins
+</span></span><span style="display:flex;"><span>                      (== q# [<span style="color:#f92672">~@</span>(<span style="color:#a6e22e">lvars</span> find)])))))))
+</span></span></code></pre></div><p>The two examples above can now be written like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defquery</span> join [<span style="color:#e6db74">:first</span> <span style="color:#e6db74">:height</span>] [[<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>]])
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join-last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join-last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join-email-height <span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join-email-height <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">join-run</span>))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;Jane&#34; 73] [&#34;John&#34; 71])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defquery</span> join2 [<span style="color:#e6db74">:firstName</span> <span style="color:#e6db74">:height</span>] [[<span style="color:#e6db74">:e1</span> <span style="color:#e6db74">:firstName</span>] [<span style="color:#e6db74">:e1</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:e2</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:e2</span> <span style="color:#e6db74">:height</span>]])
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e1-firstName <span style="color:#ae81ff">1</span> <span style="color:#e6db74">&#34;John&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e1-email <span style="color:#ae81ff">1</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e1-firstName <span style="color:#ae81ff">2</span> <span style="color:#e6db74">&#34;Jane&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e1-email <span style="color:#ae81ff">2</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e2-email <span style="color:#ae81ff">100</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e2-height <span style="color:#ae81ff">100</span> <span style="color:#ae81ff">73</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e2-email <span style="color:#ae81ff">101</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join2-e2-height <span style="color:#ae81ff">101</span> <span style="color:#ae81ff">71</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">join2-run</span>))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;John&#34; 71] [&#34;Jane&#34; 73])</span>
+</span></span></code></pre></div><p>An important point here is that we have separated the definition of the relationships, definition (loading) of the facts, and the actual running of the query.</p>
+<p>So how does this perform for larger datasets compared to the unification / clojure.set/join described in the previous post? If we look at the time for running the query it&rsquo;s ~33% faster and about 12x slower than the optimal datomic/datalog query.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>join-test2 [xs ys]
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; setup the relations</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defquery</span> join [<span style="color:#e6db74">:first</span> <span style="color:#e6db74">:height</span>] [[<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>]])
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; load the facts</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>     (doseq [x xs] (apply fact join-last-first-email x))
+</span></span><span style="display:flex;"><span>     (doseq [y ys] (apply fact join-email-height y))))
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; run the query</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">join-run</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>bench [n f]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[rand-str <span style="color:#f92672">#</span>(str (<span style="color:#a6e22e">java.util.UUID/randomUUID</span>))
+</span></span><span style="display:flex;"><span>        emails (<span style="color:#a6e22e">repeatedly</span> n rand-str)
+</span></span><span style="display:flex;"><span>        name-email (reduce (<span style="color:#66d9ef">fn </span>[res em]
+</span></span><span style="display:flex;"><span>                             (conj res (vector (<span style="color:#a6e22e">rand-str</span>) (<span style="color:#a6e22e">rand-str</span>) em)))
+</span></span><span style="display:flex;"><span>                           [] emails)
+</span></span><span style="display:flex;"><span>        email-height (reduce (<span style="color:#66d9ef">fn </span>[res em]
+</span></span><span style="display:flex;"><span>                               (conj res (vector em (rand-int <span style="color:#ae81ff">100</span>))))
+</span></span><span style="display:flex;"><span>                             [] emails)]
+</span></span><span style="display:flex;"><span>    (time (count (<span style="color:#a6e22e">f</span> name-email email-height)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> join-test2)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 287.275 msecs&#34;       (loading the data)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 127.188 msecs&#34;       (running the query)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 415.466 msecs&#34;       (total)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===================================================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Results from previous post</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> (partial q <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 14757.248824 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> (partial q <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:in</span> $a $b
+</span></span><span style="display:flex;"><span>                         <span style="color:#e6db74">:where</span> [$a ?last ?first ?email] [$b ?email ?height]]))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 10.869 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">bench</span> <span style="color:#ae81ff">5000</span> join-test)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 185.604 msecs&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; 5000</span>
+</span></span></code></pre></div><p><a href="https://gist.github.com/3150994">Follow this link for some more datalog-y queries in core.logic</a>.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

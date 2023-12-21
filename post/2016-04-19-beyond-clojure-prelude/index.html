@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Beyond Clojure: Prelude</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Beyond Clojure: Prelude</h1>
+			<b><time>2016-04-19</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+
+			<div>
+				<p>Here we are, after five years of learning and later doing Clojure full time, I&rsquo;ve come to the point where I am seriously looking around for alternatives. I&rsquo;ve gotten very comfortable working in Clojure, and it has and will continue to serve me very well. But getting comfortable has a flip-side, you stop caring.</p>
+<p>The brain is a muscle like any other, it needs constant and regular exercise to thrive. Looking back at my arc, Clojure transitioned from a hobby to a job about 2 years ago. I haven&rsquo;t touched a single line of Clojure in my spare time since then, and I stopped writing on this blog. Its not good a situation, I want to care, I want to be passionate. But what I miss most of all is learning, and sadly Clojure stopped being an inspiration of learning some time ago.</p>
+<p>Back when I started with Clojure it was hugely exciting, the old noodle was working hard devouring all the new techniques and the seemingly endless stream of <a href="https://github.com/clojure/core.logic">mind bending libraries</a> that was released. Now, the Clojure ecosystem and community has matured and settled, and the headline-grabbing news are new build tools and proposed <a href="https://www.kickstarter.com/projects/1346708779/arachne-rapid-web-development-for-clojure">web-frameworks</a>. Sorry, but I can&rsquo;t muster an ounce of interest for either. I actually caught myself thinking the other day that I much rather re-write a 10k line Clojure service in Haskell than convert it from Leiningen to Boot.</p>
+<p>Further, resentment against Clojure is building up in my mind as well. This is where we get into trickier waters, because here comes criticism. I just want to point out that what follows is my personal opinion, and that your experiences can (and will) differ.</p>
+<h2 id="types">Types</h2>
+<p>Lets talk about the big one, and you knew it was coming. The lack of automated type checking is the built-in cancer in any dynamic language (dynlang). Clojure masks this better than any other dynlang I&rsquo;ve seen, but its still there. I&rsquo;d go so far to say that Clojure is the local maximum in the dynlang camp, but at the end of the day, its lipstick on a pig.</p>
+<p>Before we get too deep into this matter, lets specify what kind of type systems I am talking about. Broadly I categorize type systems into 3 buckets;</p>
+<ul>
+<li>
+<p>C-style languages (C++, Go, Java, C# &hellip;) Types exist to make it easier for the compiler to do its job. Types are a chore that the developer has to put up with.</p>
+</li>
+<li>
+<p>ML-style languages (Miranda, OCaml, Haskell, F#, &hellip;) Types exist to aid the programmer to validate the logical assumptions in the code.</p>
+</li>
+<li>
+<p>Scala. I&rsquo;m still trying to figure out what the hell this is :-)</p>
+</li>
+</ul>
+<p>When talking about &rsquo;types&rsquo; I&rsquo;m referring to ML-style language type systems and nothing else. If your initial reaction to &rsquo;types&rsquo; is nausea because you spent too long writing Java, I feel for you, but don&rsquo;t throw out the baby with the bath-water.</p>
+<p>After years of working on real world large-ish (20k+ lines) Clojure code-bases, I&rsquo;ve come to the conclusion that Clojure (like any other dynlang) doesn&rsquo;t scale. It doesn&rsquo;t scale on 3 very important axis in software development; code size, team size and time elapsed. The Achilles heel is refactoring. When I say refactoring, I am not talking about huge re-writes, but the day to day tweaks and shuffles that you do to a living code base. In Clojure, like Python and Ruby, you are basically stabbing in the dark. Keyword typos, shape changes of your nested maps, <a href="http://www.lispcast.com/nil-punning">nil punning</a> etc all work against you. Maintaining any confidence that your change didn&rsquo;t break the code is near impossible.</p>
+<p>On a high level, I&rsquo;ve only seen 2 mitigation strategies that really work;</p>
+<ul>
+<li>
+<p>Keeping a model of the entire code-base in your head (including all the subtleties). This works if you are the sole developer (which is true for many of the popular Clojure libraries for instance).</p>
+</li>
+<li>
+<p>A huge corpus of unit / integration / <a href="https://github.com/clojure/test.check">quickcheck</a> tests (more than 50% of the total line count)</p>
+</li>
+</ul>
+<p>Neither of them scale on some or all of the 3 axis; when the code grows, when the team grows or when time elapses. The horrible truth is that Clojure code rots quickly. The end result is bugs, bugs and more bugs. Most of them are really subtle as well, its a long tail of bugs that is only found in production after weeks of uptime. Its the kind of bugs that, when fixed, are accompanied with the developer saying &ldquo;Ahh, yes, I didn&rsquo;t think about that scenario&rdquo;.</p>
+<p>The real tragedy here is that we Clojure developers think in types all the time when writing code, we just don&rsquo;t write them down (and let the computer validate them). I think that is a huge missed opportunity not to have the computer help us write better programs.</p>
+<p>I&rsquo;m sure you have lots of objections by now, and before we go on, <a href="https://www.youtube.com/watch?v=XTl7Jn_kmio">here is a recent talk about Typed Racket</a> by a much more experienced person than myself, which addresses many of them (promise!), for instance where &lsquo;runtime contracts&rsquo; (prismatic/schema in clojure-speak) and Typed Clojure plays in all this.</p>
+<h2 id="ui-programming">UI programming</h2>
+<p>Somewhat surprisingly perhaps, the one area where the lack of types really bites is UI development. In most cases for us Clojurists UI means web front-ends, i.e. Clojurescript. The reasons why this area is particularly bad are many, but I&rsquo;ve boiled it down to a couple of things.</p>
+<ul>
+<li>
+<p>UIs are very complicated, they basically contain a pretty complete model of the backend, plus all user interaction complexities</p>
+</li>
+<li>
+<p>They are notoriously hard to write automated tests for</p>
+</li>
+</ul>
+<p>The lack of automated testing is the real killer for any reasonably sized Clojurescript code-base. The long tail of bugs I wrote about earlier is brutal with Clojurescript in my experience. You&rsquo;ll find yourself stuck in the &lsquo;fix 2 bugs introduce another&rsquo; limbo forever.</p>
+<p>In the backend, Clojure works better. Building a REST API, which is a machine API, is much easier to test. And with better test coverage, your confidence that the change you just made didn&rsquo;t break the other 42 endpoints can be reasonably high.</p>
+<h2 id="an-infestation-of-nulls">An infestation of nulls</h2>
+<p>Another big bugbear of mine is nulls. And let me tell you, Clojure is a petri dish of them. We attach meaning and truthy-ness to nil of course, see <a href="http://www.lispcast.com/nil-punning">nil punning</a>. At first, this looks like a reasonable idea, but then you start finding the corner cases where it doesn&rsquo;t work. You stop trusting it, and viola, you are back in null-checking hell. NullPointerException is a very real thing in Clojure code-bases. Its a crying shame.</p>
+<p>I don&rsquo;t think the majority of Node, Ruby, Java, Clojure developers are aware of the fact that there are languages out there without nulls. Its hard to explain how big of a deal to code quality this really is, it has to be experienced.</p>
+<h2 id="what-about-repl-driven-development">What about REPL-driven development?</h2>
+<p>The killer app for dynlangs is the <code>eval</code> call, which enables REPLs. The data-centric approach of Clojure gives a fantastic experience when interactively looking and transforming data. Prime example here is pulling down some JSON and mapping, filtering, reducing it.</p>
+<p>In Clojure you start off as a single developer in the REPL and the first week you are tremendously productive. You have the entire program in your head, you are whizzing around without any blockers, like type checkers pointing out your logical fallacies. The problems comes later, when you want more people working on the code or if you get back to it a few weeks later; &ldquo;What the hell was I thinking here?&rdquo;.</p>
+<p>All is not lost in typed land however, the languages I&rsquo;m looking at do have REPLs (not using the strictest meaning of the word, but still, close enough). Further, F# is moving the needle with something called <a href="https://msdn.microsoft.com/en-us/library/hh156509.aspx">type providers</a>. I&rsquo;m convinced this is a big deal, <a href="https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/">here is an example</a>. The difference is that while still being reasonably productive, you are building on a solid foundation.</p>
+<h1 id="beyond-clojure">Beyond Clojure</h1>
+<p>I&rsquo;m starting a blog series where I look at typed alternatives to Clojure, both for the Backend and Front End. They will be centered around a simple TodoMVC-ish app. In this series I will not only look at the code, but also offer views on the production-worthynes of the language in question, taking into account maturity, ecosystem etc. Another thing that is dear to my heart is the operations aspects, how to build, deploy, run and monitor services of apps written in these languages.</p>
+<p>Think of this series as a &lsquo;grumpy Clojure guy looking at building web apps in different typed languages&rsquo; kind of thing.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

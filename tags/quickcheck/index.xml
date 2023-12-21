@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>quickcheck on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/quickcheck/</link>
+    <description>Recent content in quickcheck on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 14 Jun 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/quickcheck/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some thoughts on clojure.spec</title>
+      <link>https://martintrojer.github.io/post/2016-06-14-some-thoughts-on-clojurespec/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-06-14-some-thoughts-on-clojurespec/</guid>
+      <description>&lt;p&gt;Some of the readers of my &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series have asked about my opinion on clojure.spec, and if it solves Clojure&amp;rsquo;s &amp;rsquo;type problem&amp;rsquo;. Implying whether its presence makes me look more favorably on Clojure. Here are some of my thoughts.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

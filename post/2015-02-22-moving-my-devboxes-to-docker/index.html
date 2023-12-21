@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Moving my devboxes to Docker</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Moving my devboxes to Docker</h1>
+			<b><time>2015-02-22</time></b>
+		       
+		           <a href="/tags/docker">docker</a>
+        	       
+		           <a href="/tags/devops">devops</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve been quite vocal about my opinions on development environments and automating the creation of them <a href="https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/">on this blog</a> and <a href="https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud">elsewhere</a>. Boiling it down to the 2 points I feel most strongly about it would be;</p>
+<ol>
+<li>Always develop in a production-like environment</li>
+<li>Automate the creation of these environments</li>
+</ol>
+<p>By production-like I mean developing in the same OS distribution and version as production, using the same database versions, the same message broker, as similar settings as possible, etc. Automation allows these environments to be disposable speeding up teams working on the project and also enables &lsquo;developing in the cloud&rsquo; as described in my previous post (see above). Development environments shouldn&rsquo;t be a precious resource that you spend hours setting up (following outdated Wiki pages).</p>
+<p>Up-to now production-like meant (for me atleast) VMs. However, the uprising of Docker has now lead me to believe that future deployments I&rsquo;d encounter will involve containers. I have personally moved all of my &lsquo;hobby projects&rsquo; over the Docker.</p>
+<p>Is it possible to do your work inside containers similar to they way you can do in VMs? The answer is yes, and you will be able to enjoy the benefits Docker brings while adhering to my 2 laws of devboxes. I&rsquo;ve created 2 basic container setups to cater for my devbox needs;</p>
+<h2 id="the-hybrid-devbox">The hybrid devbox</h2>
+<p>You typically run one service per container so a development setup would be a handful of containers with your database, message broker etc. Then you create another container with <a href="https://docs.docker.com/userguide/dockerlinks/">links</a> (by using <a href="http://www.fig.sh/">Fig</a> for instance) where you put your app&rsquo;s runtime (the JVM, golang toolchain etc). If the dev container is running locally (which is most convenient for this setup) you will also use a <a href="https://docs.docker.com/userguide/dockervolumes/#mount-a-host-directory-as-a-data-volume">shared folder</a> to mount you source into the container.</p>
+<p>If you are writing Clojure its trivial to connect to nREPL running in the dev container, and if you are using something like golang you&rsquo;d run a shell in this container where you build, run and debug your code. One caveat is that some emacs/vim modes and IDEs shell-out to the language toolchain in order to analyze the code for navigation etc. With the hybrid setup you might therefore need to have a local install of the toolchain aswell as the one inside the container. This works out quite well in my experience, especially since the source folder is shared.</p>
+<p>This setup satisfies the 2 laws listed above, the container you are developing is production-like since you are using the same base image (and most of the Dockerfile hopefully) as the deployment image. The creation of this container is also completely automated and the container can be pushed to a registry and shared with team members.</p>
+<h2 id="the-all-in-devbox">The all-in devbox</h2>
+<p>In this scenario you want to move your entire development environment into the container (including you editor, dotfiles etc). One compelling argument for doing this is to enable remote devboxes, i.e. &lsquo;developing in the cloud&rsquo;. This is handy for remote (and local) pairing sessions with shared screens (tmux attach) or when the network characteristics of the remote container is important for your task/analysis at hand. For instance running ETL/migrations jobs from an AWS instance can be orders of magnitude faster than from your local machine.</p>
+<p>In this scenario the provisioning becomes more expensive, since you have to check out all the repos, run sshd etc on the containers. But if you do it correctly, and set up all users on the containers this price can be paid once and then shared by all the devs on the team.</p>
+<h2 id="example">Example</h2>
+<p>I&rsquo;ve created a repo on github with examples of both types of devboxes, <a href="https://github.com/martintrojer/devbox-docker">see here</a>.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

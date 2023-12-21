@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Comparing FP REPL Sessions</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Comparing FP REPL Sessions</h1>
+			<b><time>2013-06-04</time></b>
+		       
+		           <a href="/tags/scala">scala</a>
+        	       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+
+			<div>
+				<p>Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.</p>
+<p>Most languages comes with a REPL (or &lsquo;interactive&rsquo; prompt), where you can play with these features at your leisure. Dynamically typed languages are a bit more convenient in the REPL, but not by as much as you might think. Also, F# type providers closes the gap even further.</p>
+<p>Here&rsquo;s a typical, hit-a-JSON-endpoint-and-look-at-the-data session in Clojure;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>$ lein repl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#66d9ef">def </span>res (slurp <span style="color:#e6db74">&#34;http://www.bbc.co.uk/tv/programmes/genres/drama/scifiandfantasy/schedules/upcoming.json&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#a6e22e">require</span> <span style="color:#e6db74">&#39;clojure.data.json</span> <span style="color:#e6db74">&#39;clojure.walk</span>)
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#66d9ef">def </span>json (<span style="color:#a6e22e">-&gt;&gt;</span> res clojure.data.json/read-str
+</span></span><span style="display:flex;"><span>                      clojure.walk/keywordize-keys))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#a6e22e">-&gt;&gt;</span> json <span style="color:#e6db74">:broadcasts</span> (filter <span style="color:#f92672">#</span>(&gt;= (<span style="color:#e6db74">:duration</span> %) <span style="color:#ae81ff">6300</span>))
+</span></span><span style="display:flex;"><span>            (map <span style="color:#e6db74">:programme</span>) (map (<span style="color:#a6e22e">juxt</span> <span style="color:#e6db74">:title</span> <span style="color:#e6db74">:pid</span>)))
+</span></span><span style="display:flex;"><span>([<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>])
+</span></span></code></pre></div><p>Nice, clean and very powerful, virtually zero ceremony. Doing the same in Scala, is just a little bit more awkward;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span>$ scala
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">val</span> res <span style="color:#66d9ef">=</span> scala<span style="color:#f92672">.</span>io<span style="color:#f92672">.</span><span style="color:#a6e22e">Source</span><span style="color:#f92672">.</span>fromURL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://www.bbc.co.uk/tv/programmes/genres/drama/scifiandfantasy/schedules/upcoming.json&#34;</span><span style="color:#f92672">).</span>mkString
+</span></span><span style="display:flex;"><span>res<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">String</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Option</span> <span style="color:#66d9ef">=</span> <span style="color:#e6db74">&#34;{ ... }&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">import</span> scala.util.parsing.json._
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">val</span> json <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">JSON</span><span style="color:#f92672">.</span>parseFull<span style="color:#f92672">(</span>res<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>json<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Option</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Any</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">Some</span><span style="color:#f92672">(</span><span style="color:#a6e22e">Map</span><span style="color:#f92672">(</span> <span style="color:#f92672">...</span> <span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">val</span> broadcasts <span style="color:#66d9ef">=</span> json <span style="color:#66d9ef">match</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Some</span><span style="color:#f92672">(</span>m<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Map</span><span style="color:#f92672">[</span><span style="color:#66d9ef">String</span>,<span style="color:#66d9ef">List</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Map</span><span style="color:#f92672">[</span><span style="color:#66d9ef">String</span>,<span style="color:#66d9ef">Any</span><span style="color:#f92672">]]])</span> <span style="color:#66d9ef">=&gt;</span> m<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;broadcasts&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// warnings...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>broadcasts<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">List</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Map</span><span style="color:#f92672">[</span><span style="color:#66d9ef">String</span>,<span style="color:#66d9ef">Any</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">List</span><span style="color:#f92672">(</span><span style="color:#a6e22e">Map</span><span style="color:#f92672">(</span> <span style="color:#f92672">...</span> <span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> broadcasts filter <span style="color:#f92672">(</span><span style="color:#66d9ef">_</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;duration&#34;</span><span style="color:#f92672">).</span>asInstanceOf<span style="color:#f92672">[</span><span style="color:#66d9ef">Double</span><span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">6300</span> <span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                  map <span style="color:#f92672">(</span><span style="color:#66d9ef">_</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;programme&#34;</span><span style="color:#f92672">).</span>asInstanceOf<span style="color:#f92672">[</span><span style="color:#66d9ef">Map</span><span style="color:#f92672">[</span><span style="color:#66d9ef">String</span>,<span style="color:#66d9ef">Any</span><span style="color:#f92672">]])</span>
+</span></span><span style="display:flex;"><span>                  map <span style="color:#f92672">(</span>m <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;title&#34;</span><span style="color:#f92672">),</span>m<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;pid&#34;</span><span style="color:#f92672">)))</span>
+</span></span><span style="display:flex;"><span>res47<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">List</span><span style="color:#f92672">[(</span><span style="color:#66d9ef">Any</span>, <span style="color:#66d9ef">Any</span><span style="color:#f92672">)]</span> <span style="color:#66d9ef">=</span> <span style="color:#a6e22e">List</span><span style="color:#f92672">((</span><span style="color:#a6e22e">Lady</span> in the <span style="color:#a6e22e">Water</span><span style="color:#f92672">,</span>b00l5wdn<span style="color:#f92672">),</span> <span style="color:#f92672">(</span><span style="color:#a6e22e">Lady</span> in the <span style="color:#a6e22e">Water</span><span style="color:#f92672">,</span>b00l5wdn<span style="color:#f92672">),</span> <span style="color:#f92672">(</span><span style="color:#a6e22e">Lady</span> in the <span style="color:#a6e22e">Water</span><span style="color:#f92672">,</span>b00l5wdn<span style="color:#f92672">),</span> <span style="color:#f92672">(</span><span style="color:#a6e22e">Lady</span> in the <span style="color:#a6e22e">Water</span><span style="color:#f92672">,</span>b00l5wdn<span style="color:#f92672">))</span>
+</span></span></code></pre></div><p>Similar to Clojure but a bit more ceremony and type annotations.</p>
+<p>Now, can we get closer to the ease of dynamic languages while staying strongly typed? What if the types sprinkled evenly in the Scala example could be inferred? Enter F# type providers;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#f92672">$</span> fsharpi
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#75715e">#r</span> <span style="color:#e6db74">&#34;FSharp.Data.dll&#34;</span><span style="color:#f92672">;;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Data</span> <span style="color:#f92672">=</span> JsonProvider<span style="color:#f92672">&lt;</span><span style="color:#e6db74">&#34;http://www.bbc.co.uk/tv/programmes/genres/drama/scifiandfantasy/schedules/upcoming.json&#34;</span><span style="color:#f92672">&gt;;;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Data</span> <span style="color:#f92672">=</span> JsonProvider<span style="color:#f92672">&lt;...&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">let</span> json <span style="color:#f92672">=</span> Data.GetSample()<span style="color:#f92672">;;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">val</span> json <span style="color:#f92672">:</span> JsonProvider<span style="color:#f92672">&lt;...&gt;.</span>DomainTypes<span style="color:#f92672">.</span>Entity <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">{</span>JsonValue <span style="color:#f92672">=</span> <span style="color:#f92672">...</span> <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> json<span style="color:#f92672">.</span>Broadcasts <span style="color:#f92672">|&gt;</span> Seq.filter <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> m <span style="color:#f92672">-&gt;</span> m<span style="color:#f92672">.</span>Duration <span style="color:#f92672">&gt;=</span> 6300<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">|&gt;</span> Seq.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> m <span style="color:#f92672">-&gt;</span> m<span style="color:#f92672">.</span>Programme<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">|&gt;</span> Seq.map <span style="color:#f92672">(</span><span style="color:#66d9ef">fun</span> m <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">[</span> m<span style="color:#f92672">.</span>Title<span style="color:#f92672">;</span> m<span style="color:#f92672">.</span>Pid <span style="color:#f92672">]);;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">val</span> it <span style="color:#f92672">:</span> seq<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">string</span> <span style="color:#66d9ef">list</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>  seq <span style="color:#f92672">[[</span><span style="color:#e6db74">&#34;b0015wdn&#34;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#34;Lady in the Water&#34;</span><span style="color:#f92672">];</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;b0015wdn&#34;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#34;Lady in the Water&#34;</span><span style="color:#f92672">];</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;b0015wdn&#34;</span><span style="color:#f92672">;</span> <span style="color:#e6db74">&#34;Lady in the Water&#34;</span><span style="color:#f92672">]]</span>
+</span></span></code></pre></div><p>There you have it; the simplicity and succinctness of a dynamic language plus type safety with inferred types. Please note that the correct types are inferred in the final result.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

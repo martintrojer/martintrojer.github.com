@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Clojure Hacking on the Samsung ARM Chromebook</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Clojure Hacking on the Samsung ARM Chromebook</h1>
+			<b><time>2013-04-06</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/chrome">chrome</a>
+        	       
+		           <a href="/tags/arm">arm</a>
+        	       
+		           <a href="/tags/rpi">rpi</a>
+        	       
+
+			<div>
+				<figure><img src="/assets/images/chromebook/cb.jpg"/>
+</figure>
+
+<p>I recently switched to the <a href="http://www.samsung.com/uk/consumer/pc-peripherals/chrome-devices/chrome-devices/XE303C12-A01UK">Samsung ARM Chromebook</a> for all my laptop needs. The pitch it&rsquo;s quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it&rsquo;s quite limited RAM size, just 2GB. But with a decent swap file, I&rsquo;m running multiple JVMs (with Datomic, Elasicsearch, <a href="https://github.com/clojure/clojurescript">CLJS</a> compiler etc without any hickups).</p>
+<p>Out of the box it runs <a href="http://en.wikipedia.org/wiki/Google_Chrome_OS">ChromeOS</a>, which I have to say is pretty stellar for browsing and consuming content on the web. It is also possible to run any Linux you wish on this machine, google has an <a href="http://www.chromium.org/chromium-os/chromiumos-design-docs/developer-mode">outspoken strategy</a> to enable it.</p>
+<p>I use a dual-boot setup where I have the ChromeOS system on the internal SSD and Chrubuntu (currently 12.04) on an SDCard. So if you buy one of these chromebooks, also get a decent SDCard (I have a <a href="http://www.sandisk.co.uk/products/memory-cards/sd/">32Gb Sandisk Extreme</a>). <a href="http://chromeos-cr48.blogspot.co.uk/2012/12/so-you-want-chrubuntu-on-external-drive.html">Setting up Chrubuntu</a> is a breeze, and after the base system is installed you need to spend some time installing the other essential development tools. It&rsquo;s not as easy as <a href="http://mxcl.github.io/homebrew/">homebrew</a> on OSX, but if you have any Linux experience (or want to gain some) it&rsquo;s straight forward.</p>
+<p><strong>Edit:</strong> As pointed out in the comment section below, I decided to give <a href="https://github.com/dnschneid/crouton">Crouton</a> a go. This is some clever scripts around <a href="http://wiki.debian.org/Debootstrap">debootstrap</a>, that gives a full Ubuntu install inside Chrome OS. You can then launch it from the Crosh (developer) shell and drop into a (for instance) 13.04 Xfce environment, and install whatever you want. This is very convenient, since you can easily switch back to Chrome OS (which runs in parallel) for flash websites etc. It also solves some of the annoyances you&rsquo;ll face when booting straight into Chrubuntu (like hardware accelerated graphics and the resume on sleep issue). The price you pay is slightly less memory available for you Ubuntu system, since you share all resources with Chrome OS, and chrome is still running &lsquo;on the other side&rsquo;. If you install your Cruoton environment on the SSD, be very careful at the &ldquo;scary boot screen&rdquo; - you might end up wiping your entire environment and lose all your files.</p>
+<p>Now, since we are running on an ARM processor, any prebuilt x86 binaries won&rsquo;t run. The Chrubuntu distro is pretty complete, but you probably have to build some stuff yourself. One thing to keep in mind when working with Linux on ARM hardware is pay extra attention to &ldquo;hard-float&rdquo; vs &ldquo;soft-float&rdquo; binaries. On the Samsung ARM Chromebook you will be running <code>armhf</code> which is the hard-float option. Unfortunately soft-float <a href="http://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELFs</a> is not binary compatible with armhf, thus you might experience crashes if you don&rsquo;t pass the correct flags to <code>./configure</code>.</p>
+<p>Fortunately it&rsquo;s not a big problem. Emacs builds nicely and you can snap up a JVM for armhf <a href="http://jdk8.java.net/fxarmpreview/">here</a>. On my system I also work quite a bit with <a href="http://nodejs.org/">node.js</a>, when building it you must enable HARDFLOAT and disable the snapshot feature in v8 (otherwise v8&rsquo;s ARM JIT will not behave correctly).</p>
+<p>Once you have Emacs and Java8/armhf, just can install and run <a href="https://github.com/technomancy/leiningen">leiningen</a> as normal, jack-in in Emacs and hack away! You will quickly forget you&rsquo;re on ARM hardware, it&rsquo;s just normal Ubuntu. Well, you might notice that there aren&rsquo;t any CPU fans, and no 2nd degree burns on your legs :-)</p>
+<p>As you can see in the picture above, I&rsquo;m also working a bit on my <a href="http://www.raspberrypi.org/">Raspberry Pi</a>. This work is greatly helped by having developer spec-ed ARM hardware to work on. All binaries can be copied verbatim to/from the PI &ndash; no more ARM Emulators on x86 hardware!</p>
+<p>I recommend the Samsung ARM Chromebook for Clojure development!</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>The M Word</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>The M Word</h1>
+			<b><time>2012-11-24</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/monads">monads</a>
+        	       
+
+			<div>
+				<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>monads
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:require</span> clojure.set))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">declare </span><span style="color:#f92672">^</span><span style="color:#e6db74">:dynamic</span> return
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">^</span><span style="color:#e6db74">:dynamic</span> bind)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>lift-inc [v]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">return</span> (inc v)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>m-add [mv n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">bind</span> mv (<span style="color:#66d9ef">fn </span>[v] (<span style="color:#a6e22e">return</span> (+ v n)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>m-div [mv n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(zero? n)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">return</span> nil)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">bind</span> mv (<span style="color:#66d9ef">fn </span>[v] (<span style="color:#a6e22e">return</span> (/ v n))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Identity monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">fn </span>[] v))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#a6e22e">f</span> (<span style="color:#a6e22e">mv</span>)))]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#a6e22e">-&gt;</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">bind</span> lift-inc)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">m-div</span> <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>    )))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; 11/2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; maybe monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">fn </span>[] v))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                   (if-let [v (<span style="color:#a6e22e">mv</span>)]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#a6e22e">f</span> v)
+</span></span><span style="display:flex;"><span>                     (<span style="color:#a6e22e">return</span> nil)))]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#a6e22e">-&gt;</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">m-div</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">2</span>))))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; nil</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; state monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>setf [v] (<span style="color:#66d9ef">fn </span>[_] [v v]))
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>getf (<span style="color:#66d9ef">fn </span>[s] [s s]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>set-state [mv]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">bind</span> mv setf))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-state [mv]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">bind</span> mv (<span style="color:#66d9ef">fn </span>[_] getf)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>add-from-state [mv]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">bind</span> mv (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">bind</span> getf
+</span></span><span style="display:flex;"><span>                       (<span style="color:#66d9ef">fn </span>[s] (<span style="color:#a6e22e">return</span> (+ s v)))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">fn </span>[s] [v s]))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#66d9ef">fn </span>[s]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">let </span>[[v sn] (<span style="color:#a6e22e">mv</span> s)]
+</span></span><span style="display:flex;"><span>                       ((<span style="color:#a6e22e">f</span> v) sn))))]
+</span></span><span style="display:flex;"><span>  [
+</span></span><span style="display:flex;"><span>   ((<span style="color:#a6e22e">-&gt;</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>     set-state
+</span></span><span style="display:flex;"><span>     add-from-state
+</span></span><span style="display:flex;"><span>     )<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#66d9ef">let </span>[m-count (<span style="color:#a6e22e">bind</span> getf (<span style="color:#66d9ef">fn </span>[s]
+</span></span><span style="display:flex;"><span>                              (<span style="color:#a6e22e">setf</span> (inc s))))
+</span></span><span style="display:flex;"><span>         m-inc (<span style="color:#66d9ef">fn </span>[mv]
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">bind</span> mv (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                              (<span style="color:#a6e22e">bind</span> m-count
+</span></span><span style="display:flex;"><span>                                      (<span style="color:#66d9ef">fn </span>[_] (<span style="color:#a6e22e">return</span> (inc v)))))))]
+</span></span><span style="display:flex;"><span>     ((-&gt; (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>          m-inc
+</span></span><span style="display:flex;"><span>          m-inc
+</span></span><span style="display:flex;"><span>          )<span style="color:#ae81ff">0</span>))])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; [[20 10] [12 2]]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Continuation monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>halt [x]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">fn </span>[c] x))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>bounce [x]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">fn </span>[c]
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">fn </span>[] (<span style="color:#a6e22e">c</span> x))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>mark [x]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">fn </span>[c] c))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#66d9ef">fn </span>[c] (<span style="color:#a6e22e">c</span> v)))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                 (<span style="color:#66d9ef">fn </span>[c]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#a6e22e">mv</span> (<span style="color:#66d9ef">fn </span>[v]
+</span></span><span style="display:flex;"><span>                         ((<span style="color:#a6e22e">f</span> v) c)))))]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  [
+</span></span><span style="display:flex;"><span>   ((-&gt; (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">21</span>)
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">bind</span> lift-inc)
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">bind</span> halt)
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>    identity)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">trampoline</span>
+</span></span><span style="display:flex;"><span>    ((-&gt; (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">21</span>)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">bind</span> lift-inc)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">bind</span> bounce)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>))
+</span></span><span style="display:flex;"><span>     identity))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   (doall (map ((-&gt; (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">21</span>)
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">bind</span> mark)
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">m-add</span> <span style="color:#ae81ff">10</span>)
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">bind</span> lift-inc)
+</span></span><span style="display:flex;"><span>                    )identity)
+</span></span><span style="display:flex;"><span>               [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span>]))])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; [22 32 (11 12 13)]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; List monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>lift-id-half-double [x]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">return</span> x (/ x <span style="color:#ae81ff">2</span>) (* x <span style="color:#ae81ff">2</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[<span style="color:#f92672">&amp;</span> v]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">fn </span>[] (apply list v)))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#66d9ef">fn </span>[] (mapcat (comp <span style="color:#f92672">#</span>(<span style="color:#a6e22e">%</span>) f)
+</span></span><span style="display:flex;"><span>                                 (<span style="color:#a6e22e">mv</span>))))]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#a6e22e">-&gt;</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">bind</span> lift-id-half-double)
+</span></span><span style="display:flex;"><span>     )))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; (4 2 8 8 4 16)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ===============================</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Set monad</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(binding [return (<span style="color:#66d9ef">fn </span>[<span style="color:#f92672">&amp;</span> v]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#66d9ef">fn </span>[] (apply hash-set v)))
+</span></span><span style="display:flex;"><span>          bind (<span style="color:#66d9ef">fn </span>[mv f]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#66d9ef">fn </span>[] (apply clojure.set/union
+</span></span><span style="display:flex;"><span>                                (map (comp <span style="color:#f92672">#</span>(<span style="color:#a6e22e">%</span>) f) (<span style="color:#a6e22e">mv</span>)))))]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#a6e22e">-&gt;</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">return</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">8</span>)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">bind</span> lift-id-half-double)
+</span></span><span style="display:flex;"><span>     )))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; -&gt; #{2 4 8 16}</span>
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

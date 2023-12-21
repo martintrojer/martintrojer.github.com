@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Distributed Actors in Clojure</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Distributed Actors in Clojure</h1>
+			<b><time>2012-05-17</time></b>
+		       
+		           <a href="/tags/akka">akka</a>
+        	       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/erlang">erlang</a>
+        	       
+		           <a href="/tags/jvm">jvm</a>
+        	       
+
+			<div>
+				<p>Here&rsquo;s another post on a topic that have been discussed since the <a href="https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ">dawn-of-time</a>, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&rsquo;s post (above) still holds true today.</p>
+<p>First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;</p>
+<ul>
+<li><a href="https://github.com/stuartsierra/clojure-hadoop">clojure-hadoop</a></li>
+<li><a href="https://github.com/amitrathore/swarmiji">swamiji</a></li>
+<li><a href="https://github.com/nathanmarz/cascalog">cacalog</a></li>
+<li><a href="https://github.com/liebke/zookeeper-clj">zookeeper-clj</a></li>
+<li><a href="https://github.com/nathanmarz/storm">storm</a></li>
+<li>etc&hellip;</li>
+</ul>
+<h3 id="akka-and-the-erlang-legacy">Akka and the Erlang legacy</h3>
+<p>I am trying to write programs that solve problems in the areas where <a href="http://www.erlang.org/">Erlang</a> typically excels such as</p>
+<ul>
+<li>Event-driven, asynchronous, non-blocking programming model</li>
+<li>Scalability (location transparency etc)</li>
+<li>Fault tolerance (supervisors, &ldquo;let it crash&rdquo;)</li>
+</ul>
+<p>The closest we&rsquo;ve got on the JVM is <a href="http://akka.io/">Akka</a>, which claims to have all features (and more) listed above. Akka is the &ldquo;<a href="http://typesafe.com/stack">killer app</a>&rdquo; for Clojure&rsquo;s sister-language Scala, and is very feature rich and performant. Levering it&rsquo;s power in a safe and idiomatic way is certainly appealing.</p>
+<p>However, <a href="http://blog.darevay.com/2011/06/clojure-and-akka-a-match-made-in/">interfacing to Akka from Clojure is not nice</a>, and certainly not idiomatic. Some work is clearly needed in order to <a href="https://gist.github.com/2716711#file_commented_vision.clj">improve Akka/Clojure interrop</a>. The bigger question is if it&rsquo;s worth pursuing? Even if the interrop is made as pain-free as possible, how badly will it clash with Clojure&rsquo;s underlaying design and philosophy? For instance; Akka comes with a <a href="http://doc.akka.io/docs/akka/1.3.1/scala/stm.html">STM</a>, how nasty will that be when used in conjunction with Clojure&rsquo;s own?</p>
+<p><strong>Update</strong> 2 Akka/Clojure libraries has emerged since this article was written, which solves some of the problems I was facing; <a href="https://github.com/jasongustafson/akka-clojure">akka-clojure</a> and <a href="https://github.com/gaverhae/okku">okku</a>. Perfomance compared to Scala/Akka is yet to be determined.</p>
+<h3 id="wishful-thinking">Wishful thinking</h3>
+<p>Ideally, Clojure should support distributed actors in it&rsquo;s core, that looks, behaves and interrops nicely with it&rsquo;s other concurrency primitives. It&rsquo;s pretty easy to create a ideal-world straw-man for how this might look from a code/syntax perspective; <a href="http://code.google.com/p/termite/">Termite</a> is a good place to start. Here is a cleaned-up version of the <a href="https://gist.github.com/2716711">hello-world examples in the gist above</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;; An (imaginary) actor macro takes an initial state and callback fns.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; (actor {} (fn1 [state message]) (fn2 [state message) ...)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; The most obvious callback fn is (receive [state message) that is called when a</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; message is consumed from the agents mailbox. receive is called with the old state</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; and the message as parameters -- it returns the new state.</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; sender is bound to the senders pid.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; other callbacks are stuff broken link detection etc.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; (spawn) creates a lightweight actor process, also has remote-actor semantics</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; (tell) is used to send messages to an spawned actor&#39;s pid.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>hello-actor
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">actor</span> {<span style="color:#e6db74">:world-actor</span>
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">spawn</span>
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">actor</span> {}
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">receive</span> [state [message-type word <span style="color:#e6db74">:as</span> message]]
+</span></span><span style="display:flex;"><span>                           (<span style="color:#a6e22e">condp</span> = message-type
+</span></span><span style="display:flex;"><span>                             <span style="color:#e6db74">:hello</span> (<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>                                      (<span style="color:#a6e22e">tell</span> sender (str (<span style="color:#a6e22e">.toUpperCase</span> word) <span style="color:#e6db74">&#34;world!&#34;</span>))
+</span></span><span style="display:flex;"><span>                                      state)
+</span></span><span style="display:flex;"><span>                             (<span style="color:#a6e22e">unhandled</span> message)))))}
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">receive</span> [state [message-type word]]
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">condp</span> = message-type
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">:start</span> (<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>                             (<span style="color:#a6e22e">tell</span> (<span style="color:#e6db74">:world-actor</span> state) [<span style="color:#e6db74">:hello</span> <span style="color:#e6db74">&#34;hello&#34;</span>])
+</span></span><span style="display:flex;"><span>                             state)
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>                      (println (str <span style="color:#e6db74">&#34;Received message:&#34;</span> word))
+</span></span><span style="display:flex;"><span>                      (<span style="color:#a6e22e">shutdown</span>)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[pid (<span style="color:#a6e22e">spawn</span> hello-actor)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">tell</span> pid [<span style="color:#e6db74">:start</span>]))
+</span></span></code></pre></div><p>Many problem arises, serialisation is a big one. Since Clojure&rsquo;s data structures can contain &ldquo;anything&rdquo;, like Java objects, some limitations needs to be applied to strike a good usability / performance balance. Limiting the stuff you can distribute amongst actors to mimic Erlangs atoms/lists/tuples are probably a fair trade off (all you need is a hashmap right?), and maybe baking in <a href="https://github.com/flatland/clojure-protobuf">Google Protobuf</a> for efficiency.</p>
+<p>For data transport / socket stuff, I&rsquo;d vote for using a message queue such as <a href="http://www.zeromq.org/">0MQ</a> or maybe even <a href="http://www.rabbitmq.com/">RabbitMQ</a>, this would simplify and empower matters greatly.</p>
+<p>With all that in place, it would be possible to build Clojure equivalents of Erlang&rsquo;s OTP, <a href="http://www.erlang.org/doc/man/mnesia.html">Mnesia</a> etc, now that&rsquo;s a world I want to live in! :)</p>
+<h3 id="more-reading">More reading</h3>
+<ul>
+<li><a href="http://learnyousomeerlang.com/">Quickly get into the Erlang frame of mind</a></li>
+<li>A vision for Erlang-style actors in clojure-py <a href="http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency.html">part1</a> <a href="http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency_18.html">part2</a></li>
+<li><a href="http://elixir-lang.org/">ErlangVM language with support for Lisp-style macros</a></li>
+<li><a href="http://joxa.org/">Clojure-style Lisp for the ErlangVM</a></li>
+<li><a href="http://avout.io/">Distributed STM for Clojure, for synchronously updating of shared state</a></li>
+<li><a href="https://github.com/antoniogarrote/jobim">An attempt to mimic the Erlang programming model in Clojure</a></li>
+</ul>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

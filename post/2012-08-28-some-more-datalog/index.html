@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Some more Datalog</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Some more Datalog</h1>
+			<b><time>2012-08-28</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/datalog">datalog</a>
+        	       
+		           <a href="/tags/datomic">datomic</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve <a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">written about datalog</a> and <a href="http://www.datomic.com">Datomic</a> a bit recently. To conclude here&rsquo;s another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found <a href="https://github.com/martintrojer/datalog">here</a>.</p>
+<p>The example I&rsquo;m using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> $a $b
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:where</span> [$a ?last ?first ?email] [$b ?email ?height]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>In contrib.datalog the same query requires a bit more ceremony, you can write it like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>db-base (<span style="color:#a6e22e">make-database</span>
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">relation</span> <span style="color:#e6db74">:last-first-email</span> [<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>])
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">relation</span> <span style="color:#e6db74">:email-height</span> [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>])))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>db
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">add-tuples</span> db-base
+</span></span><span style="display:flex;"><span>              [<span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:last</span> <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>              [<span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:last</span> <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>              [<span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#e6db74">:height</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>              [<span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#e6db74">:height</span> <span style="color:#ae81ff">71</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>rules (<span style="color:#a6e22e">rules-set</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">&lt;-</span> (<span style="color:#e6db74">:first-height</span> <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:height</span> ?h)
+</span></span><span style="display:flex;"><span>                (<span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:last</span> ?l <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:email</span> ?e)
+</span></span><span style="display:flex;"><span>                (<span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span> ?e <span style="color:#e6db74">:height</span> ?h))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>wp (<span style="color:#a6e22e">build-work-plan</span>
+</span></span><span style="display:flex;"><span>         rules
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">?-</span> <span style="color:#e6db74">:first-height</span> <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:height</span> ?h)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">run-work-plan</span> wp db {})
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ({:height 73, :first &#34;Jane&#34;} {:height 71, :first &#34;John&#34;})</span>
+</span></span></code></pre></div><p>In my previous posts I described a number of different way to use core.logic, unify+clojure.set/join to replicate the same query. How does the execution times compare? I use the same benchmark as in the previous post (the same query, with 5000 joins between the 2 &rsquo;tables&rsquo;).</p>
+<p>Datomic/datalog is fastest by far needing ~11ms to complete. Second fastest is the unify + clojure.set/join solution <a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">described here</a> about an order of magnitude slower at ~150ms. The core.logic defrel/fact and contrib.datalog is about equal in speed at ~320ms, ie. 2x slower than unify+join and ~30x slower than datomic/datalog.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>My recent datalog posts focused on querying in-memoy data structures (like log rings etc). This is not exactly what Datomic was designed to do, still it&rsquo;s query engine performs really well. An added bonus is that it&rsquo;s low on ceremony. The recently announced Datomic free edition eradicates some of my initial fear of using it in my projects. The main drawback is that Datomic is closed sourced, even the free edition. Another detail that&rsquo;s annoying is that even if you&rsquo;re just after the datalog/query machinery &ndash; by adding datomic-free, you pull in all of datomics 27 jar dependencies weighing in at 19Mb. That&rsquo;s quite a heavy tax on your uberjar. <!-- raw HTML omitted --><!-- raw HTML omitted -->There are certainly alternatives, like core.logic and contrib.datalog. But the order of magnitude worse execution time can be hard to live with if your datasets are big. By using datomic/datalog queries you also have the flexibility to move into disk-based databases if your datasets explodes. More on this in upcoming blog posts.</p>
+<p>For completeness, here&rsquo;s the join-test function I used for the contrib.datalog benchmark;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>join-test3 [xs ys]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[db-base (<span style="color:#a6e22e">make-database</span>
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">relation</span> <span style="color:#e6db74">:last-first-email</span> [<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>])
+</span></span><span style="display:flex;"><span>                 (index <span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:email</span>)
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">relation</span> <span style="color:#e6db74">:email-height</span> [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>])
+</span></span><span style="display:flex;"><span>                 (index <span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span>))
+</span></span><span style="display:flex;"><span>        rules (<span style="color:#a6e22e">rules-set</span>
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&lt;-</span> (<span style="color:#e6db74">:first-height</span> <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:height</span> ?h)
+</span></span><span style="display:flex;"><span>                   (<span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:last</span> ?l <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:email</span> ?e)
+</span></span><span style="display:flex;"><span>                   (<span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span> ?e <span style="color:#e6db74">:height</span> ?h)))
+</span></span><span style="display:flex;"><span>        workplan (<span style="color:#a6e22e">build-work-plan</span>
+</span></span><span style="display:flex;"><span>                  rules
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">?-</span> <span style="color:#e6db74">:first-height</span> <span style="color:#e6db74">:first</span> ?f <span style="color:#e6db74">:height</span> ?h))
+</span></span><span style="display:flex;"><span>        db (time (<span style="color:#a6e22e">-&gt;&gt;</span> xs
+</span></span><span style="display:flex;"><span>                      (map (<span style="color:#66d9ef">fn </span>[[l f e]]
+</span></span><span style="display:flex;"><span>                             [<span style="color:#e6db74">:last-first-email</span> <span style="color:#e6db74">:last</span> l <span style="color:#e6db74">:first</span> f <span style="color:#e6db74">:email</span> e]))
+</span></span><span style="display:flex;"><span>                      (apply add-tuples db-base)))
+</span></span><span style="display:flex;"><span>        db (time  (<span style="color:#a6e22e">-&gt;&gt;</span> ys
+</span></span><span style="display:flex;"><span>                       (map (<span style="color:#66d9ef">fn </span>[[e h]] [<span style="color:#e6db74">:email-height</span> <span style="color:#e6db74">:email</span> e <span style="color:#e6db74">:height</span> h]))
+</span></span><span style="display:flex;"><span>                       (apply add-tuples db)))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">run-work-plan</span> workplan db {})))
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

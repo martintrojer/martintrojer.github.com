@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Scheme as an external DSL in Clojure</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Scheme as an external DSL in Clojure</h1>
+			<b><time>2012-01-28</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/lisp">lisp</a>
+        	       
+		           <a href="/tags/sicp">sicp</a>
+        	       
+
+			<div>
+				<p>This is a follow-up post to my previous <a href="https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/">&ldquo;Scheme in Clojure&rdquo; post</a>.</p>
+<p>This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code). However, this can serve as an example of how to write parsers in Clojure and it also highlights how elegant and succinct such a parser/interpreter can be. And of course, it&rsquo;s pretty darn fun :-)</p>
+<p>All source code is available on <a href="https://github.com/martintrojer/scheme-clojure">github</a>.</p>
+<h3 id="parsing">Parsing</h3>
+<p>The reader is made up of two parts; a tokenizer and a parser.</p>
+<p>The <a href="https://github.com/martintrojer/scheme-clojure/blob/master/external/src/mtscheme/parser.clj#L5">tokenizer</a> reads a string and produces a list of tokens. I use a &ldquo;tagged list&rdquo; as described by Abelson / Sussman in <a href="https://mitpress.mit.edu/1984-structure-and-interpretation-of-computer-programs/">SICP</a> to distinguish between the types of tokens. This is a flexible technique for dynamic languages where we can&rsquo;t express <a href="https://github.com/martintrojer/scheme-fsharp/blob/master/parser.fs#L14">token types like we can in a typed language like F#</a>. Here is an example;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">tokenize</span> <span style="color:#e6db74">&#34;(foo)&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; [[<span style="color:#e6db74">:open</span>] [<span style="color:#e6db74">:symbol</span> <span style="color:#e6db74">&#34;foo&#34;</span>] [<span style="color:#e6db74">:close</span>]]
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">tokenize</span> <span style="color:#e6db74">&#34;\&#34;foo\&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; [[<span style="color:#e6db74">:string</span> <span style="color:#e6db74">&#34;foo&#34;</span>]]
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">tokenize</span> <span style="color:#e6db74">&#34;12&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; [[<span style="color:#e6db74">:symbol</span> <span style="color:#e6db74">&#34;12&#34;</span>]]
+</span></span></code></pre></div><p>Next up is the <a href="https://github.com/martintrojer/scheme-clojure/blob/master/external/src/mtscheme/parser.clj#L54">parser</a> which takes the list of tokens as input and produces a list of expressions (or combinations as they are called in SICP). Please note that the parse functions in this example first calls tokenize on the provided string.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">parse-all</span> <span style="color:#e6db74">&#34;foo bar&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; [<span style="color:#e6db74">:foo</span> <span style="color:#e6db74">:bar</span>]
+</span></span><span style="display:flex;"><span>(parse <span style="color:#e6db74">&#34;12&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; <span style="color:#ae81ff">12.0</span>
+</span></span><span style="display:flex;"><span>(parse <span style="color:#e6db74">&#34;(+ 1 a)&#34;</span>)
+</span></span><span style="display:flex;"><span>  --&gt; [<span style="color:#e6db74">:+</span> <span style="color:#ae81ff">1.0</span> <span style="color:#e6db74">:a</span>]
+</span></span></code></pre></div><p>One big benefit of parsing a &ldquo;simple&rdquo; language like a Lisp is how clean and simple the parser becomes. The whole thing is about 50 lines of code, and very elegantly expressed in Clojure (if you ask me :-).</p>
+<p>Both the parser and interpreter relies heavily on Clojure&rsquo;s &ldquo;destructing&rdquo; feature to pick elements out of strings, lists etc. This is loosely related to pattern matching found in other languages (or in Clojure via <a href="https://github.com/clojure/core.match">core.match</a> for instance). In my <a href="https://martintrojer.github.io/post/2011-11-02-scheming-in-f/">F# implementation</a> of the Scheme interpreter, it&rsquo;s indeed this destructing feature of it&rsquo;s pattern matching I rely most on. Here is an example of extracting the head and tail (which happens to be the operator and it&rsquo;s arguments!) of a combination returned by the parser;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[[fst <span style="color:#f92672">&amp;</span> rst] (parse <span style="color:#e6db74">&#34;(+ 1 1)&#34;</span>)]
+</span></span><span style="display:flex;"><span> [fst rst])
+</span></span><span style="display:flex;"><span>  --&gt; [<span style="color:#e6db74">:+</span> (<span style="color:#ae81ff">1.0</span> <span style="color:#ae81ff">1.0</span>)]
+</span></span></code></pre></div><h3 id="eval-ing">Eval-ing</h3>
+<p>Now that we have our list of expressions we can evaluate it (or run it). I use the mutually recursive eval/apply as described in SICP. Everytime I write this I am amazed by how simple yet powerful this is, here it is in all it&rsquo;s glory;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>_eval [exp env]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">cond</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">; self-evaluating?</span>
+</span></span><span style="display:flex;"><span>   (or (<span style="color:#a6e22e">number?</span> exp) (string? exp) (<span style="color:#a6e22e">fn?</span> exp)) [exp env]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">; var reference to be looked up in env</span>
+</span></span><span style="display:flex;"><span>   (keyword? exp) [(<span style="color:#a6e22e">lookup</span> exp env) env]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">; parsed combinations (function calls)</span>
+</span></span><span style="display:flex;"><span>   (vector? exp) (<span style="color:#66d9ef">let </span>[[fst <span style="color:#f92672">&amp;</span> rst] exp
+</span></span><span style="display:flex;"><span>                       [r e] (<span style="color:#a6e22e">_eval</span> fst env)]
+</span></span><span style="display:flex;"><span>                   (<span style="color:#a6e22e">cond</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">; built-in function calls</span>
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">fn?</span> r) (<span style="color:#a6e22e">_apply</span> r rst e)
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">; user defined function/lambda calls</span>
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">list?</span> r) (<span style="color:#66d9ef">let </span>[[args body] r
+</span></span><span style="display:flex;"><span>                                    n (zipmap args (map <span style="color:#f92672">#</span>(<span style="color:#a6e22e">get-evval</span> % e) rst))
+</span></span><span style="display:flex;"><span>                                    new-env (cons n e)]
+</span></span><span style="display:flex;"><span>                                (<span style="color:#a6e22e">_eval</span> body new-env))  <span style="color:#75715e">; eval the first form only</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">:else</span> [exp env]))
+</span></span><span style="display:flex;"><span>   <span style="color:#e6db74">:else</span> (<span style="color:#a6e22e">throw</span> (<span style="color:#a6e22e">Exception.</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;invalid interpreter state %s %s&#34;</span> (str exp) (str env))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>_apply [f args env]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">f</span> args env))
+</span></span></code></pre></div><p>One trick I use is to store all built-in functions (as closures) in an environment map. So when we evaluate a combination like [:+ 1 1] the head of that vector (:+) is looked up in the environment and a fn is returned and punted over to apply. User defined functions are represented by lists in the environment and become a separate cond-case in the code above.</p>
+<p>In the interpreter then environment is a stack of maps, with <a href="https://github.com/martintrojer/scheme-clojure/blob/master/external/src/mtscheme/interpreter.clj#L226">&ldquo;roots&rdquo; at the bottom</a> containing all the built-in functions. When evaluating a let statement for instance, the locals are added to a new environment map at the top of the stack, in this way bindings can be overloaded in the local context. This is also how the arguments to functional calls are bound (and how recursion can terminate).</p>
+<p>The bulk of the interpreter code is the implementations of the built-in functions, but then again none of them are especially large. All in all the interpreter clocks in at about 200 lines, giving us an entire solution (parser, interpreter and all) in about 300 lines!</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>Even though we wrote an entire tokenizer/parser/evaluator it ended up a small and readable. It&rsquo;s quite a bit smaller than the F# implementation, mainly because of the lack of any type declarations. How fast is it though? The embedded DSL implementation runs (fact 10) about 1.5 times faster than the external one. The F# version runs roughly as fast as the Clojure embedded one although is doing much more work (running interpreted).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>$ java -jar mtscheme-0.0.1-SNAPSHOT-standalone.jar
+</span></span><span style="display:flex;"><span>mtscheme <span style="color:#ae81ff">0.1</span>
+</span></span><span style="display:flex;"><span>nil
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#a6e22e">define</span> (<span style="color:#a6e22e">foreach</span> f l) (<span style="color:#66d9ef">if </span>(not (<span style="color:#a6e22e">null?</span> l)) (<span style="color:#a6e22e">begin</span> (<span style="color:#a6e22e">f</span> (<span style="color:#a6e22e">car</span> l)) (<span style="color:#a6e22e">foreach</span> f (<span style="color:#a6e22e">cdr</span> l)))))
+</span></span><span style="display:flex;"><span>nil
+</span></span><span style="display:flex;"><span>=&gt; (<span style="color:#a6e22e">foreach</span> display (list <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3.0</span>
+</span></span><span style="display:flex;"><span>nil
+</span></span><span style="display:flex;"><span>=&gt;
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

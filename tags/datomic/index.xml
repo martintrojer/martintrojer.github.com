@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>datomic on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/datomic/</link>
+    <description>Recent content in datomic on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Jun 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/datomic/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Datomic Do&#39;s and Don&#39;ts</title>
+      <link>https://martintrojer.github.io/post/2015-06-03-datomic-dos-and-donts/</link>
+      <pubDate>Wed, 03 Jun 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2015-06-03-datomic-dos-and-donts/</guid>
+      <description>&lt;p&gt;I recently tried to use Datomic in anger in a project, here are some things I learned.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Datomic Bootstrap</title>
+      <link>https://martintrojer.github.io/post/2013-07-05-datomic-bootstrap/</link>
+      <pubDate>Fri, 05 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-05-datomic-bootstrap/</guid>
+      <description>&lt;p&gt;A simple SQL scenario;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Some more Datalog</title>
+      <link>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</link>
+      <pubDate>Tue, 28 Aug 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</guid>
+      <description>I&amp;rsquo;ve written about datalog and Datomic a bit recently. To conclude here&amp;rsquo;s another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found here.&#xA;The example I&amp;rsquo;m using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;&#xA;(q &amp;#39;[:find ?first ?height :in $a $b :where [$a ?last ?first ?email] [$b ?email ?height]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.</description>
+    </item>
+    <item>
+      <title>Replicating Datomic/Datalog queries with core.logic, take 2</title>
+      <link>https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/</link>
+      <pubDate>Tue, 17 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/</guid>
+      <description>This is a follow-up to my previous post on datalog-equivalent queries in core.logic.&#xA;Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, described here. First let&amp;rsquo;s consider this datomic query;&#xA;(q &amp;#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.com&amp;#34;]] [[&amp;#34;jane@example.com&amp;#34; 73] [&amp;#34;jdoe@example.com&amp;#34; 71]]) ;; #&amp;lt;HashSet [[&amp;#34;Jane&amp;#34; 73], [&amp;#34;John&amp;#34; 71]]&amp;gt; In core.</description>
+    </item>
+    <item>
+      <title>Replicating Datomic/Datalog queries with core.logic</title>
+      <link>https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/</link>
+      <pubDate>Mon, 16 Jul 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/</guid>
+      <description>I&amp;rsquo;ve been toying with Datomic recently, and I particularly like the power of it&amp;rsquo;s query language (~Datalog). Mr Halloway showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, gist here. Here is an example from that page of a simple join;&#xA;(q &amp;#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.com&amp;#34;]] [[&amp;#34;jane@example.com&amp;#34; 73] [&amp;#34;jdoe@example.</description>
+    </item>
+  </channel>
+</rss>

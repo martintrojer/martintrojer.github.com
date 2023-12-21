@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/</link>
+    <description>Recent content in Tags on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 14 Jun 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>clojure</title>
+      <link>https://martintrojer.github.io/tags/clojure/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/clojure/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>contracts</title>
+      <link>https://martintrojer.github.io/tags/contracts/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/contracts/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>quickcheck</title>
+      <link>https://martintrojer.github.io/tags/quickcheck/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/quickcheck/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>racket</title>
+      <link>https://martintrojer.github.io/tags/racket/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/racket/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>test.check</title>
+      <link>https://martintrojer.github.io/tags/test.check/</link>
+      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/test.check/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>clojurescript</title>
+      <link>https://martintrojer.github.io/tags/clojurescript/</link>
+      <pubDate>Tue, 03 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/clojurescript/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>elm</title>
+      <link>https://martintrojer.github.io/tags/elm/</link>
+      <pubDate>Tue, 03 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/elm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>haskell</title>
+      <link>https://martintrojer.github.io/tags/haskell/</link>
+      <pubDate>Thu, 21 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/haskell/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ring</title>
+      <link>https://martintrojer.github.io/tags/ring/</link>
+      <pubDate>Sun, 04 Oct 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/ring/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>datomic</title>
+      <link>https://martintrojer.github.io/tags/datomic/</link>
+      <pubDate>Wed, 03 Jun 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/datomic/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>emacs</title>
+      <link>https://martintrojer.github.io/tags/emacs/</link>
+      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/emacs/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>gdb</title>
+      <link>https://martintrojer.github.io/tags/gdb/</link>
+      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/gdb/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>gnu</title>
+      <link>https://martintrojer.github.io/tags/gnu/</link>
+      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/gnu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>lisp</title>
+      <link>https://martintrojer.github.io/tags/lisp/</link>
+      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/lisp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>devops</title>
+      <link>https://martintrojer.github.io/tags/devops/</link>
+      <pubDate>Sun, 22 Feb 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>docker</title>
+      <link>https://martintrojer.github.io/tags/docker/</link>
+      <pubDate>Sun, 22 Feb 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>aws</title>
+      <link>https://martintrojer.github.io/tags/aws/</link>
+      <pubDate>Thu, 04 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>cloud</title>
+      <link>https://martintrojer.github.io/tags/cloud/</link>
+      <pubDate>Thu, 04 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/cloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>.net</title>
+      <link>https://martintrojer.github.io/tags/.net/</link>
+      <pubDate>Sat, 08 Nov 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/.net/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>fsharp</title>
+      <link>https://martintrojer.github.io/tags/fsharp/</link>
+      <pubDate>Sat, 08 Nov 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/fsharp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>mono</title>
+      <link>https://martintrojer.github.io/tags/mono/</link>
+      <pubDate>Sat, 08 Nov 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/mono/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>review</title>
+      <link>https://martintrojer.github.io/tags/review/</link>
+      <pubDate>Sun, 06 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/review/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>core.async</title>
+      <link>https://martintrojer.github.io/tags/core.async/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/core.async/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>go</title>
+      <link>https://martintrojer.github.io/tags/go/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>csharp</title>
+      <link>https://martintrojer.github.io/tags/csharp/</link>
+      <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/csharp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>jvm</title>
+      <link>https://martintrojer.github.io/tags/jvm/</link>
+      <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/jvm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ocaml</title>
+      <link>https://martintrojer.github.io/tags/ocaml/</link>
+      <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/ocaml/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>frinj</title>
+      <link>https://martintrojer.github.io/tags/frinj/</link>
+      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/frinj/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>frins</title>
+      <link>https://martintrojer.github.io/tags/frins/</link>
+      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/frins/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>scala</title>
+      <link>https://martintrojer.github.io/tags/scala/</link>
+      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/scala/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>sicp</title>
+      <link>https://martintrojer.github.io/tags/sicp/</link>
+      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/sicp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>arm</title>
+      <link>https://martintrojer.github.io/tags/arm/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/arm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>chrome</title>
+      <link>https://martintrojer.github.io/tags/chrome/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/chrome/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>rpi</title>
+      <link>https://martintrojer.github.io/tags/rpi/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/rpi/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>guile</title>
+      <link>https://martintrojer.github.io/tags/guile/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/guile/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>javascript</title>
+      <link>https://martintrojer.github.io/tags/javascript/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/javascript/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>lua</title>
+      <link>https://martintrojer.github.io/tags/lua/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/lua/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>monads</title>
+      <link>https://martintrojer.github.io/tags/monads/</link>
+      <pubDate>Sat, 24 Nov 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/monads/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>core.logic</title>
+      <link>https://martintrojer.github.io/tags/core.logic/</link>
+      <pubDate>Thu, 27 Sep 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/core.logic/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>datalog</title>
+      <link>https://martintrojer.github.io/tags/datalog/</link>
+      <pubDate>Tue, 28 Aug 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/datalog/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>akka</title>
+      <link>https://martintrojer.github.io/tags/akka/</link>
+      <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/akka/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>erlang</title>
+      <link>https://martintrojer.github.io/tags/erlang/</link>
+      <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/erlang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>software</title>
+      <link>https://martintrojer.github.io/tags/software/</link>
+      <pubDate>Tue, 10 Apr 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/software/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>clang</title>
+      <link>https://martintrojer.github.io/tags/clang/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/clang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>klee</title>
+      <link>https://martintrojer.github.io/tags/klee/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/klee/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>llvm</title>
+      <link>https://martintrojer.github.io/tags/llvm/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/llvm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>sat</title>
+      <link>https://martintrojer.github.io/tags/sat/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/sat/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>symbolic execution</title>
+      <link>https://martintrojer.github.io/tags/symbolic-execution/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/symbolic-execution/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>valgrind</title>
+      <link>https://martintrojer.github.io/tags/valgrind/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/valgrind/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>gcc</title>
+      <link>https://martintrojer.github.io/tags/gcc/</link>
+      <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/tags/gcc/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/go/</link>
+    <description>Recent content in go on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 09 Mar 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Working with core.async: Chaining go blocks</title>
+      <link>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/</guid>
+      <description>&lt;p&gt;One particularly annoying difference between the core.async and &lt;a href=&#34;http://golang.org&#34;&gt;Go&lt;/a&gt; is that you can&amp;rsquo;t wrap function calls with the &lt;code&gt;go&lt;/code&gt; macro. This is due to implementation details of core.async, which can only see the body &amp;lsquo;inside&amp;rsquo; the macro and not the functions it may call. This is obviously not a problem if the called function doesn&amp;rsquo;t interact with any channels, but if it does when you might be in trouble. I&amp;rsquo;ve touched on this subject in a &lt;a href=&#34;https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/&#34;&gt;previous post&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Non tail-recursive functions in core.async go blocks</title>
+      <link>https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/</link>
+      <pubDate>Wed, 17 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/</guid>
+      <description>I&amp;rsquo;ve been using various Go examples / tutorials to take a deeper look into core.async. The CSP pattern is a very interesting and powerful, it&amp;rsquo;s good move for Clojure to &amp;ldquo;throw in&amp;rdquo; with Go and push this style of programming.&#xA;core.sync works at s-expression level, where some other JVM solutions (Kilim, Pulsar) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell.</description>
+    </item>
+    <item>
+      <title>core.async and Blocking IO</title>
+      <link>https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/</link>
+      <pubDate>Sun, 07 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/</guid>
+      <description>Some time ago I wrote about Asynchronous workflows in Clojure. With the recent release and excitement of core.async, I though it a good time to revisit that post.&#xA;While there are already some good example and comparison-with-go posts out there, I&amp;rsquo;d like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It&amp;rsquo;s important to understand the implications of blocking IO and it&amp;rsquo;s effects on &amp;lsquo;async code&amp;rsquo;, in this case core.</description>
+    </item>
+  </channel>
+</rss>

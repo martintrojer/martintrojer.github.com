@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scala on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/scala/</link>
+    <description>Recent content in scala on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 25 Jun 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/scala/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Announcing Frins, a practical unit of measure calculator DSL for Scala</title>
+      <link>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</link>
+      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</guid>
+      <description>I am proud to announce a new Scala project called &amp;ldquo;Frins&amp;rdquo;.&#xA;Frins is a practical unit-of-measure calculator DSL for Scala.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Full source code available on github.&#xA;To wet your appetite head straight over to the example calculations.&#xA;How Frins came about About a year ago I created Frinj.</description>
+    </item>
+    <item>
+      <title>EDN Parser in Scala</title>
+      <link>https://martintrojer.github.io/post/2013-06-17-edn-parser-in-scala/</link>
+      <pubDate>Mon, 17 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-17-edn-parser-in-scala/</guid>
+      <description>&lt;p&gt;Taken from &lt;a href=&#34;https://github.com/martintrojer/edn-scala&#34;&gt;edn-scala&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Scheme in Scala</title>
+      <link>https://martintrojer.github.io/post/2013-06-06-scheme-in-scala/</link>
+      <pubDate>Thu, 06 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-06-scheme-in-scala/</guid>
+      <description>In this post I present some of my experiences writing a Scheme interpreter in Scala (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.&#xA;Overall, the Scala solution is very similar to the F# one. Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of a Hindley-Milner type inference.</description>
+    </item>
+    <item>
+      <title>Comparing FP REPL Sessions</title>
+      <link>https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/</link>
+      <pubDate>Tue, 04 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/</guid>
+      <description>Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.&#xA;Most languages comes with a REPL (or &amp;lsquo;interactive&amp;rsquo; prompt), where you can play with these features at your leisure. Dynamically typed languages are a bit more convenient in the REPL, but not by as much as you might think. Also, F# type providers closes the gap even further.&#xA;Here&amp;rsquo;s a typical, hit-a-JSON-endpoint-and-look-at-the-data session in Clojure;&#xA;$ lein repl user=&amp;gt; (def res (slurp &amp;#34;http://www.</description>
+    </item>
+    <item>
+      <title>Scala and me</title>
+      <link>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</link>
+      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</guid>
+      <description>This epic journey (yeah right) began at Uni with discovering the mighty SICP, still the best book on programming I&amp;rsquo;ve read (and let&amp;rsquo;s face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in Scheme, ELisp, OCaml every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren&amp;rsquo;t very applicable to real-world software problems.</description>
+    </item>
+    <item>
+      <title>Some thoughts on Clojure performance</title>
+      <link>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</link>
+      <pubDate>Sat, 18 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</guid>
+      <description>Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).&#xA;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.</description>
+    </item>
+    <item>
+      <title>Tail Calls in F#, Clojure and Scala</title>
+      <link>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</link>
+      <pubDate>Sun, 20 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</guid>
+      <description>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&amp;rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)&#xA;TCO is a well documented topic in books and articles about functional programming and the TCO in .</description>
+    </item>
+  </channel>
+</rss>

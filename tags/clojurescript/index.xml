@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>clojurescript on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/clojurescript/</link>
+    <description>Recent content in clojurescript on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 May 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/clojurescript/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond ClojureScript: Elm</title>
+      <link>https://martintrojer.github.io/post/2016-05-03-beyond-clojurescript-elm/</link>
+      <pubDate>Tue, 03 May 2016 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2016-05-03-beyond-clojurescript-elm/</guid>
+      <description>&lt;p&gt;This is a post in the &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series, in which a Clojure developer looks at typed languages for web app development. In this episode we look at front-end development in the language Elm.&lt;/p&gt;&#xA;&lt;p&gt;Front end development targeting web browsers is a ghetto, everybody seems to agree. The core tools at our disposal are the amalgamation of ideas and accidents thrown together without much overall strategy. One positive development in recent years has been the drastic improvement of the JavaScript (JS) engines in popular browsers. They have now gotten so good that its a valid option to treat JS as a compilation target. This fact is one of the drivers behind the explosion of JS transpilers, there are now literally hundreds of languages that (either primarily or as an after-though) can compile to JS. These languages range from light syntax improvements (ala &lt;a href=&#34;http://coffeescript.org/&#34;&gt;CoffeScript&lt;/a&gt;) to full blown languages with big runtimes and everything in between.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

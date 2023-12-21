@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Enumerate N Queens solutions</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Enumerate N Queens solutions</h1>
+			<b><time>2012-03-25</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+
+			<div>
+				<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safe? [[x1 y1] [x2 y2]]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">and</span>
+</span></span><span style="display:flex;"><span>   (not= x1 x2)
+</span></span><span style="display:flex;"><span>   (not= y1 y2)
+</span></span><span style="display:flex;"><span>   (not= (- x2 x1) (- y2 y1))
+</span></span><span style="display:flex;"><span>   (not= (- x1 y2) (- x2 y1))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-possible [n y qs]
+</span></span><span style="display:flex;"><span>  (for [x (range n)
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">:let</span> [p [x y]]
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">:when</span> (every? <span style="color:#f92672">#</span>(<span style="color:#a6e22e">safe?</span> p %) qs)]
+</span></span><span style="display:flex;"><span>    p))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>search [n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>    ((<span style="color:#66d9ef">fn </span>sloop [y qs]
+</span></span><span style="display:flex;"><span>       (<span style="color:#66d9ef">if </span>(= y n) (<span style="color:#a6e22e">swap!</span> res conj qs)
+</span></span><span style="display:flex;"><span>           (doseq [p (<span style="color:#a6e22e">get-possible</span> n y qs)]
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">sloop</span> (inc y) (conj qs p)))))
+</span></span><span style="display:flex;"><span>     <span style="color:#ae81ff">0</span> [])
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">@</span>res))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(for [i (range <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">10</span>)]
+</span></span><span style="display:flex;"><span>   (count (<span style="color:#a6e22e">search</span> i)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; (1 0 0 2 10 4 40 92 352)</span>
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

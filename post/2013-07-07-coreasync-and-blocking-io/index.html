@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>core.async and Blocking IO</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>core.async and Blocking IO</h1>
+			<b><time>2013-07-07</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.async">core.async</a>
+        	       
+		           <a href="/tags/go">go</a>
+        	       
+
+			<div>
+				<p>Some time ago I wrote about <a href="https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/">Asynchronous workflows in Clojure</a>. With the recent release and excitement of <a href="https://github.com/clojure/core.async">core.async</a>, I though it a good time to revisit that post.</p>
+<p>While there are already some good example and comparison-with-<a href="http://golang.org">go</a> posts out there, I&rsquo;d like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It&rsquo;s important to understand the implications of blocking IO and it&rsquo;s effects on &lsquo;async code&rsquo;, in this case core.async.</p>
+<p>Here&rsquo;s a little diagram visualizing thread activity when using blocking IO calls;</p>
+<figure><img src="/assets/images/asyncclj/oneperconnection.png"/>
+</figure>
+
+<p>As you can see the threads mostly wait. What we are trying to achieve is to get more work out of each thread. In order to do this we want other work to be scheduled on the thread &ldquo;while they wait&rdquo;. Thus getting more work done with fewer threads.</p>
+<figure><img src="/assets/images/asyncclj/asyncthreads.png"/>
+</figure>
+
+<p>When we have a long-running API call, we want to &ldquo;park the thread&rdquo;, schedule some unrelated work and resume later when the result is available.</p>
+<p>This will break the 1 job = 1 thread knot, thus this thread parking will allow us to scale the number of jobs way beyond any thread limit on the platform (usually around 1000 on the JVM).</p>
+<h2 id="coreasync">core.async</h2>
+<p>core.async gives (blocking) channels and a new (unbounded) thread pool when using &rsquo;thread&rsquo;. This (in effect) is just some sugar over using java threads (or clojure futures) and BlockingQueues from java.util.concurrent. The main feature is <a href="http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html">go blocks</a> in which threads can be parked and resumed on the (potentially) blocking calls dealing with core.async&rsquo;s channels.</p>
+<p>The go blocks are run on a fix sized thread pool (2+number of cores) &ndash; this is plenty for asynchronous workflows where we spend almost all our time waiting for callbacks and pushing / popping data on channels.</p>
+<p><strong>However</strong> if you are using go blocks and blocking IO calls you&rsquo;re in trouble. You will in fact often get worse performance than using threads (in the normal case) since you will quickly hog all the threads in the go block thread pool and block out any other work!</p>
+<h2 id="http-client-example">Http client example</h2>
+<p>To get a bit more concrete let&rsquo;s see what happens when we try to issue some HTTP GET request using core.async. Let&rsquo;s start with the naive solution, using blocking IO via <a href="https://github.com/dakrone/clj-http">clj-http</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>blocking-get [url]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">clj-http.client/get</span> url))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#66d9ef">def </span>data
+</span></span><span style="display:flex;"><span>     (<span style="color:#66d9ef">let </span>[c (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>           res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; fetch em all</span>
+</span></span><span style="display:flex;"><span>       (doseq [i (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">go</span> (<span style="color:#a6e22e">&gt;!</span> c (<span style="color:#a6e22e">blocking-get</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;http://fssnip.net/%d&#34;</span> i)))))
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; gather results</span>
+</span></span><span style="display:flex;"><span>       (doseq [_ (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">swap!</span> res conj (<span style="color:#a6e22e">&lt;!!</span> c)))
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">@</span>res
+</span></span><span style="display:flex;"><span>       )))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 11123.577 msecs&#34;</span>
+</span></span></code></pre></div><p>Here we&rsquo;re trying to fetch 90 code snippets (in parallel) using go blocks (and blocking IO). This took a long time, and that&rsquo;s because the go block threads are &ldquo;hogged&rdquo; by the long running IO operations. The situation can be improved by switching the go blocks to normal threads.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#66d9ef">def </span>data-thread
+</span></span><span style="display:flex;"><span>     (<span style="color:#66d9ef">let </span>[c (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>           res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; fetch em all</span>
+</span></span><span style="display:flex;"><span>       (doseq [i (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">thread</span> (<span style="color:#a6e22e">&gt;!!</span> c (<span style="color:#a6e22e">blocking-get</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;http://fssnip.net/%d&#34;</span> i)))))
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; gather results</span>
+</span></span><span style="display:flex;"><span>       (doseq [_ (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">swap!</span> res conj (<span style="color:#a6e22e">&lt;!!</span> c)))
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">@</span>res
+</span></span><span style="display:flex;"><span>       )))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 6523.782 msecs&#34;</span>
+</span></span></code></pre></div><p>This is quicker, but we&rsquo;re back to one thread per connection; exactly what we wanted to avoid. How can we approve the situation? We need a non-blocking API in order to use the go blocks properly.</p>
+<h3 id="http-kit">http-kit</h3>
+<p>Clojure has a very nice library for asynchronous http clients (and servers) called <a href="http://http-kit.org/">http-kit</a>. With http-kit we can use callbacks to signal when the request is finished, this plays very well with core.async channels.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>async-get [url result]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">org.httpkit.client/get</span> url <span style="color:#f92672">#</span>(<span style="color:#a6e22e">go</span> (<span style="color:#a6e22e">&gt;!</span> result %))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span> (<span style="color:#66d9ef">def </span>hk-data
+</span></span><span style="display:flex;"><span>   (<span style="color:#66d9ef">let </span>[c (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>         res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">;; fetch em all</span>
+</span></span><span style="display:flex;"><span>     (doseq [i (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">async-get</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;http://fssnip.net/%d&#34;</span> i) c))
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">;; gather results</span>
+</span></span><span style="display:flex;"><span>     (doseq [_ (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">swap!</span> res conj (<span style="color:#a6e22e">&lt;!!</span> c)))
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">@</span>res
+</span></span><span style="display:flex;"><span>     )))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 6731.781 msecs&#34;</span>
+</span></span></code></pre></div><p>As you can see this performs like the threaded version above (which is all we can ask for in this case). However, this solution scales to way more requests than the threaded version.</p>
+<p>The pattern of putting the result of callback function onto a channel, and thus decoupling the useful logic from the plumbing, is preferable over putting the &ldquo;handling logic&rdquo; inside said callback.</p>
+<h3 id="netty">Netty</h3>
+<p>Another option is <a href="http://netty.io">Netty</a>, which also gives us a callback based API. Here&rsquo;s some helper functions;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;; handle results from the GET</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>gen-response-handler [f]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">reify</span> ChannelUpstreamHandler
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">handleUpstream</span> [_ ctx evt]
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">swap!</span> ctr inc)
+</span></span><span style="display:flex;"><span>        (when (instance? MessageEvent evt)
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">f</span> (<span style="color:#a6e22e">.getMessage</span> evt)))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; handle results from the connection (and issue the GET request)</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>connection-ok [uri f]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[host (<span style="color:#a6e22e">.getHost</span> uri)]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">reify</span> ChannelFutureListener
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">operationComplete</span> [_ fut]
+</span></span><span style="display:flex;"><span>        (<span style="color:#66d9ef">if </span>(<span style="color:#a6e22e">.isSuccess</span> fut)
+</span></span><span style="display:flex;"><span>          (<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">.getChannel</span> fut)
+</span></span><span style="display:flex;"><span>                pipe (<span style="color:#a6e22e">.getPipeline</span> ch)
+</span></span><span style="display:flex;"><span>                req (<span style="color:#a6e22e">DefaultHttpRequest.</span>
+</span></span><span style="display:flex;"><span>                      (<span style="color:#a6e22e">HttpVersion/HTTP_1_1</span>)
+</span></span><span style="display:flex;"><span>                      (<span style="color:#a6e22e">HttpMethod/GET</span>)
+</span></span><span style="display:flex;"><span>                      (<span style="color:#a6e22e">.toASCIIString</span> uri))]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.setHeader</span> req <span style="color:#e6db74">&#34;Host&#34;</span> host)
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.setHeader</span> req <span style="color:#e6db74">&#34;Connection&#34;</span> <span style="color:#e6db74">&#34;close&#34;</span>)
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.addLast</span> pipe <span style="color:#e6db74">&#34;codec&#34;</span> (<span style="color:#a6e22e">HttpClientCodec.</span>))
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.addLast</span> pipe <span style="color:#e6db74">&#34;aggregator&#34;</span> (<span style="color:#a6e22e">HttpChunkAggregator.</span> <span style="color:#ae81ff">65536</span>))
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.addLast</span> pipe <span style="color:#e6db74">&#34;handler&#34;</span> f)
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">.write</span> ch req)
+</span></span><span style="display:flex;"><span>            nil))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; Netty uses it&#39;s own thread pools</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>bootstrap
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">ClientBootstrap.</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">NioClientSocketChannelFactory.</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">Executors/newCachedThreadPool</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">Executors/newCachedThreadPool</span>))))
+</span></span></code></pre></div><p>Now we can use go blocks and channels for the results.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">time</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#66d9ef">def </span>data-netty
+</span></span><span style="display:flex;"><span>     (<span style="color:#66d9ef">let </span>[c (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>           res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; fetch them all</span>
+</span></span><span style="display:flex;"><span>       (doseq [i (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#66d9ef">let </span>[name (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;http://fssnip.net/%d&#34;</span> i)
+</span></span><span style="display:flex;"><span>               uri (<span style="color:#a6e22e">java.net.URI.</span> name)
+</span></span><span style="display:flex;"><span>               con-future (<span style="color:#a6e22e">.connect</span> bootstrap (<span style="color:#a6e22e">java.net.InetSocketAddress.</span> (<span style="color:#a6e22e">.getHost</span> uri) <span style="color:#ae81ff">80</span>))]
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">.addListener</span>
+</span></span><span style="display:flex;"><span>            con-future
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">connection-ok</span> uri
+</span></span><span style="display:flex;"><span>                           (<span style="color:#a6e22e">gen-response-handler</span>
+</span></span><span style="display:flex;"><span>                            (<span style="color:#66d9ef">fn </span>[msg]
+</span></span><span style="display:flex;"><span>                              (<span style="color:#a6e22e">go</span> (<span style="color:#a6e22e">&gt;!</span> c (<span style="color:#a6e22e">.getContent</span> msg)))))))))
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; gather results</span>
+</span></span><span style="display:flex;"><span>       (doseq [_ (range <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">100</span>)]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">swap!</span> res conj (<span style="color:#a6e22e">&lt;!!</span> c)))
+</span></span><span style="display:flex;"><span>       <span style="color:#f92672">@</span>res
+</span></span><span style="display:flex;"><span>       )))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 6842.132 msecs&#34;</span>
+</span></span></code></pre></div><p>Note that Netty isn&rsquo;t an ideal core.async example, since Netty comes with it&rsquo;s own thread pools and only one channel is used (for the results). A better example would make heavier use of go blocks (for both of the long running operations of a http request; the connection and the request).</p>
+<h2 id="summary">Summary</h2>
+<p>Here&rsquo;s the main take-away; if your code is using blocking APIs, no async framework can avoid your code hogging threads.</p>
+<p>core.async isn&rsquo;t some magic that make problems with blocking IO disappear. While the go blocks and it&rsquo;s thread parking is very useful, they have to be used with care. Since the go block thread pool is quite small, it&rsquo;s easy to block all the threads and thus stopping all &lsquo;go processing&rsquo;.</p>
+<p>Never <code>Thread/sleep</code> in a go block, use <code>(&lt;! (timeout *msec*))</code>!</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

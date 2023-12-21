@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>symbolic execution on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/symbolic-execution/</link>
+    <description>Recent content in symbolic execution on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Nov 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/symbolic-execution/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Applied Symbolic Execution with KLEE/LLVM</title>
+      <link>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</guid>
+      <description>This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&#xA;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.</description>
+    </item>
+    <item>
+      <title>Symbolic Execution</title>
+      <link>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</link>
+      <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</guid>
+      <description>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>cKanren time!</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>cKanren time!</h1>
+			<b><time>2012-08-12</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.logic">core.logic</a>
+        	       
+
+			<div>
+				<p>Mr David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event I&rsquo;m writing up some core.logic/cKanren stuff I&rsquo;ve been looking at recently.</p>
+<h3 id="enter-the-queens">Enter the Queens</h3>
+<p>If you&rsquo;ve followed this blog, you&rsquo;ve perhaps seen my previous posts on solving N-Queens in core.logic (<a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">part1</a> and <a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">part2</a>). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here&rsquo;s a core.logic-irized version of the solution described in the <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren paper</a> (please read paragraph 4.2 for an in-depth explanation);</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>diago [qi qj d rng]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fresh</span> [qid qjd]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">infd</span> qid qjd rng)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">+fd</span> qi d qid)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=fd</span> qid qj)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">+fd</span> qj d qjd)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=fd</span> qjd qi)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>diagonalso [n r]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#66d9ef">fn </span>dloop [r i s j]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">cond</span>
+</span></span><span style="display:flex;"><span>       (or (<span style="color:#a6e22e">empty?</span> r) (<span style="color:#a6e22e">empty?</span> (rest r))) s#
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">empty?</span> s) (<span style="color:#a6e22e">dloop</span> (rest r) (inc i) (rest (rest r)) (+ i <span style="color:#ae81ff">2</span>))
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">:else</span> (<span style="color:#66d9ef">let </span>[qi (first r), qj (first s)]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">all</span>
+</span></span><span style="display:flex;"><span>                (<span style="color:#a6e22e">diago</span> qi qj (- j i) (<span style="color:#a6e22e">interval</span> <span style="color:#ae81ff">0</span> (* <span style="color:#ae81ff">2</span> n)))
+</span></span><span style="display:flex;"><span>                (<span style="color:#a6e22e">dloop</span> r i (rest s) (inc j))))))
+</span></span><span style="display:flex;"><span>   r <span style="color:#ae81ff">0</span> (rest r) <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>n-queenso [q n]
+</span></span><span style="display:flex;"><span>  ((<span style="color:#66d9ef">fn </span>qloop [i l]
+</span></span><span style="display:flex;"><span>     (<span style="color:#66d9ef">if </span>(zero? i)
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">all</span>
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">distinctfd</span> l)
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">diagonalso</span> n l)
+</span></span><span style="display:flex;"><span>        (== q l))
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">fresh</span> [x]
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">infd</span> x (<span style="color:#a6e22e">interval</span> <span style="color:#ae81ff">1</span> n))
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">qloop</span> (dec i) (cons x l)))))
+</span></span><span style="display:flex;"><span>   n <span style="color:#f92672">&#39;</span>()))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">count</span>
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">run*</span> [q]
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">n-queenso</span> q <span style="color:#ae81ff">8</span>)))
+</span></span></code></pre></div><p>distinctfd (with infd) is a really nice addition to core.logic, they really help me personally write logic programs. How does this code perform? It&rsquo;s very similar in speed compared to the (non-fd) core.logic solution described in my <a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">previous posting</a>, not bad, all extra cKanren expressive power without any performance drop!</p>
+<h3 id="sudoku-time">Sudoku time</h3>
+<p>How would you use core.logic to solve sudoku? Let&rsquo;s start by looking at a simple all-Clojure functional solution;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>sud
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:require</span> [clojure.set <span style="color:#e6db74">:as</span> s]
+</span></span><span style="display:flex;"><span>            [clojure.pprint <span style="color:#e6db74">:as</span> pp]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>possible
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Possible values for a given position&#34;</span>
+</span></span><span style="display:flex;"><span>  [[x y] board]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[horizontal (set (<span style="color:#a6e22e">board</span> x))
+</span></span><span style="display:flex;"><span>        vertical (reduce (<span style="color:#66d9ef">fn </span>[a c] (conj a (<span style="color:#a6e22e">c</span> y))) <span style="color:#f92672">#</span>{} board)
+</span></span><span style="display:flex;"><span>        x<span style="color:#f92672">&#39;</span> (* (quot x <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        y<span style="color:#f92672">&#39;</span> (* (quot y <span style="color:#ae81ff">3</span>) <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>        local (reduce (<span style="color:#66d9ef">fn </span>[a r]
+</span></span><span style="display:flex;"><span>                        (<span style="color:#a6e22e">-&gt;&gt;</span> (range y<span style="color:#f92672">&#39;</span> (+ y<span style="color:#f92672">&#39;</span> <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>                             (map <span style="color:#f92672">#</span>(<span style="color:#a6e22e">get-in</span> board [r %]))
+</span></span><span style="display:flex;"><span>                             (into a)))
+</span></span><span style="display:flex;"><span>                      <span style="color:#f92672">#</span>{} (range x<span style="color:#f92672">&#39;</span> (+ x<span style="color:#f92672">&#39;</span> <span style="color:#ae81ff">3</span>)))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">s/difference</span> (set (range <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">10</span>)) vertical horizontal local)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>open
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Get all open positions&#34;</span>
+</span></span><span style="display:flex;"><span>  [board]
+</span></span><span style="display:flex;"><span>  (reduce (<span style="color:#66d9ef">fn </span>[a r]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">-&gt;&gt;</span> (second r)
+</span></span><span style="display:flex;"><span>                 (<span style="color:#a6e22e">map-indexed</span> vector)
+</span></span><span style="display:flex;"><span>                 (filter <span style="color:#f92672">#</span>(= <span style="color:#ae81ff">0</span> (second %)))
+</span></span><span style="display:flex;"><span>                 (map <span style="color:#f92672">#</span>(vector (first r) (first %)))
+</span></span><span style="display:flex;"><span>                 (into a)))
+</span></span><span style="display:flex;"><span>          [] (<span style="color:#a6e22e">map-indexed</span> vector board)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>most-constrained
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Get open positions and possibles sorted by the least possibles&#34;</span>
+</span></span><span style="display:flex;"><span>  [board]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span> board
+</span></span><span style="display:flex;"><span>       open
+</span></span><span style="display:flex;"><span>       (map <span style="color:#f92672">#</span>(vector % (<span style="color:#a6e22e">possible</span> % board)))
+</span></span><span style="display:flex;"><span>       (sort-by (comp count second))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>solved? [board]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span> board
+</span></span><span style="display:flex;"><span>       (apply concat)
+</span></span><span style="display:flex;"><span>       (some <span style="color:#f92672">#</span>{<span style="color:#ae81ff">0</span>})
+</span></span><span style="display:flex;"><span>       (not= <span style="color:#ae81ff">0</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>search [n board]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[res (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>    ((<span style="color:#66d9ef">fn </span>sloop [board]
+</span></span><span style="display:flex;"><span>       (when (&lt; (count <span style="color:#f92672">@</span>res) n)
+</span></span><span style="display:flex;"><span>         (<span style="color:#66d9ef">if </span>(<span style="color:#a6e22e">solved?</span> board)
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">swap!</span> res conj board)
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">try-all</span> [[[o ps]] <span style="color:#f92672">&amp;</span> t]
+</span></span><span style="display:flex;"><span>                     (when o
+</span></span><span style="display:flex;"><span>                       (doseq [p ps]
+</span></span><span style="display:flex;"><span>                         (<span style="color:#a6e22e">sloop</span> (<span style="color:#a6e22e">assoc-in</span> board o p))
+</span></span><span style="display:flex;"><span>                         (<span style="color:#a6e22e">try-all</span> t))))]
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">try-all</span> (<span style="color:#a6e22e">most-constrained</span> board))))))
+</span></span><span style="display:flex;"><span>     board)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">@</span>res))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>empty-board (<span style="color:#a6e22e">vec</span> (repeat <span style="color:#ae81ff">8</span> (<span style="color:#a6e22e">vec</span> (repeat <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">0</span>)))))
+</span></span><span style="display:flex;"><span>(time (<span style="color:#a6e22e">pp/pprint</span> (<span style="color:#a6e22e">search</span> <span style="color:#ae81ff">5</span> empty-board)))
+</span></span></code></pre></div><p>A few things are worth mentioning. First, this code finds all (potential) solutions of a given board layout. This is a bit strange since a true sudoku board should only have one solution! This does make it a bit more similar to logic programs (which typically looks for many solutions), and gives you some nice perks; you can use this code to check if a given puzzle is indeed a true puzzle. Secondly, in order to terminate faster, this snippet uses a quite common sudoku heuristic called &ldquo;most constrained&rdquo;. At each level of the backtracking search it will consider the open squares in order, sorted after the least possible numbers (i.e. most constrained first). This helps to &ldquo;fail fast&rdquo; and minimise the dead alleys we recursively search.<!-- raw HTML omitted --></p>
+<p>How would we do this in cKanren? As we&rsquo;d expect the code comes very close the the definition of the rules; We have 9x9 squares, each square can contain a number from 1-9, the numbers in each row, column and 3x3 sub-square must be unique.</p>
+<p>In this example I will use a 4x4 sudoku for simplicity.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">declare </span>all-distincto)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">run</span> <span style="color:#ae81ff">1</span> [q]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">fresh</span> [a1 a2 a3 a4                 <span style="color:#75715e">;; our 4x4 squares...</span>
+</span></span><span style="display:flex;"><span>             b1 b2 b3 b4
+</span></span><span style="display:flex;"><span>             c1 c2 c3 c4
+</span></span><span style="display:flex;"><span>             d1 d2 d3 d4]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            (== q [[a1 a2 a3 a4]         <span style="color:#75715e">;; ... laid out like this on our board</span>
+</span></span><span style="display:flex;"><span>                   [b1 b2 b3 b4]
+</span></span><span style="display:flex;"><span>                   [c1 c2 c3 c4]
+</span></span><span style="display:flex;"><span>                   [d1 d2 d3 d4]])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">infd</span> a1 a2 a3 a4            <span style="color:#75715e">;; all squares bound to 1-4 integer domain</span>
+</span></span><span style="display:flex;"><span>                  b1 b2 b3 b4            <span style="color:#75715e">;; infd is a cKanren function</span>
+</span></span><span style="display:flex;"><span>                  c1 c2 c3 c4
+</span></span><span style="display:flex;"><span>                  d1 d2 d3 d4
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">interval</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">4</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">;; define the rows, columns and sub-squares</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#66d9ef">let </span>[row1 [a1 a2 a3 a4] row2 [b1 b2 b3 b4]
+</span></span><span style="display:flex;"><span>                  row3 [c1 c2 c3 c4] row4 [d1 d2 d3 d4]
+</span></span><span style="display:flex;"><span>                  col1 [a1 b1 c1 d1] col2 [a2 b2 c2 d2]
+</span></span><span style="display:flex;"><span>                  col3 [a3 b3 c3 d3] col4 [a4 b4 c4 d4]
+</span></span><span style="display:flex;"><span>                  sq1 [a1 a2 b1 b2]  sq2 [a3 a4 b3 b4]
+</span></span><span style="display:flex;"><span>                  sq3 [c1 c2 d1 d2]  sq4 [c3 c4 d3 d4]]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>              <span style="color:#75715e">;; assert that the numbers in all rows, cols, squares are distinct</span>
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">all-distincto</span> [row1 row2 row3 row4
+</span></span><span style="display:flex;"><span>                              col1 col2 col3 col4
+</span></span><span style="display:flex;"><span>                              sq1 sq2 sq3 sq4]))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defne</span> all-distincto [l]
+</span></span><span style="display:flex;"><span>  ([()])
+</span></span><span style="display:flex;"><span>  ([[h <span style="color:#66d9ef">. </span>t]]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">distinctfd</span> h)               <span style="color:#75715e">;; distrinctfd is a cKanren function</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">all-distincto</span> t)))
+</span></span></code></pre></div><p>That&rsquo;s it, exactly how the rules for sudoku was written, logic programming really is magical!</p>
+<p>Writing it this way is good for understanding the solution, but not very practical for a real 9x9 board. Fortunately we can write some more helpers to make this compact, here&rsquo;s an example from Mr Nolen himself;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>sudoku
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:refer-clojure</span> <span style="color:#e6db74">:exclude</span> [==])
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:use</span> clojure.core.logic))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-square [rows x y]
+</span></span><span style="display:flex;"><span>  (for [x (range x (+ x <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>        y (range y (+ y <span style="color:#ae81ff">3</span>))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">get-in</span> rows [x y])))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>init [vars hints]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(seq vars)
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">let </span>[hint (first hints)]
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">all</span>
+</span></span><span style="display:flex;"><span>        (if-not (zero? hint)
+</span></span><span style="display:flex;"><span>          (== (first vars) hint)
+</span></span><span style="display:flex;"><span>          succeed)
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">init</span> (next vars) (next hints))))
+</span></span><span style="display:flex;"><span>    succeed))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>sudokufd [hints]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[vars (<span style="color:#a6e22e">repeatedly</span> <span style="color:#ae81ff">81</span> lvar)
+</span></span><span style="display:flex;"><span>        rows (<span style="color:#a6e22e">-&gt;&gt;</span> vars (<span style="color:#a6e22e">partition</span> <span style="color:#ae81ff">9</span>) (map vec) (into []))
+</span></span><span style="display:flex;"><span>        cols (apply map vector rows)
+</span></span><span style="display:flex;"><span>        sqs  (for [x (range <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">9</span> <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>                   y (range <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">9</span> <span style="color:#ae81ff">3</span>)]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">get-square</span> rows x y))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">run</span> <span style="color:#ae81ff">1</span> [q]
+</span></span><span style="display:flex;"><span>      (== q vars)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">everyg</span> <span style="color:#f92672">#</span>(<span style="color:#a6e22e">infd</span> % (<span style="color:#a6e22e">domain</span> <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">6</span> <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">8</span> <span style="color:#ae81ff">9</span>)) vars)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">init</span> vars hints)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">everyg</span> distinctfd rows)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">everyg</span> distinctfd cols)
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">everyg</span> distinctfd sqs))))
+</span></span></code></pre></div><p>This solution uses a &ldquo;pseudo&rdquo; goal call everyg with is similar to all-distincto in the previous example.</p>
+<p>So how fast is this then? How does it stack up against the hand-rolled implementation above? Well, on an empty board (all squares open) the hand-rolled code finds 5 solutions in 400ms, while this code above get&rsquo;s into a (&gt;5min) loop. For for more realistic &ldquo;hard&rdquo; boards the core.logic solution is on average 20x faster than the hand rolled code (much less temporary objects I recon). Finally, on really evil boards like this one, discovered by Peter Norvig;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>evil-norvig
+</span></span><span style="display:flex;"><span>    [[<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">6</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">9</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">8</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">2</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">8</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">5</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">3</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">6</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">3</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">5</span> <span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2</span> <span style="color:#ae81ff">5</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">6</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span>]])
+</span></span></code></pre></div><p>the core.logic code terminates in ~6 seconds where as the hand rolled code loops forever (well, I gave up after 20 minutes).</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>In most cases where &ldquo;searching&rdquo; is involved, I warmly recommend using core.logic. The expressive power makes for easy to read code, and the performance cost over hand rolled code is either not very significant or reverse (i.e. core.logic is faster). The new constraints primitives (cKanren) in core.logic-0.8 is a great addition to an already impressive library.</p>
+<p>Some other stuff;</p>
+<ul>
+<li>The excellent <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren paper</a> is getting a bit obsolete. It&rsquo;s still a very good read, but for the latest innovation check out it&rsquo;s <a href="https://github.com/calvis/cKanren">github page</a>, and ofcourse core.logic.</li>
+<li>If you can&rsquo;t get enough of logic programming, the next step is to dip into the ocean of Prolog, there are plenty of awesome (and practical) books written over many years. Here&rsquo;s a <a href="http://dosync.posterous.com/a-logic-programming-reading-list">good list of books</a> to get you started</li>
+</ul>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

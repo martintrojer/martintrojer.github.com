@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Some thoughts on Clojure performance</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Some thoughts on Clojure performance</h1>
+			<b><time>2012-02-18</time></b>
+		       
+		           <a href="/tags/.net">.net</a>
+        	       
+		           <a href="/tags/csharp">csharp</a>
+        	       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/javascript">javascript</a>
+        	       
+		           <a href="/tags/jvm">jvm</a>
+        	       
+		           <a href="/tags/mono">mono</a>
+        	       
+		           <a href="/tags/scala">scala</a>
+        	       
+
+			<div>
+				<p><em>Edit</em>: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &ldquo;Why is Clojure so slow?&rdquo;). I wrote this before <a href="http://www.youtube.com/watch?v=I5iNUtrYQSM">Rich Hickey&rsquo;s Clojure/Conj 2011 keynote</a> was published, in which he talks about most of my concerns (and outlines possible solutions).</p>
+<p>Clojure is great in many ways, but one thing it can&rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute. This is a well known issue in the Clojure community and have been discussed on the <a href="http://groups.google.com/group/clojure">mailing list</a> and <a href="http://stackoverflow.com/questions/2531616/why-is-the-clojure-hello-world-program-so-slow-compared-to-java-and-python">stack overflow</a>. I am not intending to troll or fuel any fires here, just jotting down some of my findings when looking into the matter.</p>
+<p>Measuring the speed of code is quite tricky, because there are many parts to a program. This is especially true for Clojure programs where the JVM, Clojure bootstrapping and dynamic compilation is part of the puzzle. But the fact remains, running tools like <a href="https://github.com/technomancy/leiningen">Leiningen</a> (lein) or &ldquo;jack-in&rdquo; is annoyingly slow, mainly because Clojure programs takes a long time to &ldquo;spin up&rdquo;. Further more, even when Clojure is up and running, it&rsquo;s not particularly fast compared to it&rsquo;s JVM cousins, see <a href="http://shootout.alioth.debian.org/">The Computer Language Benchmarks Game</a>.</p>
+<h2 id="getting-going">Getting going&hellip;</h2>
+<p>The slow startup time is probably what you will notice first when starting to code in Clojure. Anything from running your first &ldquo;hello worlds&rdquo; to starting the REPL is painful. Here&rsquo;s some average numbers for a simple &ldquo;Hello world&rdquo; program taken on a 2.5GHz Core2Duo MacBook Pro;</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th>Total running time OSX</th>
+<th>Relative</th>
+<th>Total running time Ubuntu</th>
+<th>Relative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C (printf)</td>
+<td>0.011s</td>
+<td>1</td>
+<td>0.001s</td>
+<td>1</td>
+</tr>
+<tr>
+<td>C# (mono)</td>
+<td>0.085s</td>
+<td>7.7</td>
+<td>0.027s</td>
+<td>27</td>
+</tr>
+<tr>
+<td>F# (mono)</td>
+<td>0.105s</td>
+<td>9.5</td>
+<td>0.036s</td>
+<td>36</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>0.350s</td>
+<td>32</td>
+<td>0.038s</td>
+<td>38</td>
+</tr>
+<tr>
+<td>Scala</td>
+<td>0.710s</td>
+<td>64.5</td>
+<td>0.228s</td>
+<td>228</td>
+</tr>
+<tr>
+<td>Groovy</td>
+<td>0.740s</td>
+<td>67.4</td>
+<td>0.335s</td>
+<td>335</td>
+</tr>
+<tr>
+<td>JRuby (non-compiled)</td>
+<td>0.820s</td>
+<td>74.5</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Clojure (uberjar)</td>
+<td>1.250s</td>
+<td>113.5</td>
+<td>0.652s</td>
+<td>652</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>What we can see it that Java itself accounts for 0.35s of the startup time, but unfortunately Clojure adds another second(!) on top of that. This 1.3s pause before main gets called is why Clojure is unsuitable for &ldquo;terminal scripts&rdquo;. The running time of any scripts (like lein or starting the REPL) will be totally dominated by the startup time. Most Clojure developers will not notice this too much to, since they spend almost all their time in the REPL itself, but users of those Clojure programs will!</p>
+<p>The CLR (mono) is about 4x faster getting going than the JVM. This is a big plus for the &ldquo;#-py&rdquo; languages. Also note that the difference between F# and C# is much smaller than Clojure and Java, so there isn&rsquo;t any excuse/president for more functional/declarative languages to start slower then their &ldquo;bare&rdquo; counterparts.</p>
+<p>So why don&rsquo;t we use the Clojure/CLR on mono for stuff like lein then? Well, as it currently stands, the Clojure startup times are even worse on the CLR. The same hello world example as above clocks in a 1.8s! (using the debug Clojure/CLR assembly) - the difference between ClojureCLR and C# is an order of magnitude worse than Clojure and Java, some work left to be done in the ClojureCLR project&hellip;</p>
+<h3 id="whats-taking-so-long">What&rsquo;s taking so long?</h3>
+<p><a href="http://www.deepbluelambda.org/">Daniel Solano</a> gave a talk at <a href="http://www.youtube.com/watch?v=1NptqU3bqZE">Clojure/conj 2011</a> about Clojure and Android - <a href="https://github.com/relevance/clojure-conj/blob/master/2011-slides/daniel-solano-g%C3%B3mez-clojure-and-android.pdf">slides</a>, the performance part of that talk gives some valuable insights into Clojure internals and what happens when it starts up. My summary is that it spends 95% of the startup-time loading the clojure.core namespace (the clojure.lang.RT class in particular) and filling out all the metadata/docstrings etc for the methods. This process stresses the GC quite a bit, some 130k objects are allocated and 90k free-d during multiple invokes of the GC (3-6 times), the building up of meta data is one big source of this massive object churn.</p>
+<p><em>Edit</em>: By using the &ldquo;-verbose:gc&rdquo; flag when running the clojure test above, I notice a single collection, taking some 0.018s. This is different to Daniel&rsquo;s findings, but hardly surprising since he measured performance on the <a href="http://code.google.com/p/dalvik/">Dalvik VM</a>.</p>
+<p>Daniel mentions a few ideas to improve the situation, and some of those ideas sounds pretty good to me;</p>
+<ul>
+<li>Having a separate jar for development (when you want all the docstring etc in the REPL) and a slim one with all that stuff removed to &ldquo;runtime&rdquo; jar (not to be confused with the existing clojure-slim jar file)</li>
+<li>Serialising the clojure.core initialisation so it can be dumped into memory from disk when starting up<!-- raw HTML omitted --></li>
+</ul>
+<h3 id="clojurescript-to-the-rescue">ClojureScript to the rescue</h3>
+<p>ClojureScript and Google&rsquo;s blistering fast <a href="http://code.google.com/p/v8/">javascript engine V8</a> is another way to go. When using the ClojureScript compiler on a hello word example with advanced optimisation, we end up with some 100kb of Javascript. The V8 engine runs this is in 0.140s, which is 2.5x faster than the &ldquo;bare&rdquo; Java version and 9x faster than the Clojure/JVM version! The <a href="http://code.google.com/closure/">Google Closure</a> compiler certainly helps here by removing lots of unused code, and the resulting Javascript file is indeed free from all docstrings etc.</p>
+<p>Also, Rich Hickey did mention ClojureScript as &ldquo;Clojure&rsquo;s script story&rdquo; when he <a href="http://blip.tv/clojure/rich-hickey-unveils-clojurescript-5399498">unveiled</a> ClojureScript last year - one of the main benefits is the much improved startup time.</p>
+<h2 id="up-and-running">Up and running&hellip;</h2>
+<p>How fast is Clojure at running your code once it finally has got going? A look around the <a href="http://shootout.alioth.debian.org/u32/which-programming-languages-are-fastest.php">The Computer Language Benchmarks Game</a> gives you a good idea. Clojure is on average 4x slower than Java and 2x slower than Scala. There are a couple of reasons, and the biggest factor is Clojure&rsquo;s immutable data structures.</p>
+<p>The fact is that immutable data structures will always be slower then their mutable counterparts. The promise of Clojure&rsquo;s persistant data structures is that they have the same <a href="http://en.wikipedia.org/wiki/Time_complexity">time complexity</a> as the mutable equivalents, but they are not as fast - constant time factors do play a big role in running times. Most of the benchmarks above run for 50-200 seconds, so Clojure&rsquo;s startup time will be a factor in the results as well. Finally, dynamic languages a generally slower than static ones, because of the extra boxing overheads etc.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Where does all this leave us? Clojure is a beautiful, powerful and very useful language, but (in it&rsquo;s current incarnation) not great for small script-y programs. The problems with startup time can be solved, either by changes to Clojure itself or by exploring the ClojureScript route. I personally like the javascript track; Javascript has lower processor and space overhead than the JVM, so by making ClojureScript-scripting better, Clojure can be more widely used, reaching embedded systems etc.</p>
+<p>However, in order to make ClojureScript a viable option for non-browser programs, there are certainly more work to be done. Building on the <a href="http://nodejs.org/">Node.js</a> integration looks like an interesting path forward&hellip;</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

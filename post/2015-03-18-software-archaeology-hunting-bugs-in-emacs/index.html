@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Software archaeology, hunting bugs in Emacs</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Software archaeology, hunting bugs in Emacs</h1>
+			<b><time>2015-03-18</time></b>
+		       
+		           <a href="/tags/emacs">emacs</a>
+        	       
+		           <a href="/tags/gnu">gnu</a>
+        	       
+		           <a href="/tags/lisp">lisp</a>
+        	       
+		           <a href="/tags/gdb">gdb</a>
+        	       
+
+			<div>
+				<p>By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).</p>
+<h2 id="background">Background</h2>
+<p>Let me set the scene, I tend to do all my development inside VMs and/or Docker containers. Why? well see [here]({{ ref &ldquo;2014-12-04-developing-clojure-in-the-cloud.md&rdquo; &gt;}}) and <a href="https://martintrojer.github.io/post/2015-02-22-moving-my-devboxes-to-docker/">here</a>. My host OS is OSX and my guests Linux, I use <a href="http://virtualbox.org">VirtualBox</a> for local VM-ing. After upgrading to OSX 10.10 I saw strange glitches when using Emacs terminal-mode in my VMs;</p>
+<figure><img src="/assets/images/emacs/garbled.png"/>
+</figure>
+
+<p>First port of call when Emacs draws garbled text to the terminal is to check the TERM / TERMCAP environment variables. If Emacs is outputting control chars that the terminal can&rsquo;t understand then you found your problem. One way to check this is to do <code>C-l</code> when your screen is garbled, this causes Emacs to re-draw the screen. In my case the re-draw command rendered the screen correctly.</p>
+<p>Some brave soul on the internet had found out that if you change the number of virtual CPUs to 1 on the VM, the problems goes away. Very strange indeed. This tells me its some kind on timing issue. After some googling I learned that world of terminals and <a href="http://en.wikipedia.org/wiki/ANSI_escape_code#CSI_codes">control codes</a> is complex and messy. Control codes and the text is a byte stream which the network stack can flush at its leisure, and if you mix in the user input these network transactions becomes quite unpredictable. The problem is that this byte stream can be cut off in the middle of a control char (network packet envelope) and the terminal emulator can timeout and misinterpret the remaining stream of bytes resulting in garbled output. One possible scenario is then that OSX 10.10 made some changes to the network stack resulting in these control codes being chopped of more often. What can I say, welcome the wonderful world of computers.</p>
+<h2 id="finding-a-solution">Finding a solution</h2>
+<p>So how do I arrive at this conclusion and how can we solve it?</p>
+<h3 id="termscript">termscript</h3>
+<p>One of the beauties of working with terminal apps is that you can record all the draw events and then replay them (but printing them) to a terminal. This means you can figure out what the app (Emacs in this case) does to the screen on each keypress.</p>
+<p>I used 2 methods to capture this data, Emacs has a built in command <code>M-x open-termscript</code> that starts this logging. There is also a tools like <a href="http://man7.org/linux/man-pages/man1/script.1.html">script</a> and <a href="https://www.gnu.org/software/screen/manual/screen.html">screen</a> that can log these events.</p>
+<p>Here is an example termscript file.</p>
+<pre tabindex="0"><code>[[?25l^[[38;5;252m^[[40m                          ^[[39;49m^[[2;1H^[[?12l^[[?25h^[[?12;25h^[[43d^[[?25l^[[38;5;77m^[[40mRegexp I-search: ^[[39;49m^[[2;1H^[[?12l^[[?25h^[[?12;25h^[[42;57H^[[?25l^[[3
+8;5;69m^[[48;5;236m Isearch) 10:16 jvm[2] ^[[39;49m^[[2;1H^[[?12l^[[?25h^[[?12;25h^[[43;18H^[[?25l^[[38;5;252m^[[40mC^[[39;49m^[[?12l^[[?25h^[[?12;25h^[[2;1H^[[5d^[[?25l^[[30m^[[48;5;198mC^[[39;49m^
+[[42;34H^[[38;5;69m^[[48;5;236m5,1^[[39;49m^[[5;2H^[[?12l^[[?25h^[[?12;25h^[[5;24H^[[?25l^[[30m^[[103mC^[[39;49m^[[7;1H^[[30m^[[103mC^[[39;49m^[[9;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 SP^
+[[39;49m^[[30m^[[103mC^[[39;49m^[[10;1H^[[30m^[[103mC^[[39;49m^[[11;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 &#34;         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[12;1H^[[30m^[[103mC^[[39;49m^[
+[13;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 &#39;         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[14;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 *         Prefix ^[[39;49m^[[30m^[[103mC^[[
+39;49m^[[15;1H^[[30m^[[103mC^[[39;49m^[[16;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 ,         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[17;1H^[[30m^[[103mC^[[39;49m^[[18;1H^[[30m^[[103mC^[[39
+;49m^[[19;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 /         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[5;2H^[[?12l^[[?25h^[[?12;25h^[[20;1H^[[?25l^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8
+ 1         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[21;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 3         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[22;1H^[[30m^[[103mC^[[39;49m^[[23;1H^[[30m
+^[[103mC^[[39;49m^[[24;1H^[[30m^[[103mC^[[39;49m^[[25;1H^[[30m^[[103mC^[[39;49m^[[26;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 ^[[39;49m^[[30m^[[103mC^[[39;49m^[[27;1H^[[30m^[[103mC^[[39;49m^[
+[28;1H^[[30m^[[103mC^[[39;49m^[[29;1H^[[30m^[[103mC^[[39;49m^[[30;1H^[[30m^[[103mC^[[39;49m^[[31;1H^[[30m^[[103mC^[[39;49m^[[32;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 ^         Prefix ^[[39
+;49m^[[30m^[[103mC^[[39;49m^[[33;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 _         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[34;1H^[[30m^[[103mC^[[39;49m^[[5d^[[?12l^[[?25h^[[?12;25h^[[34;24
+H^[[?25l^[[30m^[[103mC^[[39;49m^[[35;1H^[[30m^[[103mC^[[39;49m^[[36;1H^[[30m^[[103mC^[[39;49m^[[37;1H^[[30m^[[103mC^[[39;49m^[[38;1H^[[30m^[[103mC^[[39;49m^[[39;1H^[[30m^[[103mC^[[39;49m^[[40;1H^[[3
+0m^[[103mC^[[39;49m^[[41;1H^[[30m^[[103mC^[[39;49m^[[38;5;252m^[[40m-x 8 ~         Prefix ^[[39;49m^[[30m^[[103mC^[[39;49m^[[5;2H^[[?12l^[[?25h^[[?12;25h^[[43;19H^[[?25l^[[38;5;252m^[[40m-^[[39;49m^
+[[?12l^[[?25h^[[?12;25h^[[5;2H^[[?25l^[[30m^[[48;5;198m-^[[39;49m^[[42;36H^[[38;5;69m^[[48;5;236m2^[[39;49m^[[5;3H^[[?12l^[[?25h^[[?12;25h^[[5;24H^[[?25l^[[38;5;252m^[[40mC^[[39;49m^[[7;1H^[[38;5;25
+2m^[[40mC^[[39;49m^[[9;1H^[[38;5;252m^[[40mC-x 8 SPC^[[39;49m^[[10;1H^[[38;5;252m^[[40mC^[[39;49m^[[11;1H^[[38;5;252m^[[40mC-x 8 &#34;         Prefix C^[[39;49m^[[12;1H^[[38;5;252m^[[40mC^[[39;49m^[[13;
+1H^[[38;5;252m^[[40mC-x 8 &#39;         Prefix C^[[39;49m^[[14;1H^[[38;5;252m^[[40mC-x 8 *         Prefix C^[[39;49m^[[15;1H^[[38;5;252m^[[40mC^[[39;49m^[[16;1H^[[38;5;252m^[[40mC-x 8 ,         Prefix C
+^[[39;49m^[[17;1H^[[38;5;252m^[[40mC^[[39;49m^[[18;1H^[[38;5;252m^[[40mC^[[39;49m^[[19;1H^[[38;5;252m^[[40mC-x 8 /         Prefix C^[[39;49m^[[20;1H^[[38;5;252m^[[40mC-x 8 1         Prefix C^[[39;49
+m^[[21;1H^[[38;5;252m^[[40mC-x 8 3         Prefix C^[[39;49m^[[22;1H^[[38;5;252m^[[40mC^[[39;49m^[[23;1H^[[38;5;252m^[[40mC^[[39;49m^[[24;1H^[[38;5;252m^[[40mC^[[39;49m^[[25;1H^[[38;5;252m^[[40mC^[[
+39;49m^[[26;1H^[[38;5;252m^[[40mC-x 8 C^[[39;49m^[[27;1H^[[38;5;252m^[[40mC^[[39;49m^[[28;1H^[[38;5;252m^[[40mC^[[39;49m^[[29;1H^[[38;5;252m^[[40mC^[[39;49m^[[30;1H^[[38;5;252m^[[40mC^[[39;49m^[[31;
+1H^[[38;5;252m^[[40mC^[[39;49m^[[32;1H^[[38;5;252m^[[40mC-x 8 ^         Prefix C^[[39;49m^[[33;1H^[[38;5;252m^[[40mC-x 8 _         Prefix C^[[39;49m^[[34;1H^[[38;5;252m^[[40mC-x 8 `         Prefix C
+^[[39;49m^[[35;1H^[[38;5;252m^[[40mC^[[39;49m^[[36;1H^[[38;5;252m^[[40mC^[[39;49m^[[37;1H^[[38;5;252m^[[40mC^[[39;49m^[[38;1H^[[38;5;252m^[[40mC^[[39;49m^[[39;1H^[[38;5;252m^[[40mC^[[39;49m^[[40;1H^
+[[38;5;252m^[[40mC^[[39;49m^[[41;1H^[[38;5;252m^[[40mC-x 8 ~         Prefix C
+</code></pre><p>To read this one you&rsquo;ll need a table of the control codes and patience. I found cases when cursor moves seemed to be missing. That&rsquo;s one of these control codes, and after that point the screen will get garbled.</p>
+<p>Here a simple script to replay the termscript (slowly)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> read line; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#e6db74">&#34;</span>$line<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  sleep <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span> &lt; <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><h3 id="gdb">gdb</h3>
+<p>Having familiarized myself with how Emacs sends commands to the terminal. Now the question is where (and if) we can fix the problem in Emacs itself. There is not much we can do to the network stack of the OS, but we can change up the way we send control codes which might make help to treat some of the symptoms.</p>
+<p>Emacs is written in 2 languages, C and Elisp (most of it is in Elisp). The C code contains the core functionality (including the Elisp interpreter) that are used by all the modes etc. The C code also contains functions for writing to the terminal, outputting control codes etc. This makes want to look at the C code first, because its likely that a potential fix will be there.</p>
+<p>Debugging Elisp code is quite pleasant, Emacs comes with many tools and modes to do just that. Debugging the C code is a different matter, you are left with good old <a href="http://www.gnu.org/software/gdb/">gdb</a> which is less user friendly but still very powerful.</p>
+<p>Step one is to download the latest Emacs <a href="http://www.gnu.org/software/emacs/#Obtaining">source tar ball</a> and build it. When you build it by hand you&rsquo;ll get debug symbols in the binaries which is crucial when debugging. Once built we can run Emacs in the debugger. That immediately causes another problem, Emacs and gdb are now competing for the terminal making it impossible to send debugger commands and using Emacs at the same time. What we need to do is to launch Emacs by itself and attach gdb to the running process <code>gdb emacs &lt;PID&gt;</code>. At this point we can look at the stack trace, set breakpoints etc.</p>
+<pre tabindex="0"><code>(gdb) bt
+#0  cmgoto (tty=0x126bbc0, row=45, col=0) at cm.c:320
+#1  0x000000000040a642 in update_frame_line (f=f@entry=0xb06300, vpos=45) at dispnew.c:5031
+#2  0x000000000040bcfb in update_frame_1 (f=f@entry=0xb06300, force_p=force_p@entry=true, inhibit_id_p=inhibit_id_p@entry=true, set_cursor_p=set_cursor_p@entry=true) at dispnew.c:4512
+#3  0x000000000040d770 in update_frame (f=f@entry=0xb06300, force_p=&lt;optimized out&gt;, force_p@entry=true, inhibit_hairy_id_p=inhibit_hairy_id_p@entry=true) at dispnew.c:3113
+#4  0x0000000000432c12 in echo_area_display (update_frame_p=update_frame_p@entry=1) at xdisp.c:11310
+#5  0x0000000000432d5e in message3_nolog (m=m@entry=19444193) at xdisp.c:10271
+#6  0x0000000000432f1a in message3 (m=m@entry=19444193) at xdisp.c:10213
+#7  0x00000000004f4ddb in Fmessage (nargs=&lt;optimized out&gt;, args=&lt;optimized out&gt;) at editfns.c:3452
+#8  0x00000000004fc891 in Ffuncall (nargs=&lt;optimized out&gt;, args=&lt;optimized out&gt;) at eval.c:2793
+#9  0x0000000000530065 in exec_byte_code (bytestr=1, vector=45, maxdepth=0, args_template=11479922, nargs=140736461706320, args=0x3) at bytecode.c:916
+#10 0x00000000004fc43f in funcall_lambda (fun=9442429, nargs=nargs@entry=0, arg_vector=arg_vector@entry=0x7fffc2ce9610) at eval.c:3045
+#11 0x00000000004fc7b3 in Ffuncall (nargs=1, args=0x7fffc2ce9608) at eval.c:2873
+#12 0x0000000000530065 in exec_byte_code (bytestr=1, vector=45, maxdepth=0, args_template=11479922, nargs=140736461706752, args=0x1) at bytecode.c:916
+#13 0x00000000004fc43f in funcall_lambda (fun=9412165, nargs=nargs@entry=0, arg_vector=arg_vector@entry=0x7fffc2ce97c0) at eval.c:3045
+#14 0x00000000004fc7b3 in Ffuncall (nargs=1, args=0x7fffc2ce97b8) at eval.c:2873
+#15 0x0000000000530065 in exec_byte_code (bytestr=1, vector=45, maxdepth=0, args_template=11479922, nargs=140736461707184, args=0x1) at bytecode.c:916
+#16 0x00000000004fc43f in funcall_lambda (fun=9411149, nargs=nargs@entry=4, arg_vector=arg_vector@entry=0x7fffc2ce9970) at eval.c:3045
+#17 0x00000000004fc7b3 in Ffuncall (nargs=5, args=0x7fffc2ce9968) at eval.c:2873
+#18 0x0000000000530065 in exec_byte_code (bytestr=1, vector=45, maxdepth=0, args_template=11479922, nargs=0, args=0x5) at bytecode.c:916
+#19 0x00000000004fc43f in funcall_lambda (fun=9409613, nargs=nargs@entry=2, arg_vector=arg_vector@entry=0x7fffc2ce9b78) at eval.c:3045
+#20 0x00000000004fc7b3 in Ffuncall (nargs=nargs@entry=3, args=args@entry=0x7fffc2ce9b70) at eval.c:2873
+#21 0x00000000004f8d40 in Fcall_interactively (function=&lt;optimized out&gt;, record_flag=&lt;optimized out&gt;, keys=&lt;optimized out&gt;) at callint.c:836
+#22 0x00000000004fc990 in Ffuncall (nargs=&lt;optimized out&gt;, args=&lt;optimized out&gt;) at eval.c:2819
+#23 0x0000000000530065 in exec_byte_code (bytestr=1, vector=45, maxdepth=0, args_template=4100, nargs=140736461708624, args=0x4) at bytecode.c:916
+#24 0x00000000004fc4d7 in funcall_lambda (fun=0, nargs=nargs@entry=1, arg_vector=0x88bc59 &lt;pure+910393&gt;, arg_vector@entry=0x7fffc2ce9ea8) at eval.c:2979
+#25 0x00000000004fc7b3 in Ffuncall (nargs=nargs@entry=2, args=args@entry=0x7fffc2ce9ea0) at eval.c:2873
+#26 0x00000000004fcafa in call1 (fn=&lt;optimized out&gt;, arg1=&lt;optimized out&gt;) at eval.c:2611
+#27 0x0000000000499c45 in command_loop_1 () at keyboard.c:1559
+#28 0x00000000004fadae in internal_condition_case (bfun=bfun@entry=0x4998e0 &lt;command_loop_1&gt;, handlers=&lt;optimized out&gt;, hfun=hfun@entry=0x490f00 &lt;cmd_error&gt;) at eval.c:1348
+#29 0x000000000048c98e in command_loop_2 (ignore=ignore@entry=11479922) at keyboard.c:1177
+#30 0x00000000004facbb in internal_catch (tag=11526722, func=func@entry=0x48c970 &lt;command_loop_2&gt;, arg=11479922) at eval.c:1112
+#31 0x0000000000490b27 in command_loop () at keyboard.c:1156
+#32 recursive_edit_1 () at keyboard.c:777
+#33 0x0000000000490e3d in Frecursive_edit () at keyboard.c:848
+#34 0x000000000040620b in main (argc=&lt;optimized out&gt;, argv=0x7fffc2cea238) at emacs.c:1646
+</code></pre><p>This stacktrace clearly shows the duality of Emacs, there some C code at the bottom, then a chunk of Elisp in the middle (funcall_lambda etc) and eventually back into C to update the screen / write to disk etc.</p>
+<p>My starting point was <a href="https://github.com/martintrojer/emacs/blob/master/src/term.c">term.c</a> and I was looking for code that moved the cursor. I eventually ended up looking at the function called <code>cmgoto</code> in <a href="https://github.com/martintrojer/emacs/blob/master/src/cm.c">cm.c</a>. This function tries to be clever and work out the cheapest way to move the cursor to where it needs to be. I put a <a href="https://github.com/martintrojer/emacs/commit/bdff1ff98d02f4307659c052d0b35a40a36f0706">blunt hack</a> in here to always use the &lsquo;direct move&rsquo; approach. This seems to solve the problem with re-draws what I was suffering from.</p>
+<h2 id="publishing-the-solution-to-my-devboxes">Publishing the solution to my devboxes</h2>
+<p>Ok, we have arrived at a solution and now I have to make it available in the VMs and containers that I use for development (and to the rest of the world). I&rsquo;m using Ubuntu systems, so I decided to make PPA with my patch.</p>
+<p>Here is a short log of how to publish a <a href="http://en.wikipedia.org/wiki/Personal_Package_Archive">PPA</a>.</p>
+<ol>
+<li>Create a <a href="https://launchpad.net">launchpad</a> account</li>
+<li>Publish your PGP key to the <a href="http://keyserver.ubuntu.com">Ubuntu key server</a></li>
+<li>Paste you PGP fingerprint into the launchpad dashboard</li>
+<li>Sing the &lsquo;Ubuntu Code of Conduct&rsquo; on the launchpad dashboard</li>
+<li>Create a new PPA</li>
+</ol>
+<p>Next step is to build the deb files to publish.</p>
+<ol>
+<li><code>apt-get source emacs24-nox</code></li>
+<li>untar the .debian.tar.gz file (which contains the debian control files, patches etc). See <a href="https://github.com/martintrojer/emacs-debian/commit/5a04fe59af8617e4b4eb34843f94b3b33f070941">this commit</a> for what I edited.</li>
+<li>move the debian folder into the source folder</li>
+<li>debuild -S -sa</li>
+<li>You will now have a .changes file in the parent folder</li>
+<li><code>dput ppa:&lt;PPA-name&gt; &lt;source.changes&gt;</code></li>
+</ol>
+<p>After this upload is done you should receive and email saying it&rsquo;s been accepted and after about 15 minutes the package will be built.</p>
+<p>The final step is to update your Dockerfiles, puppet modules etc to <code>add-apt-repository ppa:martin-trojer/emacs24-termfix</code> before install emacs. That snippet uses the PPA I created, its landing page is <a href="https://launchpad.net/~martin-trojer/+archive/ubuntu/emacs24-termfix">here</a>.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

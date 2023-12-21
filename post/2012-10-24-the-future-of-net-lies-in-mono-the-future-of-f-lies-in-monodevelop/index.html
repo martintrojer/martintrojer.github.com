@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>The future of .NET lies in Mono. The future of F# lies in MonoDevelop.</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>The future of .NET lies in Mono. The future of F# lies in MonoDevelop.</h1>
+			<b><time>2012-10-24</time></b>
+		       
+		           <a href="/tags/.net">.net</a>
+        	       
+		           <a href="/tags/mono">mono</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+
+			<div>
+				<p>It&rsquo;s been a year since <a href="https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/">I last wrote about F# and Mono</a> - what&rsquo;s happened since then?</p>
+<p>F# 3.0 has recently been released, bundled in with the new <a href="http://www.theregister.co.uk/2012/08/28/visual_studio_2012_review/">all-grey</a>, <a href="http://blogs.msdn.com/b/visualstudio/archive/2012/06/05/a-design-with-all-caps.aspx">ALL-CAPS</a> Visual Studio 2012. The biggest new feature is <a href="http://msdn.microsoft.com/en-us/library/hh156509.aspx">type providers</a>, bringing some of the benefits of dynamic languages into type safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up pretty soon so more developers (including me) can enjoy the benefits.</p>
+<p>OK, that&rsquo;s cool, but how is good old F# doing? Well, about the same. It lumbers on in obscurity under the massive shadow of Microsoft and whatever crazy idea the company is currently peddling (<a href="http://arstechnica.com/gaming/2012/07/steams-newell-windows-8-catastrophe-driving-valve-to-embrace-linux/">Win8 metro UI</a>, <a href="http://www.businessinsider.com/microsoft-has-big-problem-with-windows-8-2012-10">touch-screen laptops</a>, <a href="http://tirania.org/blog/archive/2011/Sep-15.html">WinRT</a>, <a href="http://news.yahoo.com/microsoft-surface-pricing-flat-crazy-165658134.html">$100 surface cover</a>s, <a href="http://www.neowin.net/news/former-microsoft-pm-silverlight-is-dead">pretending Silverlight never happened</a>, etc&hellip;) F# is still awesome and deserves a lot more attention and adoption.</p>
+<p>Take a look at <a href="http://www.thoughtworks.com/articles/technology-radar-october-2012">ThoughWorks latest Tech Radar</a>. F# distant relatives (as in fairly new <a href="http://skillsmatter.com/podcast/home/practical-fsharp/js-4400">functional-first</a>  languages) Scala and Clojure are steaming ahead and have both reached &ldquo;Adopt&rdquo; status. F# is stuck in &ldquo;assess&rdquo; never-land. I don&rsquo;t see many signs of that changing anytime soon.</p>
+<p>Take a look at <a href="http://www.thoughtworks.com/articles/technology-radar-october-2012">ThoughWorks latest Tech Radar</a>. F# distant relatives (as in fairly new &ldquo;<a href="http://skillsmatter.com/podcast/home/practical-fsharp/js-4400">functional-first</a>&rdquo;  languages) Scala and Clojure are steaming ahead and have both reached &ldquo;Adopt&rdquo; status. F# is stuck in &ldquo;assess&rdquo; never-land. I don&rsquo;t see many signs of that changing anytime soon.</p>
+<p>F# has limited credibility because of Microsoft. Even though <a href="https://github.com/fsharp">F# is actually open source</a>, it has a very small open source community. The development is completely driven from Microsoft, and there is very little &ldquo;open source buzz&rdquo; about it, typical for any Microsoft products. F# moves with the same slow cadence as Visual Studio, which is software terms are eons between releases. Any big and open F# frameworks are sorely lacking. Microsoft&rsquo;s completely r******d (there, I said it) messaging regarding F# and .NET is also to blame.</p>
+<p>On messaging; firstly, there is the total confusion about .NET. Where is that going? Windows8 is all about HTML5. <a href="http://channel9.msdn.com/posts/Anders-Hejlsberg-Introducing-TypeScript">Anders is doing Typescript now</a>, silverlight is dead. There&rsquo;s a lot of frustrated .NET developer out there. I&rsquo;ve predicted that Mono is future home and legacy for .NET, and it looks more likely every day. As a die-hard MSDN developer you might frown upon this fact, but really it&rsquo;s not a bad thing. Open-source and Mono has a lot to offer, for instance OS independence. This is absolutely critical to continue to drive adoption.</p>
+<p>Secondly, F# has always been the odd one out in the .NET space (compared to headline technologies such as C#, VB, ASP). If Microsofts messaging on the future of .NET is confusing, their messaging on what F# is and supposed to be used for is crazy; &ldquo;Use C# for everything, and if you&rsquo;re an academic do some data analysis check out F#&rdquo;. Screw that, F# is superior to C# in every single way, for any application. Microsoft should promote the hell out of it and stop pussyfooting about. However, I have very little faith that this will ever improve, and F# is (and always has been) dancing close to the edge of oblivion.</p>
+<p>There is a big F# shaped hole in the language space currently, on the JVM and elsewhere. Like I stated a year ago, if F# did run on the JVM the story would be completely different, it would have massive adoption. It is a perfect candidate for &ldquo;the static typed language of choice&rdquo; in your language toolbox. Today people are seriously looking into Haskell when they get fed up with their gnarly python/ruby projects. Sadly F# is getting overlooked.</p>
+<p>So what about Mono and open source then? <a href="https://twitter.com/dsyme/status/259986508071702528">Don Syme spoke</a> at the recent <a href="http://monkeyspace.org/">MonkeySpace conference</a>, and <a href="http://news.ycombinator.com/item?id=4685053">generated a lot of buzz</a>. .NET has never been sexy technology in the hands of Microsoft, but the Xamarin guys are turning Mono into just that. <a href="http://xamarin.com/monotouch">MonoTouch</a>, <a href="http://monogame.codeplex.com/">MonoGame</a>, <a href="http://unity3d.com/">Unity</a> are some really good products. Mr Don Syme, this is where you and your language belong, this is how you take F# to the next level. Forget about all the in-fighting and bickering at Microsoft and focus on what&rsquo;s good for F#. That is to embrace Mono fully, it&rsquo;s your number one platform.</p>
+<p>The culture shift for developers who&rsquo;s been living inside the Microsoft/MSDN bubble moving to Mono is drastic. Mono is an all-out open source community with all it&rsquo;s up and downsides. Say goodbye to stable, supported releases every 3/4 years and hello to nightly builds and pull requests. That certainly won&rsquo;t fit all current .NET developers, like lemmings they&rsquo;ll just move along to whatever Microsoft is feeding them next. Could that be the <a href="http://channel9.msdn.com/Shows/C9-GoingNative">native renaissance <!-- raw HTML omitted --><!-- raw HTML omitted -->perhaps</a>? :) Real .NET enthusiast should free themselves from the Microsoft shackles and embrace Mono, they&rsquo;d be much better for it. Join the community, contribute improvements to the garbage collector. Go to awesome conferences in Boston, have fun!</p>
+<p>To summarise, how do we save this gem of a language? F# must break out of the Microsoft prison. Ideally I&rsquo;d like to see a couple of key members of the team to actually leave Microsoft, get some funding and set up a independent F# foundation (or maybe join Xamarin). This foundation could pursue important issues like sponsoring key libraries like web frameworks, making sure the F# MonoDevelop integration is top notch etc. So while Microsoft is committing corporate suicide with Windows8, the .NET and F# community needs to move on.</p>
+<p>The future of .NET lies in Mono. The future of F# lies in MonoDevelop.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

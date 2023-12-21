@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>guile on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/guile/</link>
+    <description>Recent content in guile on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 27 Jan 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/guile/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
+      <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
+      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+    </item>
+  </channel>
+</rss>

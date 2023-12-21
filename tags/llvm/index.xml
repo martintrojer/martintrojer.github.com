@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>llvm on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/llvm/</link>
+    <description>Recent content in llvm on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 10 Nov 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/llvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Applied Symbolic Execution with KLEE/LLVM</title>
+      <link>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</link>
+      <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</guid>
+      <description>This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&#xA;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.</description>
+    </item>
+    <item>
+      <title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
+      <link>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</link>
+      <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</guid>
+      <description>GNU and Richard Stallman was a real catalyst for the open source movement and it&amp;rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&amp;rsquo;s head with the copy-left licenses.</description>
+    </item>
+    <item>
+      <title>Why F# needs Mono (and really should be a JVM language)</title>
+      <link>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</link>
+      <pubDate>Thu, 03 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</guid>
+      <description>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&amp;rsquo;re writing a new Windows application (and it&amp;rsquo;s not a high performant game), chances are you are reading WPF books right now.&#xA;One of the promises of .NET when it was released was &amp;ldquo;the great language independent&amp;rdquo; runtime, making all these languages interoperate in joyful blizz.</description>
+    </item>
+    <item>
+      <title>Symbolic Execution</title>
+      <link>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</link>
+      <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</guid>
+      <description>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.</description>
+    </item>
+  </channel>
+</rss>

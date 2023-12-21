@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>N Queens with core.logic, take 2</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>N Queens with core.logic, take 2</h1>
+			<b><time>2012-07-11</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.logic">core.logic</a>
+        	       
+
+			<div>
+				<p>This post is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/">previous post on NQueens and core.logic</a>, in which I tried to find the solutions using &ldquo;pure&rdquo; logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.</p>
+<p>After some excellent feedback and hints from Mr <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&amp;qid=1341989805&amp;sr=8-2">good old Bratko</a>.</p>
+<p>First, let&rsquo;s fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given 2 prerequisites; the fresh variable must be bound to a finite (number) space and we much use <em>project</em> to bind the values. This means we can get rid of subo altogether.</p>
+<p>Project is mentioned in passing in the Reasoned Schemer book, it says &ldquo;project is syntactically like fresh, but it binds different values to the lexical variables. project binds walk*ed values, whereas fresh binds variables using var&rdquo;. What that means in this case is that we can perform arithmetic operations of the projected variables. Here&rsquo;s our new safeo;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo [[x1 y1] [x2 y2]]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">all</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">!=</span> x1 x2)
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">!=</span> y1 y2)
+</span></span><span style="display:flex;"><span>   (project [x1 x2 y1 y2]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">!=</span> (- x2 x1) (- y2 y1))
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">!=</span> (- x1 y2) (- x2 y1)))))
+</span></span></code></pre></div><p>This works if the x&rsquo;s as bound to number range with membero (remember that the y&rsquo;s are never fresh), this is done in a updated queens-run macro;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>queens-run
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Search for all N queens solutions&#34;</span>
+</span></span><span style="display:flex;"><span>  [n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[xnames (<span style="color:#a6e22e">-&gt;&gt;</span> (range n) (map (<span style="color:#66d9ef">fn </span>[_] (gensym <span style="color:#e6db74">&#34;x&#34;</span>))) (into []))
+</span></span><span style="display:flex;"><span>        gen-safeos (<span style="color:#66d9ef">fn </span>[]
+</span></span><span style="display:flex;"><span>                     (<span style="color:#a6e22e">-&gt;&gt;</span> (range (dec n))
+</span></span><span style="display:flex;"><span>                          (map (<span style="color:#66d9ef">fn </span>[x] [x (range (inc x) n)]))
+</span></span><span style="display:flex;"><span>                          (map (<span style="color:#66d9ef">fn </span>[[s ts]]
+</span></span><span style="display:flex;"><span>                                 (map (<span style="color:#66d9ef">fn </span>[t] <span style="color:#f92672">`</span>(<span style="color:#a6e22e">safeo</span> [<span style="color:#f92672">~</span>(nth xnames s) <span style="color:#f92672">~</span>s]
+</span></span><span style="display:flex;"><span>                                                      [<span style="color:#f92672">~</span>(nth xnames t) <span style="color:#f92672">~</span>t])) ts)))
+</span></span><span style="display:flex;"><span>                          (apply concat)))
+</span></span><span style="display:flex;"><span>          ]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">`</span>(<span style="color:#a6e22e">run*</span> [r#]
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">fresh</span> [<span style="color:#f92672">~@</span>(map <span style="color:#f92672">#</span>(nth xnames %) (range n))]
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">~@</span>(map (<span style="color:#66d9ef">fn </span>[x] (list <span style="color:#e6db74">&#39;membero</span> (<span style="color:#a6e22e">xnames</span> x) (into [] (range n)))) (range n))
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">~@</span>(<span style="color:#a6e22e">gen-safeos</span>)
+</span></span><span style="display:flex;"><span>                  (== r# [<span style="color:#f92672">~@</span>(map (<span style="color:#66d9ef">fn </span>[x] [(nth xnames x) x])
+</span></span><span style="display:flex;"><span>                                 (range n))])))))
+</span></span></code></pre></div><p>As you can see, we got rid of subo (and all it&rsquo;s associations). That improves performance on a 6-queens run with ~5x</p>
+<p>Next, we want to get rid of the big macro above and replace it with some readable looping constructs. To replicate the block of safeos generated by this macro (the gen-safeos fn), we are going to need 2 loops, one outer loop that goes over all N queens q, and one inner loop that for every q checks that it&rsquo;s safe against all other queens. Its time for some core.logic pattern matching magic!</p>
+<p>Let&rsquo;s change safeo again. Instead of checking if 2 queens are not attacking each other, it checks if a given queen is not attacking any other queen in a given list (this is our inner loop);</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">defne</span> safeo
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Is the queen q safe from all queens in list others&#34;</span>
+</span></span><span style="display:flex;"><span>  [q others]
+</span></span><span style="display:flex;"><span>  ([_ ()])                    <span style="color:#75715e">;; others empty, s#</span>
+</span></span><span style="display:flex;"><span>  ([[x1 y1] [[x2 y2] <span style="color:#66d9ef">. </span>t]]    <span style="color:#75715e">;; destruct q and head.tail of others</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">!=</span> x1 x2)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">!=</span> y1 y2)
+</span></span><span style="display:flex;"><span>     (project [x1 x2 y1 y2]
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">!=</span> (- x2 x1) (- y2 y1))
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">!=</span> (- x1 y2) (- x2 y1)))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">safeo</span> [x1 y1] t)))
+</span></span></code></pre></div><p>There&rsquo;s a couple of things going on here. defne is a convenience macro to build conde functions (which you end up doing all the time), secondly there are some clever destructing / pattern matching going on to pick the head / tail of a list and recur.</p>
+<p>Now for the outer loop, let&rsquo;s introduce another recursive &ldquo;conde function&rdquo; called nqueenso, this function should loop over all queens in a list, check that they are all safe against each other (using safeo). It also needs to bind the x variables to a finite number space using membero;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">defne</span> nqueenso [l n]
+</span></span><span style="display:flex;"><span>  ([() _])                    <span style="color:#75715e">;; queen list empty, s#</span>
+</span></span><span style="display:flex;"><span>  ([[[x y] <span style="color:#66d9ef">. </span>t] _]            <span style="color:#75715e">;; match/destruct head.tail, ignore n</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">nqueenso</span> t n)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">membero</span> x (range n))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">safeo</span> [x y] t)))
+</span></span></code></pre></div><p>We&rsquo;re almost done now, we just to need rewrite the (run* &hellip;) form. We can actually do without the (fresh &hellip;) expression by creating core.logic logical variables (lvar) directly, this also eliminates the need for a macro to generate n symbols. Here&rsquo;s the whole thing;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>nqueens-cl
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:refer-clojure</span> <span style="color:#e6db74">:exclude</span> [==])
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:use</span> [clojure.core.logic]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defne</span> safeo [q others]
+</span></span><span style="display:flex;"><span>  ([_ ()])
+</span></span><span style="display:flex;"><span>  ([[x1 y1] [[x2 y2] <span style="color:#66d9ef">. </span>t]]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">!=</span> x1 x2)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">!=</span> y1 y2)
+</span></span><span style="display:flex;"><span>     (project [x1 x2 y1 y2]
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">!=</span> (- x2 x1) (- y2 y1))
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">!=</span> (- x1 y2) (- x2 y1)))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">safeo</span> [x1 y1] t)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defne</span> nqueenso [l n]
+</span></span><span style="display:flex;"><span>  ([() _])
+</span></span><span style="display:flex;"><span>  ([[[x y] <span style="color:#66d9ef">. </span>t] _]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">nqueenso</span> t n)
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">membero</span> x (range n))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">safeo</span> [x y] t)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>solve-nqueens [n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">run*</span> [q]
+</span></span><span style="display:flex;"><span>    (== q (map vector (<span style="color:#a6e22e">repeatedly</span> lvar) (range n)))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">nqueenso</span> q n)))
+</span></span></code></pre></div><p>As you can see, with looping we are generating drastically less associations for core.logic to consider, that&rsquo;s good for performance.</p>
+<p>Now it&rsquo;s ~70x faster than the original solution in the previous post. For a 8-queens run, this is ~50x slower than the hand-rolled functional backtracking solution in <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">the very first posting</a>. That&rsquo;s still pretty good for a generic prolog machinery with all the extra expression power that it packs.</p>
+<p>Next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

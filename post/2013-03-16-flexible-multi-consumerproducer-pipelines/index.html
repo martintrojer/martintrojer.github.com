@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Flexible multi consumer/producer pipelines</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Flexible multi consumer/producer pipelines</h1>
+			<b><time>2013-03-16</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+
+			<div>
+				<p>TL;DR <a href="https://github.com/martintrojer/pipejine">Pipejine</a> - a lightweight Clojure library for multi-threaded producer/consumer pipelines supporting arbitrary DAG topologies.</p>
+<p>Recently a <a href="https://twitter.com/jonpither">colleague</a> and I faced a problem where we needed to optimize the total running time of a complicated calculation. This calculation involved several asynchronous steps getting data from other systems (like elasticsearch and other home-grown services) and a bit of number crunching and tallying up the results at the end. Here is and simplified example of the system.</p>
+<figure><img src="/assets/images/pipejine/pipe.png"/>
+</figure>
+
+<p>Some work items can come &ldquo;out of order&rdquo; and some had to hit different systems before &ldquo;coming back&rdquo; and be part of the remaining calculation.</p>
+<p>In order to improve performance, the communication with some of these services needed to batched. The total amount of data to flow through the steps far exceeded the heap size of a single VM, so we had to be careful to partition up the data and only keep parts of it in memory at any time. Different steps required different amount of resources (memory / threads etc) - so we needed to balance the entire system.</p>
+<p>The different steps had different failure characteristics, and it&rsquo;s important that the entire calculation didn&rsquo;t lock up when a part behaved badly, and try to come out of a bad situation as good as possible. Since the whole calculation is very multi threaded, we had to have a way of determining when the whole calculation was done and we could pass on the final result. This &ldquo;done signal&rdquo; also have to be consistent in error situations.</p>
+<p>Because of the complexity of the many steps, it was important to track the status of the whole system, to pick out potential problems and bottlenecks. Finally, we wanted many different of these calculations to be run in parallel (independent of each-other) and be able to cancel single ones (within reasonable time frames).</p>
+<p>Phew, that&rsquo;s quite a lot. How can you describe something like this (in Clojure) without pulling your hair out and go totally mad? Well, this looks like a pipeline problem does it not? There are a few Hadoop-y / Storm-y solutions out there, but all this had to run inside a single VM, and the problem wasn&rsquo;t really &ldquo;big data&rdquo; enough to justify hadoop &ndash; we didn&rsquo;t want to use a thermo nuclear bomb to open a match-box. We also wanted our pipeline to handle our quirky little requirements (like batching) transparently from the producer/consumer functions.</p>
+<p>I&rsquo;ve put what we come up with on <a href="https://github.com/martintrojer/pipejine/">github</a> and I&rsquo;m happy to say that it managed to solve the problems described above very neatly and still be very small and nimble. It&rsquo;s basically some helper functions over Java&rsquo;s powerful concurrent queues. And as it turns out, by using these primitives we manged to write a simple and flexible solution.</p>
+<p>So if you find yourself with a similar &ldquo;not big enough for hadoop&rdquo; problem, please feel free give pipejine a spin!</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>chrome on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/chrome/</link>
+    <description>Recent content in chrome on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 06 Apr 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/chrome/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Clojure Hacking on the Samsung ARM Chromebook</title>
+      <link>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</link>
+      <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</guid>
+      <description>I recently switched to the Samsung ARM Chromebook for all my laptop needs. The pitch it&amp;rsquo;s quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it&amp;rsquo;s quite limited RAM size, just 2GB. But with a decent swap file, I&amp;rsquo;m running multiple JVMs (with Datomic, Elasicsearch, CLJS compiler etc without any hickups).&#xA;Out of the box it runs ChromeOS, which I have to say is pretty stellar for browsing and consuming content on the web.</description>
+    </item>
+  </channel>
+</rss>

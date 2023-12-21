@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Beyond Clojure: Haskell</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Beyond Clojure: Haskell</h1>
+			<b><time>2016-04-21</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/haskell">haskell</a>
+        	       
+
+			<div>
+				<p>This is a post in the  <a href="/categories/beyond-clojure/">Beyond Clojure</a> blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.</p>
+<p>If you are interested in typed functional languages one stands taller than the rest. Its impossible not to get sucked into the Haskell vortex, but why fight it? In spite of its reputation of being extremely hard to learn and even harder to master, there are several excellent resources out there and you are guaranteed to learn a lots of very valuable lessons.</p>
+<p>Haskell is pure in the truest form, the succinctness of its core ideas and libraries are nothing but fantastic. It is the one language that has truly transcended the mundane imperative problem solving style and instead tackling problems (very neatly) at a higher level. One thing I really like about Haskell is that &rsquo;things&rsquo; are called what they are, using academic terminology. Many other languages, which do have Monads etc, tend to shy away and use another names for them, which I think only adds to the prevailing confusion.</p>
+<p>As long as you stay in the walled garden on the core libraries (which most of the Haskell literature does) you are presented with concise and beautiful world. Its an environment that inspires problem solving and looking at a problem from many angles. There is almost always a way to solve a problem in a cleaner way, and this inquisitive attitude is widespread in the community. In Haskell beginner meet-ups / chat-rooms more experienced developers tend to give hints and let you &lsquo;work out the problem on your own&rsquo; rather than just give you the answer. I find it makes learning the language a very gratifying experience.</p>
+<h3 id="avoid-success-at-all-cost">Avoid success at all cost</h3>
+<p>One thing to understand about Haskell is that its a research language, and this fact makes it very different from many other &lsquo;industry languages&rsquo;. The ironic motto of Haskell has always been &lsquo;avoid success at all cost&rsquo;. One way of interpreting this statement is that by avoiding having a large user-base relying on the stability of the language features, the authors/researchers are free to explore new ideas, which they can later remove if they change their mind. Contrast that to a language like Java which is a victim of its own success and has been stuck in innovation-paralysis for decades. Its quite evident in the most popular Haskell compiler, GHC, which supports the latest Haskell standard <a href="https://www.haskell.org/onlinereport/haskell2010/">Haskell2010</a> and on top of that has a plethora of <a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghc-language-features.html">language extensions</a>, some considered more safe than others.</p>
+<p>It turns out that when you venture outside the walled garden of the core libraries and start using Haskell &lsquo;for real&rsquo;, its unavoidable to have several of these language extensions in pretty much all your modules. Most, if not all, libraries you use will also use extensions and some even require the use of them in your code. How big of a deal this is comes down to your tolerance for future change.</p>
+<p>If you are thinking about using Haskell as you main language, and having a 5+ year view, this could be cause for concern. If you plan to start using GHC (which is the compiler &rsquo;everybody&rsquo; uses) for business critical services, having a strategy for keeping up with language/compiler changes and the extra work it will impose on your teams is something to factor in. Developing a discipline amongst your developers on what extensions to use is also important.</p>
+<h3 id="lazy-ness">Lazy-ness</h3>
+<p>One of the core design principles since the beginning of Haskell is lazy evaluation. This is more than lazy sequences that you see in other functional languages. Basically every expression gets thunked and is only realized when another expressions &lsquo;pulls&rsquo; for the result. Lots of the beauty of Haskell comes from this technique, but it does offer a number of practical problems. The chief one being that its very hard to work out the time/space complexity of a function. Huge ripples of expressions in other functions might get triggered in the context of the function you are currently benchmarking. There is no way around it, eager evaluation is easier to reason about, but that doesn&rsquo;t invalidate Haskell&rsquo;s approach.</p>
+<p>Another problem is that you generally don&rsquo;t get stack traces on runtime exceptions. It has to be enabled at compile time and for production builds this is generally not on. And even when you get the trace, since its lazy evaluated, its not exactly as straight forward as a Java stack trace.</p>
+<p>As always there are more or less complete workarounds, but in non trivial situations (like production downtime scenarios always are) will have you pray for Java-like profiling tools. You will inevitably go through a journey of learning the right mix of <a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/options-optimise.html">compiler optimization flags</a>, <a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/bang-patterns.html">bang patterns</a> and other hard lessons learned before landing a on a set of best practices that works for your applications.</p>
+<h3 id="working-in-a-typed-language">Working in a typed language</h3>
+<p>Being a Clojure guy working in Haskell the difference of how you go about crafting your code is quite stark. In Clojure you save off some off the data you want to work on in var, and start writing transformations. Feedback are often Clojure runtime errors while you trying to get your expressions to match the shape of the data. In Haskell you start off thinking about the your abstractions (types) and your main feedback is type errors from the compiler pointing out where you contradict yourself. You also develop a strong sense of &lsquo;if it compiles it works&rsquo;, because runtime errors are rare. This does by no means eliminate the importance of tests, but tests doesn&rsquo;t play the same role it does in a Clojure code-base. In Haskell I don&rsquo;t need tests to give me confidence that my code is glued together correctly or that I didn&rsquo;t forget to alter a case expression because of a change in a GADT. The compiler checks all that for me and says &ldquo;that change requires further changes here, here, here and here&rdquo;. For me this is a massive a win, huge.</p>
+<p>The type errors are scary in the beginning, but you develop patterns how to interpret them. The complexity of the error messages also ramps when you move from following along in a Haskell book, to build real applications, with 6 level deep Monad Transformer stacks. Some libraries are worse than others, the <a href="https://hackage.haskell.org/package/lens">lens library&rsquo;s</a> type errors are a chapter in and of itself.</p>
+<p>You are constantly building up your toolbox on how to fix issues that crop up. Lots of learning, sometimes frustrating but also lots of fun.</p>
+<h3 id="tooling">Tooling</h3>
+<p>The &lsquo;Haskell IDE&rsquo; has traditionally been Emacs/Vim plus a terminal, which has really good language modes. There are lots of extra helpers and linters that give a very pleasant developer experience. There are plug-ins for the traditional IDEs but they are typically less refined. I&rsquo;m happy with my Emacs, <a href="https://github.com/haskell/haskell-mode">haskell-mode</a>, <a href="https://hackage.haskell.org/package/ghc-mod">ghc-mod</a>, <a href="https://hackage.haskell.org/package/hlint">hlint</a> setup which gives me a very interactive workflow. If you need a more traditional IDE setup, <a href="https://atom.io/packages/ide-haskell">IDE-Haskell</a> and <a href="http://haskellformac.com/">Haskell For Mac</a> looks promising.</p>
+<p>Working with libraries and dealing with dependencies are done with <a href="https://www.haskell.org/cabal/">cabal</a>. Cabal has lots of issues and a tarnished reputation inside and outside Haskell circles. Haskell developers have been looking <a href="https://ocharles.org.uk/blog/posts/2014-02-04-how-i-develop-with-nixos.html">far and wide</a> for solutions. Part of the problem is that, not only does the version of the library (and its dependencies) matter, but also what version of the compiler was used to produce it. Since the compiler is generating machine code, you also have the problem of cross-compiling. Compiling an executable on your Mac won&rsquo;t run on your Linux server.</p>
+<p>Recently, lots of the gripes working with cabal were solved by a tool called <a href="http://docs.haskellstack.org/en/stable/README/">Stack</a>. I&rsquo;m a very happy stack user (and I don&rsquo;t need Nix). Stack is a huge improvement for the Haskell tooling story.</p>
+<p>You are mainly working with GHCi (the REPL) or GHC itself. I can&rsquo;t say that GHC is particularly fast, my main experience in this regard is compiling various libraries and their dependencies. Going for a 5 min tea break while GHC chugs away is not uncommon. Also, GHC needs lots of ram, gigabytes of it to compile the larger libraries. If you are growing a large code-base, I imagine compile time and RAM usage on the CI box will become real issues.</p>
+<h3 id="libraries">Libraries</h3>
+<p>There are lots of Haskell libraries available, its a bit bewildering finding the good ones. If you are building web apps most bases are covered; web frameworks, database connections, templating etc are there and of good quality. However, its still far off the Java ecosystem. Haskell is kind of trapped in a chicken or egg situation when it comes to available libraries. In Java land, chances are high that you&rsquo;ll find a &lsquo;off the shelf&rsquo; library for pretty much any service you want to interact with or task you want to perform. This is not the case in Haskell, the landscape is much narrower. If you want an easy route to use the latest AWS APIs or hook up to a Riak data-store you&rsquo;re out of luck. The basic building blocks are there but you have quite a bit of work ahead of you putting them together. This fact is holding back Haskell adoption, which in turn is not helping these libraries being written.</p>
+<p>This leads me to another problem, saying that the libraries on the web-app space are of good quality is one thing, they are however not battle-tested to anywhere near the same degree as <a href="http://www.eclipse.org/jetty/">Jetty</a>, JDBC or <a href="http://netty.io/">Netty</a> in the Java space. One thing you don&rsquo;t want to have to deal with as a time-constrained developer is bugs or inefficiencies deep inside your web server.</p>
+<p>Documentation of Haskell libraries is usually quite bad. Some authors seem to think that type signatures are all the documentation you&rsquo;ll need, but of course that is not true. I can&rsquo;t say that documentation in the Clojure world is much better, but don&rsquo;t expect loads of beginner friendly docs on how to use the various libraries you are evaluating. I find myself resorting to googling for stack overflow answers or a &ldquo;import TheLibIAmLookingAt&rdquo; in-all-repos-in-github search.</p>
+<p>The topic of libraries is my main concern with adopting Haskell as &rsquo;the language to use&rsquo; in a real world scenario. Lack of battle-scars and the niggling feeling that you&rsquo;ll end up in a situation 6 months down the line where a crucial library you desperately need hasn&rsquo;t been written or is not good enough. You don&rsquo;t want to find yourself painted in a corner concluding that &lsquo;Oh, you can&rsquo;t do that in Haskell (without a herculean effort)&rsquo;.</p>
+<h3 id="ops">Ops</h3>
+<p>Compiling to native executable has benefits, you avoid having to provision runtimes (and upgrading them) on your deployment machines. But you do have to deal with the cross-compilation complexities stated above however. As a whole, deployment of Haskell programs is fine, build your binary, stick it in a container or find another means to transfer it to the production VMs and run it.</p>
+<p>Next up, logging. Logging is a bit tricky in Haskell since its lazy evaluated. It can be quite hard to make sense of the logs of a Haskell program since alot of it can seemingly &lsquo;run out of order&rsquo; or &lsquo;happen at the wrong time&rsquo;. There is also no standard logging framework, so in a production situation where you want to know what is going on in your code (and the libraries you are using), and send those logs back to logstash, you&rsquo;ll have work cut out for you. Not insurmountable but effort has to be put into it. It&rsquo;s a different world than using logback in Clojure without thinking about it much and being able to tweak the log levels of the the different libs you are using.</p>
+<p>Another thing you really need in production is insight into your Haskell processes. What&rsquo;s happening to the heap? How busy is the garbage collector? Is service B about to fall over? While there are solutions out there, they are nowhere near as complete as whats available on JVM/.NET. While packages like <a href="https://hackage.haskell.org/package/ekg">ekg</a> looks good enough, its a source for concern.</p>
+<h2 id="a-simple-json-service">A simple JSON service</h2>
+<p>Throughout this blog series I&rsquo;ll use a simple TodoMVC-ish example for both backend and front end code. For the Haskell backend I chose the following;</p>
+<ul>
+<li><a href="http://snapframework.com/">Snap</a> web framework</li>
+<li><a href="http://www.yesodweb.com/book/persistent">Persistent</a> database abstraction and connection pooling</li>
+<li><a href="https://hackage.haskell.org/package/esqueleto-2.4.3/docs/Database-Esqueleto.html">Esqueleto</a> SQL query DSL</li>
+</ul>
+<p><a href="https://github.com/martintrojer/beyond-clojure/tree/master/backends/haskell">My code can be found here</a></p>
+<p>With my Clojure glasses on I&rsquo;m quite happy with the layout of the web app I get with Snap. For a very simple app like this, I really have no complaints. The routing functionality looks deep enough to cover my needs, and its straightforward to factor out model and handler functions.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#75715e">-- Setting up the routes</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">appInit</span> <span style="color:#f92672">=</span> makeSnaplet <span style="color:#e6db74">&#34;app&#34;</span> <span style="color:#e6db74">&#34;a player db backend&#34;</span> <span style="color:#66d9ef">Nothing</span> <span style="color:#f92672">$</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  addRoutes [ (<span style="color:#e6db74">&#34;&#34;</span>, ifTop <span style="color:#f92672">$</span> writeText <span style="color:#e6db74">&#34;Welcome to the Players API v0.1&#34;</span>)
+</span></span><span style="display:flex;"><span>            , (<span style="color:#e6db74">&#34;players&#34;</span>, method <span style="color:#66d9ef">GET</span> getPlayersHandler)
+</span></span><span style="display:flex;"><span>            , (<span style="color:#e6db74">&#34;players/:player&#34;</span>, method <span style="color:#66d9ef">GET</span> getPlayerHandler <span style="color:#f92672">&lt;|&gt;</span>
+</span></span><span style="display:flex;"><span>                                  method <span style="color:#66d9ef">POST</span> createPlayerHandler <span style="color:#f92672">&lt;|&gt;</span>
+</span></span><span style="display:flex;"><span>                                  method <span style="color:#66d9ef">DELETE</span> deletePlayerHandler)
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>  d <span style="color:#f92672">&lt;-</span> nestSnaplet <span style="color:#e6db74">&#34;db&#34;</span> db <span style="color:#f92672">$</span> initSqlite setupDB
+</span></span><span style="display:flex;"><span>  return <span style="color:#f92672">$</span> <span style="color:#66d9ef">App</span> d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- A simple handler</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">getPlayersHandler</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  users <span style="color:#f92672">&lt;-</span> runPersist getAllPlayers
+</span></span><span style="display:flex;"><span>  writeJSON users
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- A model/db function</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">getAllPlayers</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  players <span style="color:#f92672">&lt;-</span> select <span style="color:#f92672">$</span> from <span style="color:#f92672">$</span> <span style="color:#a6e22e">\</span>player <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    orderBy [asc (player <span style="color:#f92672">^.</span> <span style="color:#66d9ef">PlayerName</span>)]
+</span></span><span style="display:flex;"><span>    return player
+</span></span><span style="display:flex;"><span>  return <span style="color:#f92672">$</span> map entityVal players
+</span></span></code></pre></div><p>JSON marshaling works nicely and ties into Haskell data in a good way.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span>[persistLowerCase<span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Player</span>
+</span></span><span style="display:flex;"><span>  name <span style="color:#66d9ef">String</span>
+</span></span><span style="display:flex;"><span>  level <span style="color:#66d9ef">Int</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">deriving</span> <span style="color:#66d9ef">Show</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">deriving</span> <span style="color:#66d9ef">Generic</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">instance</span> <span style="color:#66d9ef">ToJSON</span> <span style="color:#66d9ef">Player</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">instance</span> <span style="color:#66d9ef">FromJSON</span> <span style="color:#66d9ef">Player</span>
+</span></span></code></pre></div><p>Getting migrations &lsquo;for free&rsquo; from Persistent is a nice touch.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">setupDB</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  runMigration migrateAll
+</span></span><span style="display:flex;"><span>  insert_ <span style="color:#f92672">$</span> <span style="color:#66d9ef">Player</span> <span style="color:#e6db74">&#34;Sally&#34;</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>  insert_ <span style="color:#f92672">$</span> <span style="color:#66d9ef">Player</span> <span style="color:#e6db74">&#34;Lance&#34;</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  insert_ <span style="color:#f92672">$</span> <span style="color:#66d9ef">Player</span> <span style="color:#e6db74">&#34;Aki&#34;</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>  insert_ <span style="color:#f92672">$</span> <span style="color:#66d9ef">Player</span> <span style="color:#e6db74">&#34;Maria&#34;</span> <span style="color:#ae81ff">4</span>
+</span></span></code></pre></div><p>I am also really enjoying using pattern matching for situations with many cases</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#a6e22e">createPlayerHandler</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  player <span style="color:#f92672">&lt;-</span> getPlayer&#39;
+</span></span><span style="display:flex;"><span>  name <span style="color:#f92672">&lt;-</span> getParam <span style="color:#e6db74">&#34;player&#34;</span>
+</span></span><span style="display:flex;"><span>  level <span style="color:#f92672">&lt;-</span> getPostParam <span style="color:#e6db74">&#34;level&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> (player, name, level) <span style="color:#66d9ef">of</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">Nothing</span>, <span style="color:#66d9ef">Just</span> n, <span style="color:#66d9ef">Just</span> l) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>      runPersist <span style="color:#f92672">$</span> createPlayer (<span style="color:#66d9ef">BS</span><span style="color:#f92672">.</span>unpack n) <span style="color:#f92672">$</span> read (<span style="color:#66d9ef">BS</span><span style="color:#f92672">.</span>unpack l)
+</span></span><span style="display:flex;"><span>      modifyResponse <span style="color:#f92672">$</span> setResponseStatus <span style="color:#ae81ff">201</span> <span style="color:#e6db74">&#34;Created&#34;</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">Just</span> <span style="color:#66d9ef">_</span>, <span style="color:#66d9ef">_</span>, <span style="color:#66d9ef">_</span>) <span style="color:#f92672">-&gt;</span> modifyResponse <span style="color:#f92672">$</span> setResponseStatus <span style="color:#ae81ff">400</span> <span style="color:#e6db74">&#34;Player exists&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">_</span> <span style="color:#f92672">-&gt;</span> notFound
+</span></span></code></pre></div><p>&hellip; and in MaybeT to simplify code that in Clojure would be big cond blocks.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-haskell" data-lang="haskell"><span style="display:flex;"><span><span style="color:#75715e">-- Flattening 2 nested calls that returns Maybe</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">getPlayer&#39;</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  player <span style="color:#f92672">&lt;-</span> runMaybeT <span style="color:#f92672">$</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    param <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">MaybeT</span> <span style="color:#f92672">$</span> getParam <span style="color:#e6db74">&#34;player&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">MaybeT</span> <span style="color:#f92672">.</span> runPersist <span style="color:#f92672">.</span> getPlayer <span style="color:#f92672">$</span> <span style="color:#66d9ef">BS</span><span style="color:#f92672">.</span>unpack param
+</span></span><span style="display:flex;"><span>  return player
+</span></span></code></pre></div><p>Finally, Snap comes with a handy test module to testing your handlers, which kept me happy for this little experiment.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

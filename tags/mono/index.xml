@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mono on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/mono/</link>
+    <description>Recent content in mono on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 08 Nov 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/mono/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>F#&#39;s strongest year yet</title>
+      <link>https://martintrojer.github.io/post/2014-11-08-fs-strongest-year-yet/</link>
+      <pubDate>Sat, 08 Nov 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-11-08-fs-strongest-year-yet/</guid>
+      <description>&lt;p&gt;Tradition demands that I write down some subjective thoughts on how my old friend F# is doing. So here we go again (for the 4th year running).&lt;/p&gt;&#xA;&lt;p&gt;All I can really say is this; wow, what a year.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>This year in F#</title>
+      <link>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</link>
+      <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</guid>
+      <description>&lt;p&gt;For the third year running, here&amp;rsquo;s my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what&amp;rsquo;s been happening was on my wish-list outlined in [last year&amp;rsquo;s post](https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/. What are the highlights?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
+      <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
+      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+    </item>
+    <item>
+      <title>The future of .NET lies in Mono. The future of F# lies in MonoDevelop.</title>
+      <link>https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/</link>
+      <pubDate>Wed, 24 Oct 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/</guid>
+      <description>It&amp;rsquo;s been a year since I last wrote about F# and Mono - what&amp;rsquo;s happened since then?&#xA;F# 3.0 has recently been released, bundled in with the new all-grey, ALL-CAPS Visual Studio 2012. The biggest new feature is type providers, bringing some of the benefits of dynamic languages into type safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up pretty soon so more developers (including me) can enjoy the benefits.</description>
+    </item>
+    <item>
+      <title>Some thoughts on Clojure performance</title>
+      <link>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</link>
+      <pubDate>Sat, 18 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</guid>
+      <description>Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).&#xA;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.</description>
+    </item>
+    <item>
+      <title>Why F# needs Mono (and really should be a JVM language)</title>
+      <link>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</link>
+      <pubDate>Thu, 03 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</guid>
+      <description>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&amp;rsquo;re writing a new Windows application (and it&amp;rsquo;s not a high performant game), chances are you are reading WPF books right now.&#xA;One of the promises of .NET when it was released was &amp;ldquo;the great language independent&amp;rdquo; runtime, making all these languages interoperate in joyful blizz.</description>
+    </item>
+  </channel>
+</rss>

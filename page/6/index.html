@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta name="generator" content="Hugo 0.121.1">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Martin Trojer</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	<link rel="alternate" type="application/rss+xml" href="/index.xml" title="Martin Trojer">
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/">Scheme as an external DSL in Clojure</a></h1>
+	<b><time>2012-01-28</time></b>
+	
+	<a href="/tags/clojure">clojure</a>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<a href="/tags/lisp">lisp</a>
+	
+	<a href="/tags/sicp">sicp</a>
+	
+	<div>
+		This is a follow-up post to my previous &ldquo;Scheme in Clojure&rdquo; post.
+This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code).
+		
+			<a href="https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/">Asynchronous workflows in Clojure</a></h1>
+	<b><time>2011-12-22</time></b>
+	
+	<a href="/tags/.net">.net</a>
+	
+	<a href="/tags/clojure">clojure</a>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<a href="/tags/jvm">jvm</a>
+	
+	<div>
+		Asynchronous workflows is a very powerful feature of F#, and recently I wanted to explore the state of the JVM and in particular Clojure when it comes to replicate the functionality. In this post I&rsquo;ll share some of my findings and I&rsquo;ll include some background material to explain the problems.
+Let&rsquo;s start with an example of a webclient using &ldquo;async&rdquo; in F#.
+let download url = async { let request = HttpWebRequest.
+		
+			<a href="https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-12-03-parsing-with-matches-and-banana-clips/">Parsing with Matches and Banana Clips</a></h1>
+	<b><time>2011-12-03</time></b>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<div>
+		I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the basics of pattern matching here, rather show how F#&rsquo;s active patterns can be used to take pattern matching to the next level.
+The traditional steps of a &ldquo;parser&rdquo; are roughly lexical analysis (tokenizer), syntactic analysis (parser) and then evaluator (interpreter).
+		
+			<a href="https://martintrojer.github.io/post/2011-12-03-parsing-with-matches-and-banana-clips/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/">Scheme as an embedded DSL in Clojure</a></h1>
+	<b><time>2011-11-29</time></b>
+	
+	<a href="/tags/clojure">clojure</a>
+	
+	<a href="/tags/jvm">jvm</a>
+	
+	<a href="/tags/lisp">lisp</a>
+	
+	<a href="/tags/sicp">sicp</a>
+	
+	<div>
+		If you give someone Fortran, he has Fortran.
+If you give someone Lisp, he has any language he pleases.
+&ndash; Guy Steele
+Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/">Tail Calls in F#, Clojure and Scala</a></h1>
+	<b><time>2011-11-20</time></b>
+	
+	<a href="/tags/.net">.net</a>
+	
+	<a href="/tags/clojure">clojure</a>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<a href="/tags/jvm">jvm</a>
+	
+	<a href="/tags/scala">scala</a>
+	
+	<div>
+		I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
+TCO is a well documented topic in books and articles about functional programming and the TCO in .
+		
+			<a href="https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/">Applied Symbolic Execution with KLEE/LLVM</a></h1>
+	<b><time>2011-11-10</time></b>
+	
+	<a href="/tags/clang">clang</a>
+	
+	<a href="/tags/klee">klee</a>
+	
+	<a href="/tags/llvm">llvm</a>
+	
+	<a href="/tags/sat">sat</a>
+	
+	<a href="/tags/symbolic-execution">symbolic execution</a>
+	
+	<a href="/tags/valgrind">valgrind</a>
+	
+	<div>
+		This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.
+If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/">Is LLVM the beginning of the end for GNU (as we know it)?</a></h1>
+	<b><time>2011-11-08</time></b>
+	
+	<a href="/tags/clang">clang</a>
+	
+	<a href="/tags/gcc">gcc</a>
+	
+	<a href="/tags/gnu">gnu</a>
+	
+	<a href="/tags/llvm">llvm</a>
+	
+	<div>
+		GNU and Richard Stallman was a real catalyst for the open source movement and it&rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &ldquo;user-land&rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&rsquo;s head with the copy-left licenses.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/">Why F# needs Mono (and really should be a JVM language)</a></h1>
+	<b><time>2011-11-03</time></b>
+	
+	<a href="/tags/.net">.net</a>
+	
+	<a href="/tags/csharp">csharp</a>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<a href="/tags/jvm">jvm</a>
+	
+	<a href="/tags/llvm">llvm</a>
+	
+	<a href="/tags/mono">mono</a>
+	
+	<div>
+		When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&rsquo;re writing a new Windows application (and it&rsquo;s not a high performant game), chances are you are reading WPF books right now.
+One of the promises of .NET when it was released was &ldquo;the great language independent&rdquo; runtime, making all these languages interoperate in joyful blizz.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-02-scheming-in-f/">Scheming in F#</a></h1>
+	<b><time>2011-11-02</time></b>
+	
+	<a href="/tags/fsharp">fsharp</a>
+	
+	<a href="/tags/sicp">sicp</a>
+	
+	<div>
+		Given the fact that I worship at the SICP altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a Scheme interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just &ldquo;big enough&rdquo; for to force me to drill into what the language have to offer.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-02-scheming-in-f/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+			<article>
+	<h1><a href="https://martintrojer.github.io/post/2011-11-02-symbolic-execution/">Symbolic Execution</a></h1>
+	<b><time>2011-11-02</time></b>
+	
+	<a href="/tags/klee">klee</a>
+	
+	<a href="/tags/llvm">llvm</a>
+	
+	<a href="/tags/sat">sat</a>
+	
+	<a href="/tags/symbolic-execution">symbolic execution</a>
+	
+	<div>
+		A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &ldquo;Symbolic execution.
+		
+			<a href="https://martintrojer.github.io/post/2011-11-02-symbolic-execution/">Read more...</a>
+		
+	</div>
+</article>
+
+		
+		<div>
+
+	<a href="/page/5/">Previous Page</a>
+
+6 of 7
+
+	<a href="/page/7/">Next Page</a>
+
+</div>
+
+	</main>
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

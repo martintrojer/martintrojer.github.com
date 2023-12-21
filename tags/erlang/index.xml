@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>erlang on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/erlang/</link>
+    <description>Recent content in erlang on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 17 May 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/erlang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Distributed Actors in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</link>
+      <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</guid>
+      <description>Here&amp;rsquo;s another post on a topic that have been discussed since the dawn-of-time, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&amp;rsquo;s post (above) still holds true today.&#xA;First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;&#xA;clojure-hadoop swamiji cacalog zookeeper-clj storm etc&amp;hellip; Akka and the Erlang legacy I am trying to write programs that solve problems in the areas where Erlang typically excels such as</description>
+    </item>
+  </channel>
+</rss>

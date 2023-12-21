@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>software on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/software/</link>
+    <description>Recent content in software on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 10 Apr 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/software/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What is a software company?</title>
+      <link>https://martintrojer.github.io/post/2012-04-10-what-is-a-software-company/</link>
+      <pubDate>Tue, 10 Apr 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-04-10-what-is-a-software-company/</guid>
+      <description>Software is different from most other things humans build, hence companies creating/selling/licensing software must be different from other &amp;lsquo;production&amp;rsquo; companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software?</description>
+    </item>
+  </channel>
+</rss>

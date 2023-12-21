@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gcc on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/gcc/</link>
+    <description>Recent content in gcc on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 08 Nov 2011 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/gcc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
+      <link>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</link>
+      <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</guid>
+      <description>GNU and Richard Stallman was a real catalyst for the open source movement and it&amp;rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&amp;rsquo;s head with the copy-left licenses.</description>
+    </item>
+  </channel>
+</rss>

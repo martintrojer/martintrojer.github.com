@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Scheme in Scala</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Scheme in Scala</h1>
+			<b><time>2013-06-06</time></b>
+		       
+		           <a href="/tags/scala">scala</a>
+        	       
+		           <a href="/tags/lisp">lisp</a>
+        	       
+
+			<div>
+				<p>In this post I present some of my experiences writing a <a href="https://github.com/martintrojer/scheme-scala">Scheme interpreter in Scala</a> (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.</p>
+<p>Overall, the Scala solution is very similar to the <a href="https://github.com/martintrojer/scheme-fsharp">F# one</a>. Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of a Hindley-Milner type inference. Scala uses a &ldquo;flow based&rdquo; type inferrer, which is less powerful than ML, but apparently works better for OO sub-classes etc. I will look into this in a future blog post.</p>
+<p>Here&rsquo;s the eval / apply functions;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> eval<span style="color:#f92672">(</span>env<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Env</span><span style="color:#f92672">,</span> expr<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">ExprT</span><span style="color:#f92672">)</span><span style="color:#66d9ef">:</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">Env</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">ExprT</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span> expr <span style="color:#66d9ef">match</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">NullExpr</span><span style="color:#f92672">()</span>       <span style="color:#66d9ef">=&gt;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">IllegalStateException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid interpreter state&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Comb</span><span style="color:#f92672">(</span><span style="color:#a6e22e">List</span><span style="color:#f92672">())</span>     <span style="color:#66d9ef">=&gt;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">IllegalStateException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid combination&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Comb</span><span style="color:#f92672">(</span>h <span style="color:#66d9ef">:</span><span style="color:#66d9ef">:</span> <span style="color:#66d9ef">t</span><span style="color:#f92672">)</span>     <span style="color:#66d9ef">=&gt;</span>
+</span></span><span style="display:flex;"><span>    eval<span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> h<span style="color:#f92672">)</span> <span style="color:#66d9ef">match</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">_</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">Proc</span><span style="color:#f92672">(</span>f<span style="color:#f92672">))</span>             <span style="color:#66d9ef">=&gt;</span> apply<span style="color:#f92672">(</span>f<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> env<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#f92672">(</span>nEnv<span style="color:#f92672">,</span> <span style="color:#a6e22e">Func</span><span style="color:#f92672">(</span>args<span style="color:#f92672">,</span> body<span style="color:#f92672">))</span> <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>args<span style="color:#f92672">.</span>length <span style="color:#f92672">!=</span> t<span style="color:#f92672">.</span>length<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">IllegalArgumentException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid number or arguments&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> newEnv <span style="color:#66d9ef">=</span> <span style="color:#f92672">(</span>args zip t<span style="color:#f92672">).</span>foldLeft<span style="color:#f92672">(</span>nEnv<span style="color:#f92672">.</span>expand<span style="color:#f92672">())((</span>acc<span style="color:#f92672">,</span> av<span style="color:#f92672">)</span> <span style="color:#66d9ef">=&gt;</span> bindArg<span style="color:#f92672">(</span>acc<span style="color:#f92672">,</span> av<span style="color:#f92672">.</span>_1<span style="color:#f92672">,</span> av<span style="color:#f92672">.</span>_2<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>        evalAll<span style="color:#f92672">(</span>newEnv<span style="color:#f92672">,</span> body<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#f92672">(</span>nEnv<span style="color:#f92672">,</span> expr<span style="color:#f92672">)</span>             <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>nEnv<span style="color:#f92672">,</span> expr<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Proc</span><span style="color:#f92672">(</span>f<span style="color:#f92672">)</span>          <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> <span style="color:#a6e22e">Proc</span><span style="color:#f92672">(</span>f<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Func</span><span style="color:#f92672">(</span>args<span style="color:#f92672">,</span> body<span style="color:#f92672">)</span> <span style="color:#66d9ef">=&gt;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">IllegalArgumentException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid function call&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> v <span style="color:#66d9ef">@</span> <span style="color:#a6e22e">Value</span><span style="color:#f92672">(</span><span style="color:#66d9ef">_</span><span style="color:#f92672">)</span>     <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> v<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> l <span style="color:#66d9ef">@</span> <span style="color:#a6e22e">List</span><span style="color:#f92672">(</span><span style="color:#66d9ef">_</span><span style="color:#f92672">)</span>      <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> l<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Symbol</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>        <span style="color:#66d9ef">=&gt;</span>
+</span></span><span style="display:flex;"><span>    env<span style="color:#f92672">.</span>lookUp<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> <span style="color:#66d9ef">match</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">Some</span><span style="color:#f92672">(</span>e<span style="color:#f92672">)</span>  <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> e<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">None</span>     <span style="color:#66d9ef">=&gt;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">IllegalArgumentException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unbound symbol &#39;&#34;</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">+</span><span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">def</span> apply<span style="color:#f92672">(</span>f<span style="color:#66d9ef">:</span> <span style="color:#f92672">((</span><span style="color:#66d9ef">Env</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">List</span><span style="color:#f92672">[</span><span style="color:#66d9ef">ExprT</span><span style="color:#f92672">])</span> <span style="color:#66d9ef">=&gt;</span> <span style="color:#f92672">(</span><span style="color:#a6e22e">Env</span><span style="color:#f92672">,</span> <span style="color:#a6e22e">ExprT</span><span style="color:#f92672">)),</span>
+</span></span><span style="display:flex;"><span>                  args<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">List</span><span style="color:#f92672">[</span><span style="color:#66d9ef">ExprT</span><span style="color:#f92672">],</span> env<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Env</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span>
+</span></span><span style="display:flex;"><span>  f<span style="color:#f92672">(</span>env<span style="color:#f92672">,</span> args<span style="color:#f92672">)</span></span></span></code></pre></div>
+<h2 id="oo-vs-fp">OO vs. FP</h2>
+<p>Scala feels like a OO language with FP features, where Clojure and F# appears the other way around. In Clojure and F#, you typically group functions that somehow &ldquo;belong together&rdquo; in namespaces/modules, in Scala you put them in classes and objects (scala speak for singletons). You can treat these object like namespaces if you want, but that doesn&rsquo;t feel like idiomatic Scala. One example of this, in this particular case, is the environment (or stack) functions that sat quite happily in the interpreter namespace in F# / Clojure. In Scala that felt awkward, I ended up creating a <a href="https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/Env.scala">Env class</a>, with some methods, to model this better.</p>
+<p>This Scheme implementation is still very FP, and I don&rsquo;t really feel the OO parts gets in the way. But it highlights the issue that Scala isn&rsquo;t a very opinionated language. Many paradigms are supported; Old-school OO with mutable variables / collections is idiomatic just as strict immutable, function-oriented code. Discipline is needed if a codebase of any size, worked on by many individuals, is to be kept coherent.</p>
+<p>Scala tries to fix some of the common problems found in popular OO languages, with featrues like <a href="http://www.scala-lang.org/node/105">abstract types</a>, <a href="http://blog.joa-ebert.com/2010/12/26/understanding-scala-implicits/">implicits</a>, <a href="http://blogs.atlassian.com/2013/01/covariance-and-contravariance-in-scala/">co/contra-variance</a> and more. It&rsquo;s all very clever stuff, but be prepared to spend quite a bit of time getting the type declarations right if you want to leverage all this.</p>
+<p>It can be argued that time is better spend working on the problems/functions themselves instead of messing about with clever type annotations (<a href="http://vimeo.com/16753929#">speaking to the problem vs speaking to the compiler</a>). The just as valid counter-argument is that once you gotten your types and model right, the type system will help you drive your code and eliminate many logical errors early. I do enjoy that warm fuzzy feeling you get when to compiler tells you about forgotten pattern match cases, and the &ldquo;if it compiles it works&rdquo; experience.</p>
+<h2 id="parsing">Parsing</h2>
+<p>I&rsquo;m really impressed by <a href="http://www.scala-lang.org/api/current/index.html#scala.util.parsing.combinator.Parsers">scala.util.parsing.combinator</a>. The code below is the entire parser, both readable (once you get the hang of it) and powerful.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> scala.util.parsing.combinator._
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">object</span> <span style="color:#a6e22e">Parser</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">JavaTokenParsers</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> value<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Parser</span><span style="color:#f92672">[</span><span style="color:#66d9ef">ValueT</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> stringLiteral <span style="color:#f92672">^^</span> <span style="color:#f92672">(</span>x <span style="color:#66d9ef">=&gt;</span> <span style="color:#a6e22e">Name</span><span style="color:#f92672">(</span>x<span style="color:#f92672">.</span>tail<span style="color:#f92672">.</span>init<span style="color:#f92672">))</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>                              floatingPointNumber <span style="color:#f92672">^^</span> <span style="color:#f92672">(</span>x <span style="color:#66d9ef">=&gt;</span> <span style="color:#a6e22e">Num</span><span style="color:#f92672">(</span><span style="color:#a6e22e">BigDecimal</span><span style="color:#f92672">(</span>x<span style="color:#f92672">)))</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> expression<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Parser</span><span style="color:#f92672">[</span><span style="color:#66d9ef">ExprT</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> value <span style="color:#f92672">^^</span> <span style="color:#f92672">(</span>x <span style="color:#66d9ef">=&gt;</span> <span style="color:#a6e22e">Value</span><span style="color:#f92672">(</span>x<span style="color:#f92672">))</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>                                  <span style="color:#e6db74">&#34;&#34;&#34;[^()\s]+&#34;&#34;&#34;</span><span style="color:#f92672">.</span>r <span style="color:#f92672">^^</span> <span style="color:#f92672">(</span>x <span style="color:#66d9ef">=&gt;</span> <span style="color:#a6e22e">Symbol</span><span style="color:#f92672">(</span>x<span style="color:#f92672">))</span> <span style="color:#f92672">|</span>
+</span></span><span style="display:flex;"><span>                                  combination
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> combination<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Parser</span><span style="color:#f92672">[</span><span style="color:#66d9ef">Comb</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">=</span> <span style="color:#e6db74">&#34;(&#34;</span> <span style="color:#f92672">~&gt;</span> rep<span style="color:#f92672">(</span>expression<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;~</span> <span style="color:#e6db74">&#34;)&#34;</span> <span style="color:#f92672">^^</span> <span style="color:#f92672">(</span>x <span style="color:#66d9ef">=&gt;</span> <span style="color:#a6e22e">Comb</span><span style="color:#f92672">(</span>x<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> program<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">Parser</span><span style="color:#f92672">[</span><span style="color:#66d9ef">List</span><span style="color:#f92672">[</span><span style="color:#66d9ef">ExprT</span><span style="color:#f92672">]]</span> <span style="color:#66d9ef">=</span> rep<span style="color:#f92672">(</span>expression<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// ---
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">def</span> parse<span style="color:#f92672">(</span>source<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">String</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">=</span> parseAll<span style="color:#f92672">(</span>program<span style="color:#f92672">,</span> source<span style="color:#f92672">).</span>get
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div>
+<p>The way you map the parse results onto your own type domain is fantastic. Contrast this is an example of a <a href="https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/HandRolledParser.scala">hand rolled parser</a>, which still is pretty neat if you ask me, but much more code.</p>
+<h2 id="ide-vs-emacs-and-repls">IDE vs Emacs and REPLs</h2>
+<p>I decided to use IntelliJ for this project, and the experience was much better than when I used the abysmal <a href="http://scala-ide.org/index.html">Eclipse/Scala</a> package 4-5 months ago. Maybe the Eclipse integration is better now, but I&rsquo;ve been scarred for life. I have no complaints really, all the IntelliJ goodness and a pretty rock solid compile/debug/run tests work flow. You can also drop into the <a href="http://www.scala-sbt.org/">SBT</a> console, which is similar to the F# interactive stuff in Visual Studio &ndash; which give you a REPL-like shell where you can get to your objects that your currently writing.</p>
+<p>I did quickly fall into the old trodden tracks of writing unit test to drive my coding. Coming from Clojure this is a bit of a change where work is much more interactive, in the REPL, and unit tests feels more like an afterthought. The compiler is also more apparent working with Scala, while is pretty well hidden in the Clojure flow. One of the reasons it&rsquo;s more in your face is because it&rsquo;s a lot slower, which is understandable since it&rsquo;s doing a lot more. That fact that there is an obvious compile step also drives you towards &ldquo;old&rdquo; work flows.</p>
+<p>Scala <a href="https://github.com/aemoncannon/ensime">Emacs integration</a> looks promising, but I didn&rsquo;t use it enough to give a verdict. However, I do feel that due to the OO aspects of Scala, an traditional IDE is probably a better fit. I used the refactor functions in IntelliJ frequently. I also used the debugger on occasion, and it&rsquo;s hard to beat an IDE in that area. Dropping stack frames in the debugger and running again etc is powerful stuff.</p>
+<p>Finally, JVM hot-swapping is less useful in Scala than Java, due to how many classes etc is generated under the covers even for quite small changes. It&rsquo;s a bit sad, since it&rsquo;s a real time saver working with Java, maybe this is better with JRebel?</p>
+<h2 id="speed">Speed</h2>
+<p>Let&rsquo;s compare the execution speed (using a silly little benchmark) of these interpreters I&rsquo;ve written (and a native scheme implementation). All run on Linux, JDK1.7.0_21 x64, Mono 2.10.8.1. Results in milliseconds.</p>
+<table>
+<thead>
+<tr>
+<th>(fact 50)</th>
+<th></th>
+<th style="text-align:center">100x</th>
+<th style="text-align:center">10000x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/martintrojer/scheme-scala">Scala</a></td>
+<td>2.10.1</td>
+<td style="text-align:center">580</td>
+<td style="text-align:center">58800</td>
+</tr>
+<tr>
+<td><a href="https://github.com/martintrojer/scheme-clojure">Clojure</a></td>
+<td>1.5.1</td>
+<td style="text-align:center">300</td>
+<td style="text-align:center">29700</td>
+</tr>
+<tr>
+<td><a href="https://github.com/martintrojer/scheme-fsharp">F#</a></td>
+<td>3.0</td>
+<td style="text-align:center">80</td>
+<td style="text-align:center">6600</td>
+</tr>
+<tr>
+<td><a href="https://github.com/martintrojer/scheme-python">Python</a></td>
+<td>2.7.4</td>
+<td style="text-align:center">420</td>
+<td style="text-align:center">40500</td>
+</tr>
+<tr>
+<td><a href="http://www.call-cc.org/">Chicken Scheme</a></td>
+<td>4.8.0</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">150</td>
+</tr>
+<tr>
+<td><a href="https://github.com/martintrojer/scheme-clojure">Clojure embedded</a></td>
+<td>1.5.1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">40</td>
+</tr>
+</tbody>
+</table>
+<p>I&rsquo;m a bit surprised with the results here, Scala is quite slow and F# is very fast. If you consider that the F# and Scala implementations are fundamentally identical, my only conclusion can be that Scala pattern matching is slow. Daniel Spiewak alluded to this in a <a href="http://2013.flatmap.no/spiewak.html">recent talk</a>, if I understand him correctly, it is much faster (in Scala) to replace pattern matches with &lsquo;polymorphic operators&rsquo; &ndash; <a href="https://gist.github.com/martintrojer/5646283">here&rsquo;s an example</a>.</p>
+<p>If you watch that talk, it boils down to different ways to tackle the expression problem, where pattern matches and &lsquo;polymorphic operators&rsquo; are on different extremes on the spectrum. However, it doesn&rsquo;t explain why pattern matching in Scala is so much slower than F#.</p>
+<p>If you are interested how these benchmarks were run, here&rsquo;s some <a href="https://gist.github.com/martintrojer/5719803">snippets</a>.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

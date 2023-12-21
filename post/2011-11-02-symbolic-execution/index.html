@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Symbolic Execution</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Symbolic Execution</h1>
+			<b><time>2011-11-02</time></b>
+		       
+		           <a href="/tags/klee">klee</a>
+        	       
+		           <a href="/tags/llvm">llvm</a>
+        	       
+		           <a href="/tags/sat">sat</a>
+        	       
+		           <a href="/tags/symbolic-execution">symbolic execution</a>
+        	       
+
+			<div>
+				<p>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &ldquo;Symbolic execution.&rdquo; Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.</p>
+<p>I want to acknowledge the significant contributions made by Dawson Engler at Stanford and Patrice Godefroid at Microsoft Research in advancing this field of research. Their detailed papers are captivating and offer valuable insights.</p>
+<p>In this article, I provide background information about symbolic execution. In a future post, I will delve into its practical applications, utilizing frameworks such as <a href="http://llvm.org/">LLVM</a> and <a href="http://klee.llvm.org/">klee</a>).</p>
+<h3 id="introduction">Introduction</h3>
+<p>In recent years, static code analysis has made remarkable progress, allowing its application to large real-world codebases and generating reliable results. A crucial metric for success in this area is the ratio of actual defects to false positives. Achieving an optimal ratio is an incredibly challenging problem that involves employing heuristics, optimization techniques, and fine-tuning. One of the most significant advantages of static code analysis is that it analyzes the source code itself, eliminating the need to build, link, and run the code under scrutiny. It operates on &ldquo;snippets&rdquo; of code, which are perfectly valid in isolation.</p>
+<p>Unlike other code analysis tools, symbolic execution executes the code under test in a controlled environment or virtual machine. The key distinction from normal execution is that certain inputs are treated as symbolic, meaning they can be &ldquo;anything.&rdquo; For code that depends on symbolic input, the symbolic executor constructs boolean expressions (known as path constraints) to explore previously uncharted paths.</p>
+<h3 id="symbolic-execution">Symbolic Execution</h3>
+<p>Symbolic execution involves &ldquo;executing&rdquo; a program in an abstracted manner. Let&rsquo;s examine the process using the following code fragment:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x; <span style="color:#66d9ef">int</span> y) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> s<span style="color:#f92672">=</span>x<span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (s<span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">=</span><span style="color:#a6e22e">malloc</span>(s);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span>(y<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">=</span><span style="color:#a6e22e">malloc</span>(x);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> p;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Suppose our goal is to ensure that <code>func</code> always returns a valid (non-null) pointer.</p>
+<h3 id="control-flow-graph">Control Flow Graph</h3>
+<p>The first step in symbolic execution is to generate a Control Flow Graph (CFG), which provides an abstract representation of the code in the form of a directed graph. In the CFG, each node represents a &ldquo;basic block&rdquo; terminated by a conditional statement (in this case, an if statement). Each edge corresponds to a boolean &ldquo;truth value&rdquo; for the condition.</p>
+<figure><img src="/assets/images/symbolic/cfg.png"/>
+</figure>
+
+<p>Generating the CFG helps visualize the paths of execution. It&rsquo;s worth noting that CFGs are not specific to symbolic execution; compilers also generate CFGs during code compilation as they lend themselves well to optimization techniques.</p>
+<h3 id="analysing-the-cfg-with-symbolic-values">Analysing the CFG with symbolic values</h3>
+<p>With symbolic execution, our objective is to identify feasible paths that lead to undesirable outcomes or &ldquo;bad things.&rdquo; In this scenario, we aim to find the path(s) that result in returning <code>p</code> without it being allocated first. To understand how the value of <code>p</code> changes, we assign a symbolic value to <code>p</code> at each node in the CFG. In other words, we&rsquo;re interested in the symbolic value of <code>p</code>; we don&rsquo;t care about the specific memory location it points to. Our focus is solely on whether <code>p</code> is null or non-null.</p>
+<figure><img src="/assets/images/symbolic/cfg-annotated.png"/>
+</figure>
+
+<p>By annotating the CFG accordingly, we can easily identify a path that leads to returning p without prior initialization. This simple example demonstrates two fundamental techniques in practice:</p>
+<ul>
+<li>Transformation to CFG</li>
+<li>Reasoning on symbolic values</li>
+</ul>
+<p>Note that we also draw implicit code paths, as they lead to different symbolic value of <code>p</code>.</p>
+<h3 id="scalability-and-accuracy">Scalability and Accuracy</h3>
+<p>Developing a &ldquo;symbolic tool&rdquo; poses numerous challenging problems. Broadly speaking, these problems can be classified into two categories:</p>
+<ol>
+<li>Scalability and speed of analysis: Analyzing a non-trivial function involves a large number of paths. Ideally, we want the tool to complete its analysis within a reasonable timeframe, avoiding prolonged execution.</li>
+<li>Accuracy: Not all paths are feasible, and reporting defects along infeasible paths leads to false positives. A practical tool should only report genuine errors and provide test vectors to reproduce those errors.</li>
+</ol>
+<p>Consider a simpler tool like a &ldquo;lint&rdquo; tool, which becomes less useful as it generates excessive &ldquo;garbage&rdquo; output. An ideal tool, on the other hand, would report only real errors and provide test vectors to trigger those errors, as you&rsquo;ll see later in this article.</p>
+<h3 id="scalability-and-inter-procedural-analysis">Scalability and Inter-Procedural analysis</h3>
+<p>The scalability problem is compounded by the fact that we can&rsquo;t limit the analysis to paths within a single function for any non-trivial analysis. For example, in the previous code snippet, it doesn&rsquo;t matter if func returns a null pointer if all callers of func properly check for this possibility. To conduct a meaningful analysis, we must follow the path until the pointer is actually used. This necessitates analyzing paths that span multiple functions, which is known as inter-procedural analysis.</p>
+<p>Performing inter-procedural analysis enhances accuracy, but it exponentially increases the number of paths to analyze. A real-life CFG, taking inter-procedural analysis into account, is likely to be more complex:</p>
+<figure><img src="/assets/images/symbolic/cfg-real.png"/>
+</figure>
+
+<p>An exhaustive enumeration of paths through such a CFG would never complete. Consequently, researchers and practitioners in this field focus on techniques to prune the CFG and identify a small set of &ldquo;interesting&rdquo; paths. The path explosion problem can be mitigated using heuristics derived from graph theory or by inferring additional information from the execution context.</p>
+<h3 id="accuracy">Accuracy</h3>
+<p>Analyzing long paths introduces a complication: the path conditions along those paths may be unsatisfiable. Let&rsquo;s explore this concept in more detail, as it leads us to another fundamental idea underlying symbolic execution.</p>
+<h3 id="path-condition">Path Condition</h3>
+<p>Let&rsquo;s revisit the previous example and discuss path conditions. We&rsquo;ll rewrite the CFG, incorporating the truth values of the encountered conditions along the given paths. The path condition represents the boolean equation that synthesizes the truth values of the encountered conditional expressions at each node.</p>
+<figure><img src="/assets/images/symbolic/cfg-annotated2.png"/>
+</figure>
+
+<p>For the path of interest (leading to a null p), the corresponding expression is <code>x * y == 0 &amp;&amp; y != 0</code>. Thus, we can associate a set of boolean equations with each edge along a given path. In this example, we can conclude that <code>x * y == 0 &amp;&amp; y != 0</code> implies <code>p == 0</code>.</p>
+<h3 id="inter-procedural-analysis-and-path-condition">Inter-Procedural analysis and Path condition</h3>
+<p>Now that we understand path conditions, let&rsquo;s explore how they help solve the accuracy problem. We need to determine whether a path that appears feasible within the narrow context of a single function is valid in the larger context of the entire program, which involves interprocedural analysis. For instance, we might discover that all paths containing a call to func have an ASSERT statement before the call, checking if x is not equal to 0.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//func as defined above
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x; <span style="color:#66d9ef">int</span> y);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//main calls func
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> x,y;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> p<span style="color:#f92672">*</span>;
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ASSERT</span>(x<span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>  p<span style="color:#f92672">=</span><span style="color:#a6e22e">func</span>(x,y);
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The path condition now becomes <code>x * y != 0 &amp;&amp; y != 0 &amp;&amp; x != 0</code>. It is evident that this boolean equation cannot be satisfied, which aligns with the concept known as the <a href="http://en.wikipedia.org/wiki/Boolean_satisfiability_problem">Boolean Satisfiability Problem</a>.</p>
+<h3 id="boolean-sat-applied-to-symbolic-execution">Boolean SAT applied to Symbolic Execution</h3>
+<p>Now, let&rsquo;s delve into the good news and the bad news&hellip;</p>
+<p>The bad news is that solving the Boolean Satisfiability Problem is an NP-complete problem, meaning it is inherently complex and does not have an upper limit on its running time. Although not explicitly apparent in this simple example, any non-trivial path can be summarized by a path condition with hundreds of terms. Therefore, simply iterating through all possible assignments for boolean variables would lead to infinite execution.</p>
+<p>The good news is that there are solutions to this problem. The Very Large Scale Integration (VLSI) industry, for instance, has been dealing with solving boolean equations with a large number of terms for years. They have developed fairly efficient software, known as SAT solvers, to tackle this challenge. In fact, researchers continually refine algorithms for SAT solvers to solve ever larger boolean equations in a more efficient manner.</p>
+<p>Consequently, modern symbolic execution engines incorporate these SAT solvers. A boolean SAT solver can quickly determine that <code>x * y != 0 &amp;&amp; y != 0 &amp;&amp; x != 0</code> is unsatisfiable, thus avoiding the reporting of a false positive defect.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>
