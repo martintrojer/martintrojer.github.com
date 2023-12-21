@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>lisp on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/lisp/</link>
+    <description>Recent content in lisp on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 18 Mar 2015 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/lisp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Software archaeology, hunting bugs in Emacs</title>
+      <link>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</link>
+      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</guid>
+      <description>&lt;p&gt;By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Scheme in Scala</title>
+      <link>https://martintrojer.github.io/post/2013-06-06-scheme-in-scala/</link>
+      <pubDate>Thu, 06 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-06-scheme-in-scala/</guid>
+      <description>In this post I present some of my experiences writing a Scheme interpreter in Scala (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.&#xA;Overall, the Scala solution is very similar to the F# one. Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of a Hindley-Milner type inference.</description>
+    </item>
+    <item>
+      <title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
+      <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
+      <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
+      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+    </item>
+    <item>
+      <title>Scheme as an external DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</link>
+      <pubDate>Sat, 28 Jan 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</guid>
+      <description>This is a follow-up post to my previous &amp;ldquo;Scheme in Clojure&amp;rdquo; post.&#xA;This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&amp;rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code).</description>
+    </item>
+    <item>
+      <title>Scheme as an embedded DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</link>
+      <pubDate>Tue, 29 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</guid>
+      <description>If you give someone Fortran, he has Fortran.&#xA;If you give someone Lisp, he has any language he pleases.&#xA;&amp;ndash; Guy Steele&#xA;Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&amp;rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</description>
+    </item>
+  </channel>
+</rss>

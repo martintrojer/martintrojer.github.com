@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jvm on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/jvm/</link>
+    <description>Recent content in jvm on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 29 Oct 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>This year in F#</title>
+      <link>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</link>
+      <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</guid>
+      <description>&lt;p&gt;For the third year running, here&amp;rsquo;s my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what&amp;rsquo;s been happening was on my wish-list outlined in [last year&amp;rsquo;s post](https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/. What are the highlights?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Distributed Actors in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</link>
+      <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</guid>
+      <description>Here&amp;rsquo;s another post on a topic that have been discussed since the dawn-of-time, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&amp;rsquo;s post (above) still holds true today.&#xA;First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;&#xA;clojure-hadoop swamiji cacalog zookeeper-clj storm etc&amp;hellip; Akka and the Erlang legacy I am trying to write programs that solve problems in the areas where Erlang typically excels such as</description>
+    </item>
+    <item>
+      <title>Some thoughts on Clojure performance</title>
+      <link>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</link>
+      <pubDate>Sat, 18 Feb 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</guid>
+      <description>Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).&#xA;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.</description>
+    </item>
+    <item>
+      <title>Asynchronous workflows in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/</link>
+      <pubDate>Thu, 22 Dec 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/</guid>
+      <description>Asynchronous workflows is a very powerful feature of F#, and recently I wanted to explore the state of the JVM and in particular Clojure when it comes to replicate the functionality. In this post I&amp;rsquo;ll share some of my findings and I&amp;rsquo;ll include some background material to explain the problems.&#xA;Let&amp;rsquo;s start with an example of a webclient using &amp;ldquo;async&amp;rdquo; in F#.&#xA;let download url = async { let request = HttpWebRequest.</description>
+    </item>
+    <item>
+      <title>Scheme as an embedded DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</link>
+      <pubDate>Tue, 29 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</guid>
+      <description>If you give someone Fortran, he has Fortran.&#xA;If you give someone Lisp, he has any language he pleases.&#xA;&amp;ndash; Guy Steele&#xA;Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&amp;rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</description>
+    </item>
+    <item>
+      <title>Tail Calls in F#, Clojure and Scala</title>
+      <link>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</link>
+      <pubDate>Sun, 20 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/</guid>
+      <description>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&amp;rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)&#xA;TCO is a well documented topic in books and articles about functional programming and the TCO in .</description>
+    </item>
+    <item>
+      <title>Why F# needs Mono (and really should be a JVM language)</title>
+      <link>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</link>
+      <pubDate>Thu, 03 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</guid>
+      <description>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&amp;rsquo;re writing a new Windows application (and it&amp;rsquo;s not a high performant game), chances are you are reading WPF books right now.&#xA;One of the promises of .NET when it was released was &amp;ldquo;the great language independent&amp;rdquo; runtime, making all these languages interoperate in joyful blizz.</description>
+    </item>
+  </channel>
+</rss>

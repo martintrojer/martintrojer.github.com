@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Non tail-recursive functions in core.async go blocks</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Non tail-recursive functions in core.async go blocks</h1>
+			<b><time>2013-07-17</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.async">core.async</a>
+        	       
+		           <a href="/tags/go">go</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve been using various <a href="http://go-lang.org/">Go</a> examples / tutorials to take a deeper look into <a href="https://github.com/clojure/core.async">core.async</a>. The <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a> pattern is a very interesting and powerful, it&rsquo;s good move for Clojure to &ldquo;throw in&rdquo; with Go and push this style of programming.</p>
+<p>core.sync works at s-expression level, where some other JVM solutions (<a href="http://www.malhar.net/sriram/kilim/">Kilim</a>, <a href="https://github.com/puniverse/pulsar">Pulsar</a>) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">David has written about this</a>.</p>
+<h3 id="the-go-macro">The go macro</h3>
+<p>Now, one limitation of the go macro is that it can&rsquo;t &ldquo;look into&rdquo; other functions / closures. This difference stands out quite clearly when reading Go code where you can put &ldquo;go&rdquo; in-front of function calls.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>put-all! [vs ch]
+</span></span><span style="display:flex;"><span>  (doseq [v vs] (<span style="color:#a6e22e">&gt;!</span> ch v)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">chan</span>)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">go</span> (<span style="color:#a6e22e">put-all!</span> [<span style="color:#ae81ff">42</span> <span style="color:#ae81ff">84</span>] ch))
+</span></span><span style="display:flex;"><span>  [(<span style="color:#a6e22e">&lt;!!</span> ch) (<span style="color:#a6e22e">&lt;!!</span> ch)])
+</span></span></code></pre></div><p>This causes the <code>Assert failed: &gt;! used not in (go ...) block</code> error. In this case it&rsquo;s easily fixed, simply move the <code>(go ...)</code> embrace into the <code>put-all!</code> function or inline the body of the function.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">chan</span>)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">go</span> (doseq [v [<span style="color:#ae81ff">42</span> <span style="color:#ae81ff">84</span>]] (<span style="color:#a6e22e">&gt;!</span> ch v)))
+</span></span><span style="display:flex;"><span>  [(<span style="color:#a6e22e">&lt;!!</span> ch) (<span style="color:#a6e22e">&lt;!!</span> ch)])
+</span></span></code></pre></div><p>Please note that inlining an anonymous function does not work (fails with the error as above)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">chan</span>)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">go</span> ((<span style="color:#66d9ef">fn </span>[vs] (doseq [v vs] (<span style="color:#a6e22e">&gt;!</span> ch v)))
+</span></span><span style="display:flex;"><span>       [<span style="color:#ae81ff">42</span> <span style="color:#ae81ff">84</span>]))
+</span></span><span style="display:flex;"><span>  [(<span style="color:#a6e22e">&lt;!!</span> ch) (<span style="color:#a6e22e">&lt;!!</span> ch)])
+</span></span></code></pre></div><p>However, if the function you&rsquo;re inlining is tail recursive, you can use the approach above by using the <code>loop/recur</code> form (which the go macro can translate).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">chan</span>)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">go</span> (<span style="color:#66d9ef">loop </span>[[f <span style="color:#f92672">&amp;</span> r] [<span style="color:#ae81ff">42</span> <span style="color:#ae81ff">84</span>]]   <span style="color:#75715e">;; equivalent to (doseq)</span>
+</span></span><span style="display:flex;"><span>        (when f (<span style="color:#a6e22e">&gt;!</span> ch f) (<span style="color:#a6e22e">recur</span> r))))
+</span></span><span style="display:flex;"><span>  [(<span style="color:#a6e22e">&lt;!!</span> ch) (<span style="color:#a6e22e">&lt;!!</span> ch)])
+</span></span></code></pre></div><p>I.e. it&rsquo;s possible to simulate putting go around a function call by inlining it&rsquo;s body &ndash; if it&rsquo;s tail recursive (or not recursive at all).</p>
+<h3 id="non-tail-recursive-functions">Non-tail recursive functions</h3>
+<p>Now for a more <a href="http://tour.golang.org/#68">involved example</a>, we want to walk a binary search tree and put the values on a channel. When all results have been put on the channel we want to close it.</p>
+<p>Here&rsquo;s a simple version of the walker (using the thread blocking <code>&gt;!!</code> call).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">walker</span> [t]
+</span></span><span style="display:flex;"><span>            (when t
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:left</span> t))
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">&gt;!!</span> ch (<span style="color:#e6db74">:value</span> t))
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:right</span> t))))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">walker</span> tree)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">close!</span> ch)))
+</span></span></code></pre></div><p>Then we can use the <code>same</code> function to see if 2 trees are identical;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>same [t1 t2]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[ch1 (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>        ch2 (<span style="color:#a6e22e">chan</span>)
+</span></span><span style="display:flex;"><span>        drain <span style="color:#f92672">#</span>(<span style="color:#66d9ef">loop </span>[v (<span style="color:#a6e22e">&lt;!!</span> %) res []]
+</span></span><span style="display:flex;"><span>                 (<span style="color:#66d9ef">if </span>v (<span style="color:#a6e22e">recur</span> (<span style="color:#a6e22e">&lt;!!</span> %) (conj res v)) res))]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">thread</span> (<span style="color:#a6e22e">walk</span> t1 ch1))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">thread</span> (<span style="color:#a6e22e">walk</span> t2 ch2))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    (= (<span style="color:#a6e22e">drain</span> ch1) (<span style="color:#a6e22e">drain</span> ch2))))
+</span></span></code></pre></div><p>How do we convert this to use go blocks? We ideally want to have the entire <code>walker</code> function done by one go process, so that we can close the channel when the that function returns. Embracing the body of that function with <code>(go ..)</code> gives us the problem that the channel immediately closes before we get a chance to put anything on it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">walker</span> [t]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>             (when t
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:left</span> t))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&gt;!</span> ch (<span style="color:#e6db74">:value</span> t))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:right</span> t)))))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">walker</span> tree)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">close!</span> ch)))
+</span></span></code></pre></div><p>Also, we&rsquo;ll get a new go process for every node in the tree (every recursive call), so not all processing is done in &ldquo;one place&rdquo;.</p>
+<p>Ok, let&rsquo;s try to inline the body of the walker function so we can call <code>close!</code> when it&rsquo;s done.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>   ((<span style="color:#66d9ef">fn </span>walker [t]
+</span></span><span style="display:flex;"><span>       (when t
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:left</span> t))
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">&gt;!</span> ch (<span style="color:#e6db74">:value</span> t))
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:right</span> t))))
+</span></span><span style="display:flex;"><span>    tree)
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">close!</span> ch)))
+</span></span></code></pre></div><p>Hm, this won&rsquo;t work because of the restriction of the go macro described above. If the walker function would have been <strong>tail recursive</strong>, we could have used the <code>loop/recur</code> form where the <code>((fn ..))</code> is and this approach would work, but not in this case.</p>
+<p>Let&rsquo;s give up the idea of using one go process per tree and see if we can&rsquo;t use some kind of synchronisation to not call <code>close!</code> too early.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">walker</span> [t]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>             (when t
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:left</span> t))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&gt;!</span> ch (<span style="color:#e6db74">:value</span> t))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:right</span> t)))))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">&lt;!</span> (<span style="color:#a6e22e">walker</span> tree))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">close!</span> ch))))
+</span></span></code></pre></div><p>Here we put the <code>walker</code> and <code>close!</code> calls in another go block and then we wait for the call to walker to &ldquo;finish&rdquo; before moving on to close the channel. What it means for the &ldquo;walker to finish&rdquo; is that the go block for the top node of the tree terminates (since every node in the tree will have it&rsquo;s own go block).</p>
+<p>This looks promising, but the results in the channel can be in any order (since there are no order guarantees in the scheduling of go processes) &ndash; this also means that some of the values might be missing since the &ldquo;top&rdquo; go process can be scheduled before a child one.</p>
+<p>We need a little bit more synchronisation to arrive at a working solution.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">walker</span> [t]
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>             (when t
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&lt;!</span> (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:left</span> t)))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&gt;!</span> ch (<span style="color:#e6db74">:value</span> t))
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">&lt;!</span> (<span style="color:#a6e22e">walker</span> (<span style="color:#e6db74">:right</span> t))))))]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">go</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">&lt;!</span> (<span style="color:#a6e22e">walker</span> tree))
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">close!</span> ch))))
+</span></span></code></pre></div><p>Now all the nodes will be processed (by different go processes) but in the correct order.</p>
+<p>The complete solution can be found <a href="https://github.com/martintrojer/go-tutorials-core-async/blob/master/src/tut005.clj">here</a>, note that the <code>(thread ...)</code> embrace in the <code>same</code> function has been removed.</p>
+<h3 id="postscript">Postscript</h3>
+<p><a href="https://github.com/martintrojer/go-tutorials-core-async/">Some more Go tutorials converted to core.async</a></p>
+<p>A final word of advice, when converting Go examples to core.async remember no to do <code>Thread/sleep</code> in your go blocks! In go, the sleep function is integrated in the go routine scheduling, this is not the case in core.async. See <a href="https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/">here</a> for a deeper explanation why.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

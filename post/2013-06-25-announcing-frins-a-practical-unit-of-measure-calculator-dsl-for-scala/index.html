@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Announcing Frins, a practical unit of measure calculator DSL for Scala</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Announcing Frins, a practical unit of measure calculator DSL for Scala</h1>
+			<b><time>2013-06-25</time></b>
+		       
+		           <a href="/tags/scala">scala</a>
+        	       
+		           <a href="/tags/frinj">frinj</a>
+        	       
+		           <a href="/tags/frins">frins</a>
+        	       
+
+			<div>
+				<p>I am proud to announce a new Scala project called &ldquo;Frins&rdquo;.</p>
+<p>Frins is a practical unit-of-measure calculator DSL for Scala.</p>
+<p>Key features;</p>
+<ul>
+<li>Tracks units of measure through all calculations allowing you to mix units of measure transparently</li>
+<li>Comes with a <strong>huge</strong> database of units and conversion factors</li>
+<li>Inspired by the <a href="http://futureboy.us/frinkdocs/">Frink project</a></li>
+</ul>
+<p>Full source code available on <a href="https://github.com/martintrojer/frins">github</a>.</p>
+<p>To wet your appetite head straight over to the <a href="https://github.com/martintrojer/frins/blob/master/src/main/scala/frins/ExampleCalculations.scala">example calculations</a>.</p>
+<h3 id="how-frins-came-about">How Frins came about</h3>
+<p>About a year ago I created <a href="https://github.com/martintrojer/frinj">Frinj</a>. With Frinj I tried to marry some of the joys of one of my favorite programming languages (Frink) with the Clojure REPL. I was quite pleased with the results, and the response was encouraging.</p>
+<p>Recently I started reading <a href="http://www.amazon.co.uk/Programming-In-Scala-2nd-Edition/dp/0981531644">Odersky</a> (again) and when I came to the chapter on implicit conversions I got the idea of trying to create a Frinj style DSL for the Scala interpreter. I could leverage some of the efforts made in Frinj (like parsing the Frink unit database) and the result is quite cool.</p>
+<p>It&rsquo;s indeed possible to create a very fluent and powerful DSL using some of Scala&rsquo;s core language constructs!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scala" data-lang="scala"><span style="display:flex;"><span><span style="color:#75715e">// If you took the matter in a teaspoon of water, and converted that to energy,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// how many gallons of gasoline would you have to burn to get an equal amount of energy?
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>scala<span style="color:#f92672">&gt;</span> &#39;teaspoon <span style="color:#f92672">*</span> &#39;water <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>&#39;c <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span><span style="color:#f92672">)</span> to &#39;gallons <span style="color:#f92672">*</span> &#39;gasoline
+</span></span><span style="display:flex;"><span>res0<span style="color:#66d9ef">:</span> <span style="color:#66d9ef">frins.NumberT</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3164209.862836101</span>  <span style="color:#f92672">[</span><span style="color:#66d9ef">dimensionless</span><span style="color:#f92672">]</span>
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

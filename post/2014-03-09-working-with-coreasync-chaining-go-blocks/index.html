@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Working with core.async: Chaining go blocks</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Working with core.async: Chaining go blocks</h1>
+			<b><time>2014-03-09</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.async">core.async</a>
+        	       
+		           <a href="/tags/go">go</a>
+        	       
+
+			<div>
+				<p>One particularly annoying difference between the core.async and <a href="http://golang.org">Go</a> is that you can&rsquo;t wrap function calls with the <code>go</code> macro. This is due to implementation details of core.async, which can only see the body &lsquo;inside&rsquo; the macro and not the functions it may call. This is obviously not a problem if the called function doesn&rsquo;t interact with any channels, but if it does when you might be in trouble. I&rsquo;ve touched on this subject in a <a href="https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/">previous post</a>.</p>
+<p>Anyway, let me explain what I mean.</p>
+<p>Let&rsquo;s say we have a complicated <code>get-result</code> function that hits some external services (waits for the result) and then feeds the input to a big calculation function multiple times. All examples below simplified for brevity.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>calculation []
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; Big complicated calculation</span>
+</span></span><span style="display:flex;"><span>  (rand-int <span style="color:#ae81ff">1000</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-result []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff</span>
+</span></span><span style="display:flex;"><span>    (reduce + (<span style="color:#a6e22e">repeatedly</span> <span style="color:#ae81ff">1000</span> calculation))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(time (<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 1.034 msecs&#34;</span>
+</span></span></code></pre></div><p>This is all fine and well, but lets say the calculation function also needs to wait on some data, so it needs to become a go-routine as well. This means that we no longer have a return value but a channel with the result. Lets use some FP to get all the data out.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>calculation-go []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff</span>
+</span></span><span style="display:flex;"><span>    (rand-int <span style="color:#ae81ff">1000</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-result-go []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">-&gt;&gt;</span>
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">repeatedly</span> <span style="color:#ae81ff">10</span> calculation-go)
+</span></span><span style="display:flex;"><span>     (map async/&lt;!)
+</span></span><span style="display:flex;"><span>     (reduce +))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result-go</span>))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; =&gt; nil</span>
+</span></span></code></pre></div><p>Nope, you can&rsquo;t to that, <code>Assert failed: &lt;! used not in (go ...) block</code>. It&rsquo;s also &lsquo;returns&rsquo; nil, <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-exceptions-in-go-blocks/">explained in this post</a>. Let&rsquo;s try another way;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>calculation-go2 [ch]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">&gt;!</span> ch (rand-int <span style="color:#ae81ff">1000</span>))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-result-go2 []
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[ch (<span style="color:#a6e22e">async/chan</span>)
+</span></span><span style="display:flex;"><span>        count <span style="color:#ae81ff">1000</span>]
+</span></span><span style="display:flex;"><span>    (dotimes [_ count]
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">calculation-go2</span> ch))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">async/go-loop</span> [res <span style="color:#ae81ff">0</span> cnt count]
+</span></span><span style="display:flex;"><span>      (<span style="color:#66d9ef">if </span>(or (nil? res) (zero? cnt))
+</span></span><span style="display:flex;"><span>        res
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">recur</span> (+ res (<span style="color:#a6e22e">&lt;!</span> ch)) (dec cnt))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(time (<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result-go2</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 102.503 msecs&#34;</span>
+</span></span></code></pre></div><p>Oh dear, 2 orders of magnitude and that warm fuzzy FP feeling is gone.</p>
+<p>Since a go block returns a channel (with the result), you now have to deal with taking that value out of the channel. If you have long &lsquo;go-call-chains&rsquo; of go blocks, you&rsquo;re going to spend lots of time in and out of channels. In this case we have lock congestion amongst all the <code>calculation-go2</code> blocks and that single channel.</p>
+<p>The nil returning snippet above can be written in a similar fashion using some of core.async&rsquo;s helpers functions (thanks to Ben Ashford for pointing this out);</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-result-go-better []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span>
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">repeatedly</span> <span style="color:#ae81ff">1000</span> calculation-go)
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">async/merge</span>)
+</span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">async/reduce</span> + <span style="color:#ae81ff">0</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(time (<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result-go-better</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 178.654 msecs&#34;</span>
+</span></span></code></pre></div><p>Unfortunately this performs even worse than the written out go-loop, but it is much nicer.</p>
+<h2 id="how-is-this-any-better-in-go">How is this any better in Go?</h2>
+<p>Here&rsquo;s a rough equivalent of the 2 scenarios in Go.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">calculation</span>() <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getResult</span>(<span style="color:#a6e22e">c</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sum</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">1000</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">sum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">calculation</span>()
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 196.309us
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">calculation2</span>(<span style="color:#a6e22e">c</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// wait for some stuff
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getResult2</span>(<span style="color:#a6e22e">c</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">tmpc</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sum</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">1000</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">calculation2</span>(<span style="color:#a6e22e">tmpc</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">1000</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">sum</span> <span style="color:#f92672">+=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">tmpc</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 4.421806ms
+</span></span></span></code></pre></div><p>The key difference is that the caller put the function in a go block, and then any subsequent function are free to operate on any channel <em>without</em> itself being wrapped in <code>go</code>.</p>
+<p>Also it performs better <code>getResult2</code> is an order of magnitude slower than <code>getResult</code>.</p>
+<h2 id="the-blessings-and-curses-of-macros">The blessings and curses of macros</h2>
+<p>If we have to wrap every function in a go block and if chaining go blocks is so slow, can we just inline that function in our outer go block somehow? Yes we can, we can turn that function into a macro.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>calculation-go-macro []
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>(<span style="color:#a6e22e">do</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff using async/channels</span>
+</span></span><span style="display:flex;"><span>     (rand-int <span style="color:#ae81ff">1000</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-result-go-macro []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff</span>
+</span></span><span style="display:flex;"><span>    (reduce +
+</span></span><span style="display:flex;"><span>            (<span style="color:#66d9ef">loop </span>[res [] cnt <span style="color:#ae81ff">1000</span>]
+</span></span><span style="display:flex;"><span>              (<span style="color:#66d9ef">if </span>(zero? cnt)
+</span></span><span style="display:flex;"><span>                res
+</span></span><span style="display:flex;"><span>                (<span style="color:#a6e22e">recur</span> (conj res (<span style="color:#a6e22e">calculation-go-macro</span>)) (dec cnt)))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(time (<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result-go-macro</span>)))
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; &#34;Elapsed time: 2.452 msecs&#34;</span>
+</span></span></code></pre></div><p>Problem solved right? Well, not really. Instead of composable functions (well kind of since they return channels) we now have a special kind of macros that must be called from within a go block. In the snippet above we can&rsquo;t use the lovely <code>(reduce ... (repeatedly calculation-go-macro))</code> form since we can&rsquo;t use macros that way. However, the macro itself can use <code>&lt;!</code>, <code>&gt;!</code> etc freely without the <code>go</code> wrapper and we solved the perf problem.</p>
+<p>If you&rsquo;re interested in how some Go examples convert to core.async check out <a href="https://github.com/martintrojer/go-tutorials-core-async">this repo</a>.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

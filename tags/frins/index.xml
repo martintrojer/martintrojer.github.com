@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>frins on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/frins/</link>
+    <description>Recent content in frins on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 25 Jun 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/frins/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Announcing Frins, a practical unit of measure calculator DSL for Scala</title>
+      <link>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</link>
+      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</guid>
+      <description>I am proud to announce a new Scala project called &amp;ldquo;Frins&amp;rdquo;.&#xA;Frins is a practical unit-of-measure calculator DSL for Scala.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Full source code available on github.&#xA;To wet your appetite head straight over to the example calculations.&#xA;How Frins came about About a year ago I created Frinj.</description>
+    </item>
+  </channel>
+</rss>

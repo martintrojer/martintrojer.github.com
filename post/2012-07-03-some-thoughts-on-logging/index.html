@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Some thoughts on logging</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Some thoughts on logging</h1>
+			<b><time>2012-07-03</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+
+			<div>
+				<p>Have you ever tried to log from multi threaded program? Have you tried to make sense of the log output which multiple subsystems were logging to? Have you tried to do average latency calculations based on that log file?</p>
+<p>If you reading this blog, I am guessing you answered yes to a couple of the questions above.</p>
+<p>There are multiple problems here; multiple producers (race conditions), out-of-order logs, conflated subsystem in the same logs etc. You gotta put a lot of effort into you log post-processor to make any sense at all of the data, decorating it with various metadata to make it at all possible.</p>
+<p>In this post I point out a few ways you can use Clojure (both the language and it&rsquo;s general ethos) to overcome these problems. The solutions here are primarily tailored to &ldquo;pipeline systems&rdquo; where you want to find time consuming bottle-necks and produce latency reports etc. For simplicity, this is in-process logging, where all the parts (threads) can share a log resource and tick timer etc.</p>
+<p>TL;DR <a href="https://gist.github.com/3041849">the complete code snippet</a>.</p>
+<h3 id="agents">Agents</h3>
+<p>First off, the race conditions; if the log is simply a file, or a in-memory data structure, you have to somehow serialise the &ldquo;emit&rdquo; calls. Conventional wisdom would have you put the emit call in a critical section, but this is a) ugly b) can introduce deadlocks c) can effect the system under stress. We want to post a log entry using a lock free, asynchronous mechanism, that&rsquo;s why we have agents in Clojure;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>log (agent []))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>emit
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Emit data to the log&#34;</span>
+</span></span><span style="display:flex;"><span>  [data]
+</span></span><span style="display:flex;"><span>  (send log <span style="color:#f92672">#</span>(conj % data)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>emit-timed
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Emit datas to the log, timestamp appended&#34;</span>
+</span></span><span style="display:flex;"><span>  [data]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit</span> (assoc data <span style="color:#e6db74">:time</span> (<span style="color:#a6e22e">System/nanoTime</span>))))
+</span></span></code></pre></div><p>Please note that when emitting with timestamps, we take a snapshot of the time instantly (in the context of the calling thread), not in the agent-thread context later on.</p>
+<h3 id="tree-logging">Tree Logging</h3>
+<p>How do we apply structure to the log data? One idea is to put the log data into a tree instead of a flat vector (or file). Then log entries from different subsystems can be separated (for easier post-processing), and we can express dependancy between log events for latency calculations.</p>
+<p>Lets say each log entry is associated with one id and multiple correlation ids. The id is typically an UUID which you assign to a request, operation, instruction that &ldquo;travels&rdquo; through multiple parts of your system. The correlation ids can be used a splitting your logs into categories of arbitrary depth, yield possibly more meaningful reports etc.</p>
+<figure><img src="/assets/images/logging/tree-log.png"/>
+</figure>
+
+<p>Here&rsquo;s how such a tree structure can be built using Clojure&rsquo;s maps and the mighty <a href="http://clojuredocs.org/clojure_core/clojure.core/assoc-in">assoc-in</a> function;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>log (agent {}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn- </span>add-log [id data time <span style="color:#f92672">&amp;</span> corr-ids]
+</span></span><span style="display:flex;"><span>  (send log <span style="color:#f92672">#</span>(<span style="color:#66d9ef">let </span>[keys (into [id] corr-ids)
+</span></span><span style="display:flex;"><span>                   log-node (<span style="color:#a6e22e">get-in</span> % keys {<span style="color:#e6db74">:entries</span> []})
+</span></span><span style="display:flex;"><span>                   entries (<span style="color:#e6db74">:entries</span> log-node)]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">assoc-in</span> % keys
+</span></span><span style="display:flex;"><span>                         (assoc log-node <span style="color:#e6db74">:entries</span>
+</span></span><span style="display:flex;"><span>                                (conj entries {<span style="color:#e6db74">:time</span> time
+</span></span><span style="display:flex;"><span>                                               <span style="color:#e6db74">:data</span> data}))))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>emit
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Emit data to the log, with a given id and potential corr-ids&#34;</span>
+</span></span><span style="display:flex;"><span>  [id data <span style="color:#f92672">&amp;</span> corr-ids]
+</span></span><span style="display:flex;"><span>  (apply add-log id data (<span style="color:#a6e22e">System/nanoTime</span>) corr-ids))
+</span></span></code></pre></div><p>The logger handles the timestamping for you, it also gives you functionality such as extracting chronological logs for ids, and timing/latency reports.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-ids
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Get all ids in log&#34;</span>
+</span></span><span style="display:flex;"><span>  [log]
+</span></span><span style="display:flex;"><span>  (keys log))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn- </span>walk-nodes [node f path]
+</span></span><span style="display:flex;"><span>  (when node
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">f</span> node path)
+</span></span><span style="display:flex;"><span>    (doseq [child-id (filter <span style="color:#f92672">#</span>(not= % <span style="color:#e6db74">:entries</span>) (keys node))]
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">walk-nodes</span> (get node child-id) f (conj path child-id)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-log
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Get all log entries for a given id in chronological oder&#34;</span>
+</span></span><span style="display:flex;"><span>  [log id]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[evts (<span style="color:#a6e22e">atom</span> [])]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">walk-nodes</span> (get log id)
+</span></span><span style="display:flex;"><span>                (<span style="color:#66d9ef">fn </span>[n _] (<span style="color:#a6e22e">swap!</span> evts <span style="color:#f92672">#</span>(into % (<span style="color:#e6db74">:entries</span> n))))
+</span></span><span style="display:flex;"><span>                [id])
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">-&gt;&gt;</span> evts (sort-by <span style="color:#e6db74">:time</span>) (map <span style="color:#e6db74">:data</span>))))
+</span></span></code></pre></div><p>Ok, this looks like it might perhaps work, but there are some drawbacks; we must keep the tree in memory for processing, which can be hard for huge logs, also serialisation to disk is trickier (but no really if you have a <a href="http://clojure.org/reader">reader</a>). We&rsquo;re also forcing a structure upon the log data, that feels awkward. Supplying the id, and corr-ids is not as clean as it could be.</p>
+<h3 id="metadata">Metadata</h3>
+<p>Let&rsquo;s get back to a simple flat log and more metadata in the events. We use the metadata to express the categories and other dependancies between the events that we used the tree for in the previous example. In a sense, we are still using a tree (or maybe even graph) data structure, but the branching is described with metadata in sequence of events. Using the emit function describes under the &ldquo;Agents&rdquo; paragraph above, here and example of some &ldquo;connected&rdquo; log events;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">let </span>[id (<span style="color:#a6e22e">java.util.UUID/randomUUID</span>)]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:add</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:backend</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:send</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:backend</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:ack</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:send</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:backend</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:sub</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:send</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:distribution</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:contribute</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:distribution</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:chain-contribute</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:distribution</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:chain-event</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:contribute</span>})
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:done</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:add</span>})))
+</span></span></code></pre></div><p>The helper functions also becomes much cleaner this way;<!-- raw HTML omitted --></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-ids
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Return a set of ids seen in the log&#34;</span>
+</span></span><span style="display:flex;"><span>  [log]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span> log
+</span></span><span style="display:flex;"><span>       (map <span style="color:#e6db74">:id</span>)
+</span></span><span style="display:flex;"><span>       set))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-log
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Get chronological logs for a given id&#34;</span>
+</span></span><span style="display:flex;"><span>  [log id]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span> log
+</span></span><span style="display:flex;"><span>       (filter <span style="color:#f92672">#</span>(= (<span style="color:#e6db74">:id</span> %) id))
+</span></span><span style="display:flex;"><span>       (sort-by <span style="color:#e6db74">:time</span>)))
+</span></span></code></pre></div><p>Please note that these functions take a (de-referenced) log rather than using @log directly. This helps testing, but is also very important for more complicated (looping) functions which should work on a stable snapshot of the log events.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>The flat log file, with simple events described as Clojure maps worked out really well, and it&rsquo;s certainly more idiomatic. The log is easier to serialise, we only need parts of it in memory for meaningful analysis, we can treat it as a continuos stream. The analysis functions that we write can leverage the power of Clojure&rsquo;s library directly and compose beautifully. Also, we are not forcing any structure (or schema) on the log events (more than any analysis functions expect) which make it very flexible and future proof. The only price we are paying is additional (redundant) metadata to that can be more cheaply expressed in a tree data structure.</p>
+<p>Here&rsquo;s a complete <a href="https://gist.github.com/3041849">listing of a event logger</a>, using metadata, with statistical reporting.</p>
+<h3 id="more-reading">More reading</h3>
+<ul>
+<li><a href="http://blip.tv/clojure/mark-mcgranaghan-logs-as-data-5953857">Mark McGranaghan Clojure/conj 2011 &ndash; Logs as data</a></li>
+<li><a href="https://github.com/heroku/pulse/">Pulse on Github</a></li>
+<li><a href="https://github.com/ptaoussanis/timbre">Timbre on Github</a></li>
+<li><a href="http://richhickey.github.com/clojure-contrib/logging-api.html">Clojure-contrib logging</a></li>
+</ul>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

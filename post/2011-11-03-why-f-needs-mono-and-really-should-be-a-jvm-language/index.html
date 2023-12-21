@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Why F# needs Mono (and really should be a JVM language)</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Why F# needs Mono (and really should be a JVM language)</h1>
+			<b><time>2011-11-03</time></b>
+		       
+		           <a href="/tags/.net">.net</a>
+        	       
+		           <a href="/tags/csharp">csharp</a>
+        	       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/jvm">jvm</a>
+        	       
+		           <a href="/tags/llvm">llvm</a>
+        	       
+		           <a href="/tags/mono">mono</a>
+        	       
+
+			<div>
+				<p>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in <a href="http://www.reflector.net/">reflector</a> for technical proof). If you&rsquo;re writing a new Windows application (and it&rsquo;s not a high performant game), chances are you are reading <a href="http://en.wikipedia.org/wiki/Windows_Presentation_Foundation">WPF</a> books right now.</p>
+<p>One of the promises of .NET when it was released was &ldquo;the great language independent&rdquo; runtime, making all these languages interoperate in joyful blizz. Technically this still holds, but in practice it&rsquo;s all about C#.</p>
+<p>F# is still considered a new .NET language, but the fact is that it&rsquo;s been around since 2007. Let me tell you, it&rsquo;s an absolute gem of a language, and it&rsquo;s a fully supported in Visual Studio 2010. F# is however not .NET the same way C# is. Drawing from it&rsquo;s <a href="http://caml.inria.fr/">OCaml</a> roots, it doesn&rsquo;t feels like typical Microsoft technology (it&rsquo;s just too darn good :) It seems more at home in the open source world &ndash; the F# compiler is in fact <a href="http://blogs.msdn.com/b/dsyme/archive/2010/11/04/announcing-the-f-compiler-library-source-code-drop.aspx">open source</a>.</p>
+<p>In the recent Microsoft 2011 <a href="http://www.buildwindows.com/">build conference</a>, where Windows8, <a href="http://tirania.org/blog/archive/2011/Sep-15.html">WinRT</a>, future of Silverlight, new Visual Studio etc was announced. F# wasn&rsquo;t mentioned in the headlining presentations. How much mind-share does F# have internally at Microsoft?</p>
+<p>The approach taken by the F# team is to educate the C# crowd, and win them over on technical excellence. It&rsquo;s a valid strategy, but it&rsquo;s going to be a very long process. Force feeding a new language and a new programming paradigm to the OO crowd is a very hard sell. What needs to happen in the .NET community for F# to gain ground is pull rather than push. A couple of high profile Microsoft apps showing off F# to the world (just see what <a href="http://rubyonrails.org/">Rails</a> did for Ruby) and get the C#-ers&rsquo; attention.</p>
+<p>.NET being Microsoft technology, it&rsquo;s Windows only. Microsoft have <a href="http://en.wikipedia.org/wiki/Common_Language_Runtime">opened the runtime standard</a>, but it&rsquo;s a mine field of patents, and Microsoft has an army of lawyers. If you&rsquo;re a non-windows user your only hope is <a href="http://www.mono-project.com/Main_Page">Mono</a>, a open-source .NET runtime and C# compiler with a limp. In my experience, it&rsquo;s not ready for running production code. Some of Mono&rsquo;s core technologies, like it&rsquo;s garbage collector is not up to scratch. I can still easily get the runtime to crash using the experimental &ldquo;generational gc&rdquo;. Some really core .NET libraries is missing, like WPF, and it doesn&rsquo;t support <a href="http://flyingfrogblog.blogspot.com/2009/01/mono-does-not-support-tail-calls.html">tail call elimination</a>.</p>
+<p>F#&rsquo;s creator <a href="http://blogs.msdn.com/b/dsyme/">Dom Syme</a> is flirting heavily with Mono, and he understands the importance of getting the universities and hobbyists on board. There is no way they are going to fork out for a Windows and Visual Studio license. F# is included in the <a href="http://www.mono-project.com/Release_Notes_Mono_2.10">standard Mono</a> release, but it&rsquo;s still missing from the MonoDevelop IDE. Tomas Petricek has made a <a href="http://tomasp.net/blog/fsharp-in-monodevelop.aspx">F# plugin for MonoDevelop</a>, but not yet officially included in MonoDevelop, and doesn&rsquo;t work for version 2.8. A big part of the potential F# community is in the open source world, so F# needs Mono. Too bad Mono isn&rsquo;t good enough.</p>
+<p>F# is perceived more of a &ldquo;server room&rdquo; language, leaving the UI code for C#. Technically, this is false, but that is a bias that will be near impossible to break. Server rooms are the domain of *UX, thus once again F# needs Mono.</p>
+<p>So, F# have a tough battle of survival against C# on Windows and a weak story in the open source world. F# sorely needs a good open runtime, it deserves it. Mono&rsquo;s main contributing company <a href="http://xamarin.com/">Xamarin</a> seems to have it&rsquo;s focus elsewhere (iPhone apps written in C#) instead of fixing the basics. It&rsquo;s worth noting that there are other promising projects on the horizon however, <a href="http://vmkit.llvm.org/">vmkit</a> might come along and save the day? Unfortunately it&rsquo;s going to be a long wait.</p>
+<p>I&rsquo;ve thought many times how awesome F# would be if it targeted the JVM. Scala would be completely redundant and F# would have a much bigger and more eager user base. There is a F#-shaped hole in the JVM language space, and given it&rsquo;s open source heritage, I am sure it would be big hit. The server-room developers are now starting to use Scala and Clojure, just imagine what they could do with active patterns and asynchronous workflows! The JVM world needs solid ML language, there have been some valiant <a href="http://mth.github.com/yeti/">attempts</a>, but none of them have taken off.</p>
+<p>Mr Syme; just think how much easier this would all be if you were in the JVM camp? :-)</p>
+<p>Ps. Here&rsquo;s a workshop <a href="http://www.infoq.com/presentations/FSharp-and-Mono">presentation</a> by <a href="http://richardminerich.com/">Richard Minerich</a> showing F# in Mono and MonoDevelop.</p>
+<p><em>Update</em>: After talking to some people in the F# / Mono community, my lacklustre attitude of Mono has slightly changed. The TCO problems is fixed, which I can verify. And even if we all agree that the Mono + F# tooling situation is bad, the runtime seems to in a better shape than I feared, and are indeed used in production. I stand by my absolute conviction that F#&rsquo;s fate is tightly linked to Mono&rsquo;s, and thus deserves the full attention from the F# community.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

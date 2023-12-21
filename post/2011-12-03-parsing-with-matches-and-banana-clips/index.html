@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Parsing with Matches and Banana Clips</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Parsing with Matches and Banana Clips</h1>
+			<b><time>2011-12-03</time></b>
+		       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+
+			<div>
+				<p>I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the <a href="http://msdn.microsoft.com/en-us/library/dd547125.aspx">basics of pattern matching</a> here, rather show how F#&rsquo;s <a href="http://msdn.microsoft.com/en-us/library/dd233248.aspx">active patterns</a> can be used to take pattern matching to the next level.</p>
+<p>The traditional steps of a &ldquo;parser&rdquo; are roughly lexical analysis (tokenizer), syntactic analysis (parser) and then evaluator (interpreter). In this post we&rsquo;ll focus on the parsing step of a simple DSL. A parser typically consume a list of tokens and produces an Abstract Syntax Tree (AST), ready to be passed on the evaluator/interpreter.</p>
+<p>You can think of the main bulk of a parser being a loop containing a switch of the tokens types. It looks for some predefined patterns (syntax) in the token list. Some are valid and some are not (syntax error). This sounds like a perfect &ldquo;match&rdquo; :-) for pattern matching! And indeed it is.</p>
+<p>Let&rsquo;s say we have a simple DSL made up of a list of fields. Each field has a type and a name;</p>
+<pre tabindex="0"><code>int32   version
+myAlias data
+</code></pre><p>As you can see there are two kinds of types; we&rsquo;ll call them atomic types and alias types (myAlias is an pre-defined alias for some other atomic type). The main &ldquo;switch&rdquo; in the parser (using pattern matching) can look something like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> extractField <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// int32 version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#f92672">|</span> TAtomic<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>     Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">)),</span> rest
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// alias version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#f92672">|</span> TString<span style="color:#f92672">(</span>alias<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>     Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AliasType<span style="color:#f92672">(</span>alias<span style="color:#f92672">)),</span> rest
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span>  <span style="color:#f92672">_</span>   <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>     failwith <span style="color:#e6db74">&#34;syntax error&#34;</span>
+</span></span></code></pre></div><p>This function takes a list of tokens and returns a Field and the rest of the tokens. An outer loop would run this repeatedly until the token list is empty. The &ldquo;T&rdquo; types are tokens, and &ldquo;Field&rdquo; is the resulting type ready for the evaluator.</p>
+<p>Now let&rsquo;s say we want to make some fields optional, they should only be present if a specific condition holds true. We extend the syntax like so;</p>
+<pre tabindex="0"><code>int32   version
+int16   dodgy       if? version &gt; 2
+myAlias data
+</code></pre><p>This means we have to extend our switch to handle all cases;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#75715e">// int32 version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> TAtomic<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> None<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// alias version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> TString<span style="color:#f92672">(</span>alias<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AliasType<span style="color:#f92672">(</span>alias<span style="color:#f92672">),</span> None<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// int32 version  if? a &gt; 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> TAtomic<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TCondExpr<span style="color:#f92672">(</span>expr<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> Some<span style="color:#f92672">(</span>expr<span style="color:#f92672">)),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// alias version  if? a &gt; 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> TString<span style="color:#f92672">(</span>alias<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TCondExpr<span style="color:#f92672">(</span>expr<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AliasType<span style="color:#f92672">(</span>alias<span style="color:#f92672">),</span> Some<span style="color:#f92672">(</span>expr<span style="color:#f92672">)),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span>  <span style="color:#f92672">_</span>   <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   failwith <span style="color:#e6db74">&#34;syntax error&#34;</span>
+</span></span></code></pre></div><p>We just doubled the number of cases. It&rsquo;s still kind of nice and clear, but as a F# developer, this level of duplication is already making me a bit nauseous. Let&rsquo;s say we extend the DSL even more, we want each field for have a set of options;</p>
+<pre tabindex="0"><code>hidden     int32   version
+deprecated int16   dodgy       if? version &gt; 2
+           myAlias data
+</code></pre><p>This doubles the number of cases again, the level of duplication is now pretty much unbearable :-) Thankfully, F# active patterns come to the rescue! Active patterns can be thought of as a way to impose a structure onto some of set of data (such as a list), and reason about these structures (treating said list as a binary heap for example). This can remove duplication and make code more easy to read and maintain.</p>
+<p>Let&rsquo;s start and tackle the newly introduced options, by defining a couple of active patterns;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>ValidFieldOption<span style="color:#f92672">|_|)</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> THidden <span style="color:#f92672">-&gt;</span> Some <span style="color:#f92672">(</span>ValidFieldOption Hidden<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> TDeprecated <span style="color:#f92672">-&gt;</span> Some <span style="color:#f92672">(</span>ValidFieldOption Deprecated<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span> None
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> rec <span style="color:#f92672">(|</span>FieldOptions<span style="color:#f92672">|)</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> T<span style="color:#f92672">(</span>ValidFieldOption<span style="color:#f92672">(</span>o<span style="color:#f92672">),_)</span> <span style="color:#f92672">::</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> Set.add o os<span style="color:#f92672">,</span> rest
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> toks <span style="color:#f92672">-&gt;</span> Set.empty<span style="color:#f92672">,</span> toks
+</span></span></code></pre></div><p>The &ldquo;(|&rdquo; brace is called a banana clip and is used for active patterns. In this case we have defined a partial active pattern &ldquo;ValidFieldOption&rdquo; which only matches on 2 types of tokens. The &ldquo;FieldOptions&rdquo; pattern is recursive and builds up an returns a set of valid options. It easts one token at a time and if that token satisfies the ValidFieldOption pattern it&rsquo;s added to the set (and the pattern calls itself with the rest of the tokens for another round of matching).</p>
+<p>Our main switch can thus be simplified;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#75715e">// hidden? int32 version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> TAtomic<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> None<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// hidden? alias version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> TString<span style="color:#f92672">(</span>alias<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AliasType<span style="color:#f92672">(</span>alias<span style="color:#f92672">),</span> None<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// hidden? int32 version  if? a &gt; 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> TAtomic<span style="color:#f92672">(</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TCondExpr<span style="color:#f92672">(</span>expr<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> Some expr<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// hidden? alias version  if? a &gt; 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> TString<span style="color:#f92672">(</span>alias<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TCondExpr<span style="color:#f92672">(</span>expr<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AliasType<span style="color:#f92672">(</span>alias<span style="color:#f92672">),</span> Some expr<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span>  <span style="color:#f92672">_</span>   <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   failwith <span style="color:#e6db74">&#34;syntax error&#34;</span>
+</span></span></code></pre></div><p>One interesting thing to note here is that in the same line as the active pattern is triggered, we also match (on the sub pattern) of the result list from FieldOptions. I.e. in the first case the &ldquo;TAtomic(t) :: TString..&rdquo; is another pattern that is matched on FieldOption&rsquo;s returned list!<!-- raw HTML omitted --></p>
+<p>Let&rsquo;s try to simplify the duplication for the two field types;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#75715e">// Parse FieldTypes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>FieldType<span style="color:#f92672">|_|)</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> TAtomic<span style="color:#f92672">(</span>at<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span> Some <span style="color:#f92672">(</span>AtomicType at<span style="color:#f92672">,</span> rest<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span> Some <span style="color:#f92672">(</span>AliasType n <span style="color:#f92672">,</span> rest<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">|</span> <span style="color:#f92672">_</span> <span style="color:#f92672">-&gt;</span> None
+</span></span></code></pre></div><p>Which gives a cleaner &ldquo;switch&rdquo; like so;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#75715e">// hidden? type version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> FieldType<span style="color:#f92672">(</span>ftype<span style="color:#f92672">,</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> None<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// hidden? type version  if? a &gt; 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> FieldType<span style="color:#f92672">(</span>ftype<span style="color:#f92672">,</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> TCondExpr<span style="color:#f92672">(</span>expr<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> rest<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> Some expr<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|</span>  <span style="color:#f92672">_</span>   <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>   failwith <span style="color:#e6db74">&#34;syntax error&#34;</span>
+</span></span></code></pre></div><p>And finally we can &ldquo;banana clip up&rdquo; the condition expressions;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#f92672">(|</span>CondExpr<span style="color:#f92672">|)</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> TCondExpr es <span style="color:#f92672">::</span> rest <span style="color:#f92672">-&gt;</span> Some es<span style="color:#f92672">,</span> rest
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> rest <span style="color:#f92672">-&gt;</span> None<span style="color:#f92672">,</span> rest
+</span></span></code></pre></div><p>Which leaves us with our final version of the main parser switch;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> extractField <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span> FieldOptions<span style="color:#f92672">(</span>os<span style="color:#f92672">,</span> FieldType<span style="color:#f92672">(</span>ftype<span style="color:#f92672">,</span> TString<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span> <span style="color:#f92672">::</span> CondExpr<span style="color:#f92672">(</span>ces<span style="color:#f92672">,</span> rest<span style="color:#f92672">)))</span> <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>      Field<span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> AtomicType<span style="color:#f92672">(</span>t<span style="color:#f92672">),</span> ces<span style="color:#f92672">,</span> os<span style="color:#f92672">),</span> rest
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">|</span>  <span style="color:#f92672">_</span>   <span style="color:#f92672">-&gt;</span>
+</span></span><span style="display:flex;"><span>      failwith <span style="color:#e6db74">&#34;syntax error&#34;</span>
+</span></span></code></pre></div><h3 id="conclusion">Conclusion</h3>
+<p>Pattern matching is very powerful and useful in many circumstances. F#&rsquo;s addition of active patterns makes it even better. It is easier to break the patterns apart and avoid duplication, thus making the code easier to read and maintain. Pattern matching is available in some other languages (ML, Erlang, Haskell etc) and we will look at Scala and Clojure in future posts. Clojure solves pattern matching the &ldquo;Lisp way&rdquo;, by using macros, and this can be extended do something like Active Patterns as well.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

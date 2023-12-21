@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>N Queens with core.logic, take 1</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>N Queens with core.logic, take 1</h1>
+			<b><time>2012-07-07</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.logic">core.logic</a>
+        	       
+
+			<div>
+				<p>I&rsquo;ve been &ldquo;hammock-reading&rdquo; the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.</p>
+<p>My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&rsquo;t a good fit, <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people over at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.</p>
+<p>Let&rsquo;s have a crack at this problem anyway shall we? I&rsquo;ve previously posted a <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional implementation on n-queens</a> in Clojure, and it&rsquo;s both nice to read and fast. What would this look like using core.logic?</p>
+<p>Here&rsquo;s the core function (in Clojure) which determines if 2 queens are threatening each other.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safe? [[x1 y1] [x2 y2]]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">and</span>
+</span></span><span style="display:flex;"><span>   (not= x1 x2)
+</span></span><span style="display:flex;"><span>   (not= y1 y2)
+</span></span><span style="display:flex;"><span>   (not= (- x2 x1) (- y2 y1))
+</span></span><span style="display:flex;"><span>   (not= (- x1 y2) (- x2 y1))))
+</span></span></code></pre></div><p>The main problem in core.logic is the subtraction operator, which cannot be applied to fresh variables. We need a goal that has all the subtraction algebra &ldquo;mapped out&rdquo; as associations, let&rsquo;s call it subo. If we had that, our safeo function could look like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each ohter?&#34;</span>
+</span></span><span style="display:flex;"><span>  [[x1 y1] [x2 y2]]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fresh</span> [d1 d2 d3 d4]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 x1 d1)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> y2 y1 d2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x1 y2 d3)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 y1 d4)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> x1 x2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> y1 y2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> d1 d2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> d3 d4)))
+</span></span></code></pre></div><p>With subo (for a (range 2) subtraction) like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>subo
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">fn </span>([x y r]
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">conde</span>
+</span></span><span style="display:flex;"><span>          [(== x <span style="color:#ae81ff">0</span>) (== y <span style="color:#ae81ff">0</span>) (== r <span style="color:#ae81ff">0</span>)]
+</span></span><span style="display:flex;"><span>          [(== x <span style="color:#ae81ff">0</span>) (== y <span style="color:#ae81ff">1</span>) (== r <span style="color:#ae81ff">-1</span>)]
+</span></span><span style="display:flex;"><span>          [(== x <span style="color:#ae81ff">1</span>) (== y <span style="color:#ae81ff">0</span>) (== r <span style="color:#ae81ff">1</span>)]
+</span></span><span style="display:flex;"><span>          [(== x <span style="color:#ae81ff">1</span>) (== y <span style="color:#ae81ff">1</span>) (== r <span style="color:#ae81ff">0</span>)]))))
+</span></span></code></pre></div><p>Fortunately this isn&rsquo;t too bad, since in the classic case we only need to subtract numbers in (range 8). We can write a macro that generates a subo for any range our heart desires.</p>
+<p>Next up the associations for queen pieces. We can brute force this as well by writing safeo associations for each queen piece against each other and finally constraining each queen to a unique row. Typing it out for 4-queens would look something like this;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">run*</span> [r]
+</span></span><span style="display:flex;"><span>      (<span style="color:#a6e22e">fresh</span> [x1 x2 x3 x4]
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x1 <span style="color:#ae81ff">0</span>] [x2 <span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x1 <span style="color:#ae81ff">0</span>] [x3 <span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x1 <span style="color:#ae81ff">0</span>] [x4 <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x2 <span style="color:#ae81ff">1</span>] [x3 <span style="color:#ae81ff">2</span>])
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x2 <span style="color:#ae81ff">1</span>] [x4 <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">safeo</span> [x3 <span style="color:#ae81ff">2</span>] [x4 <span style="color:#ae81ff">3</span>])
+</span></span><span style="display:flex;"><span>             (== r [[x1 <span style="color:#ae81ff">0</span>] [x2 <span style="color:#ae81ff">1</span>] [x3 <span style="color:#ae81ff">2</span>] [x4 <span style="color:#ae81ff">3</span>]]))))
+</span></span></code></pre></div><p>Please note that the y variables doesn&rsquo;t have to be fresh since they can only take one value (each queen is determined by an unique y variable).</p>
+<p>Here&rsquo;s a complete listing to the whole thing, with an example of a 7-queens run;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>nqueens-cl
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:refer-clojure</span> <span style="color:#e6db74">:exclude</span> [==])
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:use</span> [clojure.core.logic]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>def-subo
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Generate subtraction algebra&#34;</span>
+</span></span><span style="display:flex;"><span>  [name n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[xn <span style="color:#e6db74">&#39;x</span>, yn <span style="color:#e6db74">&#39;y</span>, rn <span style="color:#e6db74">&#39;r</span>
+</span></span><span style="display:flex;"><span>        gen-association (<span style="color:#66d9ef">fn </span>[x y]
+</span></span><span style="display:flex;"><span>                          <span style="color:#f92672">`</span>[(== <span style="color:#f92672">~</span>xn <span style="color:#f92672">~</span>x) (== <span style="color:#f92672">~</span>yn <span style="color:#f92672">~</span>y) (== <span style="color:#f92672">~</span>rn <span style="color:#f92672">~</span>(- x y))])
+</span></span><span style="display:flex;"><span>        gen-row (<span style="color:#66d9ef">fn </span>[x]
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">-&gt;&gt;</span> (range n)
+</span></span><span style="display:flex;"><span>                       (map <span style="color:#f92672">#</span>(<span style="color:#a6e22e">gen-association</span> x %))
+</span></span><span style="display:flex;"><span>                       concat))
+</span></span><span style="display:flex;"><span>        gen-all (<span style="color:#66d9ef">fn </span>[]
+</span></span><span style="display:flex;"><span>                  (<span style="color:#a6e22e">-&gt;&gt;</span> (range n)
+</span></span><span style="display:flex;"><span>                       (map <span style="color:#f92672">#</span>(<span style="color:#a6e22e">gen-row</span> %))
+</span></span><span style="display:flex;"><span>                       (apply concat)))]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">`</span>(<span style="color:#66d9ef">defn </span><span style="color:#f92672">~</span>name [<span style="color:#f92672">~</span>xn <span style="color:#f92672">~</span>yn <span style="color:#f92672">~</span>rn]
+</span></span><span style="display:flex;"><span>       (<span style="color:#a6e22e">conde</span>
+</span></span><span style="display:flex;"><span>         <span style="color:#f92672">~@</span>(<span style="color:#a6e22e">gen-all</span>)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">declare </span>subo)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each ohter?&#34;</span>
+</span></span><span style="display:flex;"><span>  [[x1 y1] [x2 y2]]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fresh</span> [d1 d2 d3 d4]
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 x1 d1)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> y2 y1 d2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x1 y2 d3)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 y1 d4)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> x1 x2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> y1 y2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> d1 d2)
+</span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">!=</span> d3 d4)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>queens-run
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Search for all N queens solutions&#34;</span>
+</span></span><span style="display:flex;"><span>  [n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[xnames (<span style="color:#a6e22e">-&gt;&gt;</span> (range n) (map (<span style="color:#66d9ef">fn </span>[_] (gensym <span style="color:#e6db74">&#34;x&#34;</span>))) (into []))
+</span></span><span style="display:flex;"><span>        gen-safes (<span style="color:#66d9ef">fn </span>[]
+</span></span><span style="display:flex;"><span>                    (<span style="color:#a6e22e">-&gt;&gt;</span> (range (dec n))
+</span></span><span style="display:flex;"><span>                         (map (<span style="color:#66d9ef">fn </span>[x] [x (range (inc x) n)]))
+</span></span><span style="display:flex;"><span>                         (map (<span style="color:#66d9ef">fn </span>[[s ts]]
+</span></span><span style="display:flex;"><span>                                (map (<span style="color:#66d9ef">fn </span>[t] <span style="color:#f92672">`</span>(<span style="color:#a6e22e">safeo</span> [<span style="color:#f92672">~</span>(nth xnames s) <span style="color:#f92672">~</span>s]
+</span></span><span style="display:flex;"><span>                                                    [<span style="color:#f92672">~</span>(nth xnames t) <span style="color:#f92672">~</span>t])) ts)))
+</span></span><span style="display:flex;"><span>                         (apply concat)))
+</span></span><span style="display:flex;"><span>          ]
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">`</span>(<span style="color:#a6e22e">run*</span> [r#]
+</span></span><span style="display:flex;"><span>           (<span style="color:#a6e22e">fresh</span> [<span style="color:#f92672">~@</span>(map <span style="color:#f92672">#</span>(nth xnames %) (range n))]
+</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">~@</span>(<span style="color:#a6e22e">gen-safes</span>)
+</span></span><span style="display:flex;"><span>                  (== r# [<span style="color:#f92672">~@</span>(map (<span style="color:#66d9ef">fn </span>[x] [(nth xnames x) x])
+</span></span><span style="display:flex;"><span>                                 (range n))])))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">def-subo</span> subo <span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>(time (count (<span style="color:#a6e22e">queens-run</span> <span style="color:#ae81ff">7</span>)))
+</span></span></code></pre></div><p>So how does it perform? Well, you guessed it, terribly. My previous <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional Clojure implementation</a> finds all 4 solutions for 6-queens in ~7ms. The core.logic one above does it in ~6.5 seconds, 3 orders of magnitude, ouch!</p>
+<p>It&rsquo;s quite possible that this brute force approach is a very inefficient way of solving n-queens using miniKanren. Maybe building / removing queens from solution lists are a better approach? Also, cKanren in core.logic promises much faster and cleaner solutions. Either way, I&rsquo;ll keep you posted&hellip;</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

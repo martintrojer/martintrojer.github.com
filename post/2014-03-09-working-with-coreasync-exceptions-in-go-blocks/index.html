@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Working with core.async: Exceptions in go blocks</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Working with core.async: Exceptions in go blocks</h1>
+			<b><time>2014-03-09</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.async">core.async</a>
+        	       
+
+			<div>
+				<p>Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks &ndash; all your exceptions are gone! Since the body of a go block is run on a thread pool, it&rsquo;s not much we can do with an exception, thus core.async will just eat them and close the channel. That&rsquo;s what happened in the second snippet <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/">in this post</a>. The <code>nil</code> result is because the channel we read from is closed.</p>
+<p>I find myself wanting to know the cause of problem at the consumer side of a channel. That means the go block needs to catch the exception, put it (the exception) on the channel before it dies. <a href="http://swannodette.github.io/2013/08/31/asynchronous-error-handling/">David Nolen has written about this pattern</a>, and I&rsquo;ve been using the proposed <code>&lt;?</code> quite happily.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>throw-err [e]
+</span></span><span style="display:flex;"><span>  (when (instance? Throwable e) (<span style="color:#a6e22e">throw</span> e))
+</span></span><span style="display:flex;"><span>  e)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>&lt;? [ch]
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">`</span>(<span style="color:#a6e22e">throw-err</span> (<span style="color:#a6e22e">async/&lt;!</span> <span style="color:#f92672">~</span>ch)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-data [s]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span> (<span style="color:#a6e22e">try</span>
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">client/get</span> (str <span style="color:#e6db74">&#34;http://some.query?q=s&#34;</span>) {<span style="color:#e6db74">:throw-exceptions</span> true})
+</span></span><span style="display:flex;"><span>              <span style="color:#75715e">;; catch and put exception on the channel</span>
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">catch</span> Exception e
+</span></span><span style="display:flex;"><span>                e))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">async/go</span> (<span style="color:#a6e22e">try</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#66d9ef">let </span>[data      (<span style="color:#a6e22e">&lt;?</span> (<span style="color:#a6e22e">get-data</span> <span style="color:#e6db74">&#34;clojure&#34;</span>))
+</span></span><span style="display:flex;"><span>                  more-data (<span style="color:#a6e22e">&lt;?</span> (<span style="color:#a6e22e">get-data</span> <span style="color:#e6db74">&#34;core.async&#34;</span>)]
+</span></span><span style="display:flex;"><span>              <span style="color:#75715e">;; process all data</span>
+</span></span><span style="display:flex;"><span>              )
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">;; Handle exceptions for all &#39;&lt;? calls&#39;</span>
+</span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">catch</span> Exception e
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">log/error</span> <span style="color:#e6db74">&#34;error getting data&#34;</span>))))
+</span></span></code></pre></div><p>If you&rsquo;re interested in how some Go examples convert to core.async check out <a href="https://github.com/martintrojer/go-tutorials-core-async">this repo</a>.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

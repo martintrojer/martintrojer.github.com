@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Datomic Bootstrap</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Datomic Bootstrap</h1>
+			<b><time>2013-07-05</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/datomic">datomic</a>
+        	       
+
+			<div>
+				<p>A simple SQL scenario;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>dbtest.h2
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:use</span> [korma.core]
+</span></span><span style="display:flex;"><span>        [korma.db])
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:require</span> [clojure.string <span style="color:#e6db74">:refer</span> [lower-case upper-case]]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defdb</span> korma-db (<span style="color:#a6e22e">h2</span> {<span style="color:#e6db74">:db</span> <span style="color:#e6db74">&#34;h2test&#34;</span>
+</span></span><span style="display:flex;"><span>                 <span style="color:#e6db74">:naming</span> {<span style="color:#e6db74">:keys</span> lower-case
+</span></span><span style="display:flex;"><span>                          <span style="color:#e6db74">:fields</span> upper-case}}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- schema creation ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;DROP TABLE IF EXISTS users&#34;</span>])
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;CREATE TABLE users (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, name VARCHAR, email VARCHAR, address VARCHAR)&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;DROP TABLE IF EXISTS items&#34;</span>])
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;CREATE TABLE items (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, name VARCHAR, price FLOAT)&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;DROP TABLE IF EXISTS orders&#34;</span>])
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">exec-raw</span> [<span style="color:#e6db74">&#34;CREATE TABLE orders (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, items_id INT, users_id INT, date DATE, price FLOAT, FOREIGN KEY (items_id) REFERENCES items(id), FOREIGN KEY (users_id) REFERENCES users(id))&#34;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- korma schema definition ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defentity</span> orders
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">entity-fields</span> <span style="color:#e6db74">:items_id</span> <span style="color:#e6db74">:users_id</span> <span style="color:#e6db74">:date</span> <span style="color:#e6db74">:price</span>))
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defentity</span> users
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">entity-fields</span> <span style="color:#e6db74">:name</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">:address</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">has-many</span> orders))
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defentity</span> items
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">entity-fields</span> <span style="color:#e6db74">:name</span> <span style="color:#e6db74">:price</span>)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">has-many</span> orders))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- inserts ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">transaction</span>
+</span></span><span style="display:flex;"><span> (<span style="color:#a6e22e">insert</span> users (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;kalle&#34;</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;kalle@hotmail.com&#34;</span> <span style="color:#e6db74">:address</span> <span style="color:#e6db74">&#34;12 high street&#34;</span>}))
+</span></span><span style="display:flex;"><span> (<span style="color:#a6e22e">insert</span> users (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;olle&#34;</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;olle@gmail.com&#34;</span> <span style="color:#e6db74">:address</span> <span style="color:#e6db74">&#34;132 in-the-sticks street&#34;</span>}))
+</span></span><span style="display:flex;"><span> (<span style="color:#a6e22e">insert</span> users (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;lisa&#34;</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;lisa77@yahoo.com&#34;</span> <span style="color:#e6db74">:address</span> <span style="color:#e6db74">&#34;4 belgrave square&#34;</span>})))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">insert</span> items (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;Olympus OM-D&#34;</span> <span style="color:#e6db74">:price</span> <span style="color:#ae81ff">523.32</span>}))
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">insert</span> items (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;Pana 20mm/1.7&#34;</span> <span style="color:#e6db74">:price</span> <span style="color:#ae81ff">250</span>}))
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">insert</span> items (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:name</span> <span style="color:#e6db74">&#34;Oly 45mm/2.4&#34;</span> <span style="color:#e6db74">:price</span> <span style="color:#ae81ff">261.2</span>}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">insert</span> orders (<span style="color:#a6e22e">values</span> {<span style="color:#e6db74">:items_id</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">:users_id</span> <span style="color:#ae81ff">1</span> <span style="color:#e6db74">:date</span> (<span style="color:#a6e22e">java.util.Date.</span>) <span style="color:#e6db74">:price</span> <span style="color:#ae81ff">510</span>}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- queries ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(select users
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">fields</span> <span style="color:#e6db74">:name</span> <span style="color:#e6db74">:email</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(select users
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">with</span> orders))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(select items
+</span></span><span style="display:flex;"><span>        (<span style="color:#a6e22e">with</span> orders))
+</span></span></code></pre></div><p>Translated to datomic;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>dbtest.datomic
+</span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:require</span> [datomic.api <span style="color:#e6db74">:as</span> d]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>uri <span style="color:#e6db74">&#34;datomic:mem://test&#34;</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/delete-database</span> uri)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/create-database</span> uri)
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>conn (<span style="color:#a6e22e">d/connect</span> uri))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>urif <span style="color:#e6db74">&#34;datomic:free://localhost:4334/test&#34;</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/delete-database</span> urif)
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/create-database</span> urif)
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>connf (<span style="color:#a6e22e">d/connect</span> urif))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- schema creation ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>schema
+</span></span><span style="display:flex;"><span>  [
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:user/name</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:user/email</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:user/address</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:item/name</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:item/price</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/double</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:order/price</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/double</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:order/date</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/instant</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:order/user</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/ref</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/ident</span> <span style="color:#e6db74">:order/item</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/valueType</span> <span style="color:#e6db74">:db.type/ref</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/cardinality</span> <span style="color:#e6db74">:db.cardinality/one</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/db</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:db.install/_attribute</span> <span style="color:#e6db74">:db.part/db</span>}
+</span></span><span style="display:flex;"><span>   ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/transact</span> conn schema)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- inserts ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>data
+</span></span><span style="display:flex;"><span>  [
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-100</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/name</span> <span style="color:#e6db74">&#34;kalle&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/email</span> <span style="color:#e6db74">&#34;kalle@hotmail.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/address</span> <span style="color:#e6db74">&#34;12 high street&#34;</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-101</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/name</span> <span style="color:#e6db74">&#34;olle&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/email</span> <span style="color:#e6db74">&#34;olle@gmail.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/address</span> <span style="color:#e6db74">&#34;132 in-the-sticks street&#34;</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-102</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/name</span> <span style="color:#e6db74">&#34;lisa&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/email</span> <span style="color:#e6db74">&#34;lisa77@yahoo.com&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:user/address</span> <span style="color:#e6db74">&#34;4 belgrave square&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-200</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/name</span> <span style="color:#e6db74">&#34;Olympus OM-D&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/price</span> <span style="color:#ae81ff">523.32</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-201</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/name</span> <span style="color:#e6db74">&#34;Pana 20mm/1.7&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/price</span> <span style="color:#ae81ff">250.0</span>}
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-202</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/name</span> <span style="color:#e6db74">&#34;Oly 45mm/2.4&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:item/price</span> <span style="color:#ae81ff">261.2</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-300</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/price</span> <span style="color:#ae81ff">510.0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/date</span> (<span style="color:#a6e22e">java.util.Date.</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/user</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-100</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/item</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-200</span>]}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   {<span style="color:#e6db74">:db/id</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-301</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/price</span> <span style="color:#ae81ff">123.2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/date</span> (<span style="color:#a6e22e">java.util.Date.</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/user</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-100</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">:order/item</span> <span style="color:#f92672">#</span>db/id [<span style="color:#e6db74">:db.part/user</span> <span style="color:#ae81ff">-201</span>]}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/transact</span> conn data)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; --- queries ---</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">d/q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?n ?m
+</span></span><span style="display:flex;"><span>       <span style="color:#e6db74">:where</span>
+</span></span><span style="display:flex;"><span>       [?e <span style="color:#e6db74">:user/name</span> ?n]
+</span></span><span style="display:flex;"><span>       [?e <span style="color:#e6db74">:user/email</span> ?m]]
+</span></span><span style="display:flex;"><span>     (<span style="color:#a6e22e">d/db</span> conn))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">group-by</span> first
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">d/q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?n ?in ?op ?od
+</span></span><span style="display:flex;"><span>                 <span style="color:#e6db74">:where</span>
+</span></span><span style="display:flex;"><span>                 [?e <span style="color:#e6db74">:user/name</span> ?n]
+</span></span><span style="display:flex;"><span>                 [?e <span style="color:#e6db74">:user/address</span> ?a]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/user</span> ?e]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/item</span> ?ie]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/price</span> ?op]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/date</span> ?od]
+</span></span><span style="display:flex;"><span>                 [?ie <span style="color:#e6db74">:item/name</span> ?in]]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">d/db</span> conn)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">group-by</span> second
+</span></span><span style="display:flex;"><span>          (<span style="color:#a6e22e">d/q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?n ?u ?p ?d
+</span></span><span style="display:flex;"><span>                 <span style="color:#e6db74">:where</span>
+</span></span><span style="display:flex;"><span>                 [?e <span style="color:#e6db74">:item/name</span> ?n]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/item</span> ?e]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/user</span> ?ue]
+</span></span><span style="display:flex;"><span>                 [?ue <span style="color:#e6db74">:user/name</span> ?u]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/price</span> ?p]
+</span></span><span style="display:flex;"><span>                 [?oe <span style="color:#e6db74">:order/date</span> ?d]]
+</span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">d/db</span> conn)))
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

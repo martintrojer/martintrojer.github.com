@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Working with core.async: Blocking calls</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Working with core.async: Blocking calls</h1>
+			<b><time>2014-03-09</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/core.async">core.async</a>
+        	       
+
+			<div>
+				<p>You can&rsquo;t do anything even remotely blocking inside go-blocks. This is because all the core.async go blocks share a single thread pool, with a very limited number of threads (go blocks are supposed to be CPU bound). So if you have hundreds / thousands of go blocks running conurrently just having a few (a handful really) block &ndash; <em>all</em> go blocks will stop! For a more in-depth explanation see <a href="https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/">this previous post</a>.</p>
+<p>But what is blocking anyway? If an API you are using claims to be non-blocking, is it really? Unfortunately this isn&rsquo;t black and white, some functions are more non-blocking than others. They can also become &lsquo;more blocking&rsquo; by accident. One good example of this is when using the async APIs of any client that writes to sockets. When the network stack of the system is very stressed, these calls start slowly drifting towards more blocking &ndash; with very bad effects in the core.async go thread pool.</p>
+<p>The only way to be sure is to measure / profile the functions you call inside your go blocks, under different circumstances; different loads of internal and external systems. Here&rsquo;s a neat little trick I used to clearly mark the functions I suspect with meta data, and then instrument and profile while the system is running.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ------------------------</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn- </span>log-time [{<span style="color:#e6db74">:keys</span> [<span style="color:#66d9ef">ns </span>name line]} f <span style="color:#f92672">&amp;</span> args]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[start   (<span style="color:#a6e22e">System/nanoTime</span>)
+</span></span><span style="display:flex;"><span>        res     (apply f args)
+</span></span><span style="display:flex;"><span>        elapsed (quot (- (<span style="color:#a6e22e">System/nanoTime</span>) start) <span style="color:#ae81ff">1000</span>)]
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">log/debug</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;%s/%s:%s %dus&#34;</span> <span style="color:#66d9ef">ns </span>name line elapsed))
+</span></span><span style="display:flex;"><span>    res))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>enable-timing [var]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">log/debug</span> <span style="color:#e6db74">&#34;enabling timings&#34;</span> var)
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">robert.hooke/add-hook</span> <span style="color:#66d9ef">var </span>(partial log-time (meta var))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>enable-timing-on-blocking-functions []
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;&gt;</span> (<span style="color:#a6e22e">all-ns</span>)
+</span></span><span style="display:flex;"><span>       (mapcat ns-interns)
+</span></span><span style="display:flex;"><span>       (map second)
+</span></span><span style="display:flex;"><span>       (filter <span style="color:#f92672">#</span>(<span style="color:#e6db74">:blocking</span> (meta %)))
+</span></span><span style="display:flex;"><span>       <span style="color:#75715e">;; No dups</span>
+</span></span><span style="display:flex;"><span>       (remove <span style="color:#f92672">#</span>(<span style="color:#e6db74">:robert.hooke/hook</span> (meta (deref %))))
+</span></span><span style="display:flex;"><span>       (map enable-timing)
+</span></span><span style="display:flex;"><span>       doall))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; ------------------------</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn- </span><span style="color:#f92672">^</span><span style="color:#e6db74">:blocking</span> request-data [s]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">client/get</span> (str <span style="color:#e6db74">&#34;http://some.query?q=s&#34;</span>) {<span style="color:#e6db74">:throw-exceptions</span> true}))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-data [s]
+</span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span> (<span style="color:#a6e22e">try</span>
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">request-data</span> s)
+</span></span><span style="display:flex;"><span>              <span style="color:#75715e">;; catch and put exception on the channel</span>
+</span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">catch</span> Exception e
+</span></span><span style="display:flex;"><span>                w))))
+</span></span></code></pre></div><p>If you&rsquo;re interested in how some Go examples convert to core.async check out <a href="https://github.com/martintrojer/go-tutorials-core-async">this repo</a>.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

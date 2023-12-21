@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Developing Clojure in the Cloud</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Developing Clojure in the Cloud</h1>
+			<b><time>2014-12-04</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/aws">aws</a>
+        	       
+		           <a href="/tags/cloud">cloud</a>
+        	       
+
+			<div>
+				<p>Recently I gave a talk at the <a href="https://skillsmatter.com/conferences/1956-clojure-exchange-2014">Clojure eXchange 2014</a> titled &lsquo;Developing Clojure in the Cloud&rsquo;. I described a way of creating and using (Clojure) development environments inside VMs, I&rsquo;ve been developing like this for the last year (spanning 2 projects).</p>
+<p><a href="/assets/images/devcloud/developing-clojure-in-the-cloud.pdf">Download the slides here</a></p>
+<p><a href="https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud">Video recording here</a></p>
+<p>The basic idea is to move your entire development environment into a VM and thus creating a controlled environment for all your dependencies (OS distribution, Java version, database version etc). You also provision this VM with your dotfiles and run your text editor inside it. In both projects I&rsquo;ve been able to use the same provisioning scripts (in both cases puppet) to build my devboxes as was used to build the production environments. It&rsquo;s been a bit of revelation for myself to be able to practically &lsquo;develop in prod&rsquo;, and during this time I&rsquo;ve never once uttered the dreaded words &lsquo;But it works on my machine!&rsquo;.</p>
+<p>I&rsquo;ve created a <a href="https://github.com/martintrojer/devbox">repository on github</a> which I used as starting point for my last project. One highlight of this example is that it supports multiple users and pairing out of the box. That reason alone is usually enough to adopt it.</p>
+<h3 id="pros">Pros</h3>
+<ul>
+<li>No more WOMM!</li>
+<li>No more (outdated) Wikis/napkins describing how to setup the development environment. A devbox is fully built (users created with dotfiles applied, git repos cloned) by running one command from the command line.</li>
+<li>Local/remote transparency. Building a remote devbox (on AWS) or a local one (in Virtualbox) is identical, and when using them you can&rsquo;t tell the difference. Interestingly this fact makes the host machine much less relevant, people using OSX, Linux, Windows, ChromeOS can join the project on equal footing.</li>
+<li>Pairing, a killer feature with remote devboxes. Many users can log into the same VM and &rsquo;tmux attach&rsquo;. This works great when people are pairing over Skype, and is surprisingly useful when sitting next to eachother aswell.</li>
+<li>Since the devboxes are &lsquo;disposable&rsquo; (they can be destroyed and recreated over a cup of tea), they give you great freedom to experiment. Install what ever package you want, <code>sudo make install</code> etc. If it didn&rsquo;t work, create a new box and you&rsquo;re back in a clean and stable state.</li>
+<li>When working in a small team, without dedicated devops, I&rsquo;ve noticed that by automating the creation of devboxes, you automatically get a way to grow these provisioning scripts into a production setup. This is great, because you no longer need to have a big scramble at the end when setting everything up for prod.</li>
+<li>Flipping between projects is as simple as switching VMs. If these project have conflicting versions of services, not a problem.</li>
+</ul>
+<h3 id="cons">Cons</h3>
+<p>You main interface to VMs are SSH, so this setup works best with editors that can work in terminal mode. Both Emacs and VIM handles this very well, but full blown IDEs less so. I have tried x-forwarding of Emacs/IntelliJ, which is usable for local VMs, but only just.</p>
+<p>If you are working on remote devboxes you need a decent network connection that doesn&rsquo;t drop packets. I&rsquo;d say this is less of an issue in practice but worth considering.</p>
+<p>Finally if you are running local VMs, you need spare RAM on you local machine. Hardware spec wise, I&rsquo;d say 8Gb minimum and 16Gb preferred.</p>
+<h3 id="hybrid-setups">Hybrid setups</h3>
+<p>You might find this regimen a bit extreme, but as described above there are some pretty great benefits when moving your entire development environment into a VM.</p>
+<p>There are other versions of the same theme, something you&rsquo;re probably familiar with is what I like to call &lsquo;Hybrid setups&rsquo;. Basically you run editor and the software you are working on locally and connect it to databases etc in VMs (either local or remote). In this manner running full blown IDEs is possible, however the overlap between your development environment and deployment environment have now become smaller. In many cases this is a perfectly acceptable compromise, but Murphuys Law still holds and every tiny little difference can (and will!) cause you headaches in the long run. You are also potentially back in &lsquo;Wiki-hell&rsquo; with long instructions on how to set everything up.</p>
+<p>Another thing you are giving up is (remote) pairing support.</p>
+<h3 id="docker">Docker</h3>
+<p>&lsquo;What about docker?&rsquo; you might ask yourself. Doesn&rsquo;t it invalidate the approach outlined in this post? Well, yes and no. First of all, I think docker is great and the level of innovation in that container field is impressive.</p>
+<p>Sticking to the docker mantra of one-service-per-container you will naturally build hybrid setups as described above (with the same drawbacks). You basically start on container for each service you want to use and connect to them as usual. It does make the setup extremely simple. Something like;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ boot2docker start
+</span></span><span style="display:flex;"><span>$ docker run -d postgres
+</span></span><span style="display:flex;"><span>$ docker run -d dockerfile/elasticsearch
+</span></span></code></pre></div><p>It is definitely better than lengthy wikis entries, but unless you know that containers will be used in production (and you control the containers) you are again exposing yourself environmental differences.</p>
+<p>One of the reasons I&rsquo;ve been holding back from pushing Docker to clients is that deployment options have been been spartan, but that is rapidly changing. Amazon just announced the <a href="http://aws.amazon.com/ecs/">EC2 container service</a> and that takes care of many of my reservations.</p>
+<p>Some reservations that do remain is that how to actually construct the more complicated containers (for databases etc) that you rely on. Dockerfiles are just not powerful enough, while <a href="http://ianmiell.github.io/shutit/">alternatives</a> are being built I feel that these guys are reinventing Chef/puppet. How to handle secuirty updates is another problem area.</p>
+<p>There is also a split in the Docker family currently unfolding; CoreOS just announced their Docker alternative <a href="https://coreos.com/blog/rocket/">Rocket</a>. It will be interesting to see where it will end up.</p>
+<p>Finally, when talking about non-VM deployment options. One thing that has me really exited is unikernels or library OSes. <a href="http://osv.io/">OSv</a> and <a href="http://www.openmirage.org/">MirageOS</a> looks incredibly promising.</p>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

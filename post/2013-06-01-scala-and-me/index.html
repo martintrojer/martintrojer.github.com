@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Scala and me</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Scala and me</h1>
+			<b><time>2013-06-01</time></b>
+		       
+		           <a href="/tags/fsharp">fsharp</a>
+        	       
+		           <a href="/tags/scala">scala</a>
+        	       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/sicp">sicp</a>
+        	       
+
+			<div>
+				<figure class="floatright"><img src="/assets/images/scalame/martin.png"/>
+</figure>
+
+<p>This epic journey (yeah right) began at Uni with discovering the mighty <a href="http://mitpress.mit.edu/sicp/">SICP</a>, still the best book on programming I&rsquo;ve read (and let&rsquo;s face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in <a href="http://plt-scheme.org/">Scheme</a>, <a href="http://en.wikipedia.org/wiki/Emacs_Lisp">ELisp</a>, <a href="http://ocaml.org/">OCaml</a> every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren&rsquo;t very applicable to real-world software problems. While very clever and mind expanding, they seemed mainly an academic exercise. There were zero jobs out there using these languages. Heck, hardly anybody of my peers have heard nor cared about them.</p>
+<p>Another problem with the early FP languages, which didn&rsquo;t come clear to me until java really took off, was that all those languages were islands. They had close to no libraries, so if you wanted to write an application with UI, socket connections etc you were stuck reinventing wheels. It made choosing such a language practically impossible.</p>
+<p>My FP fire was rekindled in a big way when I joined a company in 2011, where an ex-Microsoft Research hacker (<a href="https://twitter.com/ptrelford">Phil Trelford</a>) introduced me to <a href="http://fsharp.org/">F#</a>. I was aware of F#, but hadn&rsquo;t realised the most profound difference between F# and OCaml; it was a very practical language. By embracing the .NET platform and offering seamless C# interrop, you could leverage all the libraries AND the awesome power of ML. I got the opportunity to work on a few F# projects, some with the mighty <a href="https://twitter.com/jonharrop">Dr Harrop</a>, and convinced myself that FP had a lot to offer mainstream software engineering. I was excited of my craft again, and started attending some FP conferences and user groups (mainly at <a href="http://skillsmatter.com/">Skills Matter</a>).</p>
+<p>At the same time I wanted to see if there were any other &ldquo;practical&rdquo; FPs out there. Naturally I looked on &ldquo;the other&rdquo; big runtime, and initially found Scala. I started browsing <a href="http://www.artima.com/shop/programming_in_scala_2ed">Odersky&rsquo;s book</a> and there were lots of similarities with F#. I was primarily interested in the FP angle (there is certainly lots of clever OO stuff in Scala, which I glossed over at the time) &ndash; but there were a few things that bugged me. The lack of &ldquo;proper&rdquo; <a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner">Hindley-Milner</a> type inference was certainly one. I kept looking a bit more and found Clojure.</p>
+<p>I was immediately attracted because of it being a Lisp, and after some more digging it turned out to be an extraordinary well-designed and clean language. Also a very opinionated one; FP and immutability all the way down, and tightly controlled <a href="http://clojure.org/state">state transitions</a>. Through some of my contacts from previously mentioned user groups, I&rsquo;ve landed a Clojure gig as a contractor.</p>
+<p>When Scala <a href="http://typesafe.com/blog/announcing-scala-210-a-simpler-way-to-tackle">2.10 was released</a>, my interest (in Scala) was peaked again. The work <a href="http://typesafe.com">Typesafe</a> is doing on Async (which is hard on the JVM) and the momentum around Scala is impressive. I&rsquo;m also an Erlang fan (<a href="http://www.sics.se/~joe/thesis/armstrong_thesis_2003.pdf">Armstrong&rsquo;s dissertation</a> is an eye opener) so <a href="http://akka.io/">Akka</a> is something I want to learn more about. I took the first <a href="https://www.coursera.org/course/progfun">Scala Coursera course</a> (aced the quizzes thank you very much) and started reading Odersky again (this time the second edition). I really enjoy the power of case classes and pattern matching, and you have to be impressed by the innovation in the OO space that Scala is (in my opinion) spearheading.</p>
+<p>I also recently started on a <a href="https://github.com/martintrojer/scheme-scala">Scheme interpreter in Scala</a>. This has become my standard way of learning a new language, I find a scheme interpreter is just big enough to drill into the guts of the thing. I&rsquo;m enjoying my Scala implementation quite a bit.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

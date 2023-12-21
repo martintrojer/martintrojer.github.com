@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Adding Live Unit Feeds to Frinj</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Adding Live Unit Feeds to Frinj</h1>
+			<b><time>2012-03-14</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/frinj">frinj</a>
+        	       
+
+			<div>
+				<p>A couple of weeks has passed since I&rsquo;ve pushed <a href="https://github.com/martintrojer/frinj">Frinj to github</a> and blogged/tweeted about it. The response have been pretty awesome, one highlight being when <a href="https://twitter.com/#!/stuarthalloway">@stuarthalloway</a> showed me a <a href="https://gist.github.com/1980351">frinj+datomic example gist</a> on the #datomic IRC channel. In short, the Clojure community is #badass.</p>
+<p>Frinj comes with a big database of units and conversion factors, and while as many conversion factors are &ldquo;eternal&rdquo;, others aren&rsquo;t. Exchange rates for instance has to be kept up to date to be relevant. The Frinj unit database was designed to be updatable, both for usability when doing various calculations, but also for rates that constantly change. This is the reason the frinj.calc namespace exposes the (frinj-init!) function to reset the unit database to a know baseline (in case you write over some factors etc). Clojure&rsquo;s support for atomically updating state is ideal for this purpose, the calculator&rsquo;s state is <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/core.clj#L17">kept in a number of refs</a> and thanks to the STM always kept consistent.</p>
+<p>Frinj now supports live currency exchange rates, precious/industrial metals and agrarian commodities, by adding the concept of unit feeds. This is handled by the new frinj.feeds namespace, and the basic idea is to have multiple feeds sharing one ScheduledThreadPoolExecutor for periodically updating Frinj&rsquo;s state. The generic feed utility functions; (start-feed, stop-feed, update-units!) are separated from the feed specific ones. For more information see the <a href="https://github.com/martintrojer/frinj/wiki/Live-Unit-Feeds">wiki</a> and <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/feeds.clj#L19">source</a>. As you can imagine, these live units rates are just a couple of many potential feeds.</p>
+<p>Currencies use the 3 letter (ISO 4217) currency acronym (uppercase), and the metals and commodities use capitalised names, see below for examples.</p>
+<p>I&rsquo;ve also added an new convenience namespace called frinj.repl that will initialise the built-in units, start the feeds and immigrate the rest of the frinj vars.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>user=&gt; (<span style="color:#a6e22e">use</span> <span style="color:#e6db74">&#39;frinj.repl</span>)
+</span></span><span style="display:flex;"><span>user=&gt; (str (<span style="color:#a6e22e">fj</span> <span style="color:#ae81ff">10</span> <span style="color:#e6db74">:thousand</span> <span style="color:#e6db74">:SEK</span> <span style="color:#e6db74">:to</span> <span style="color:#e6db74">:GBP</span>))   <span style="color:#75715e">;; standard currency conversion</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;937.1075201531269 [dimensionless]&#34;</span>
+</span></span><span style="display:flex;"><span>user=&gt; (str (<span style="color:#a6e22e">fj</span> <span style="color:#e6db74">:Gold</span> <span style="color:#e6db74">:per</span> <span style="color:#e6db74">:Silver</span>))           <span style="color:#75715e">;; Gold vs Silver price</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;49.95612708018155 [dimensionless]&#34;</span>
+</span></span><span style="display:flex;"><span>user=&gt; (str (<span style="color:#a6e22e">fj</span> <span style="color:#e6db74">:Milk</span>))
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;0.3659673552268969 dollar kg^-1 [price_per_mass]&#34;</span>
+</span></span></code></pre></div><p>Next time, I&rsquo;ll explain how to use Frinj in ClojureScript.</p>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

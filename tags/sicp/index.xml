@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sicp on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/sicp/</link>
+    <description>Recent content in sicp on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 Jun 2013 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/sicp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scala and me</title>
+      <link>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</link>
+      <pubDate>Sat, 01 Jun 2013 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2013-06-01-scala-and-me/</guid>
+      <description>This epic journey (yeah right) began at Uni with discovering the mighty SICP, still the best book on programming I&amp;rsquo;ve read (and let&amp;rsquo;s face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in Scheme, ELisp, OCaml every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren&amp;rsquo;t very applicable to real-world software problems.</description>
+    </item>
+    <item>
+      <title>Scheme as an external DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</link>
+      <pubDate>Sat, 28 Jan 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/</guid>
+      <description>This is a follow-up post to my previous &amp;ldquo;Scheme in Clojure&amp;rdquo; post.&#xA;This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&amp;rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code).</description>
+    </item>
+    <item>
+      <title>Scheme as an embedded DSL in Clojure</title>
+      <link>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</link>
+      <pubDate>Tue, 29 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/</guid>
+      <description>If you give someone Fortran, he has Fortran.&#xA;If you give someone Lisp, he has any language he pleases.&#xA;&amp;ndash; Guy Steele&#xA;Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&amp;rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</description>
+    </item>
+    <item>
+      <title>Scheming in F#</title>
+      <link>https://martintrojer.github.io/post/2011-11-02-scheming-in-f/</link>
+      <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-11-02-scheming-in-f/</guid>
+      <description>Given the fact that I worship at the SICP altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a Scheme interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just &amp;ldquo;big enough&amp;rdquo; for to force me to drill into what the language have to offer.</description>
+    </item>
+    <item>
+      <title>What is software?</title>
+      <link>https://martintrojer.github.io/post/2011-10-30-what-is-software/</link>
+      <pubDate>Sun, 30 Oct 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-10-30-what-is-software/</guid>
+      <description>Having gained experience through numerous software projects and collaborations with diverse individuals, I&amp;rsquo;ve observed a recurring issue: a lack of understanding regarding the nature and process of software development. Surprisingly, even among developers, there persists a belief that seniority alone enables one to design and plan a problem, leaving less experienced developers to implement it. Some individuals still equate software development to assembly line production in the automotive industry.&#xA;In chapter 1 of &amp;ldquo;Structure and Interpretation of Computer Programs&amp;rdquo; SICP, Abelsson and Sussman describe a concept they call the &amp;ldquo;sorcerer&amp;rsquo;s spirit&amp;rdquo;</description>
+    </item>
+    <item>
+      <title>Welcome and some guiding words...</title>
+      <link>https://martintrojer.github.io/post/2011-10-29-welcome-and-some-guiding-words/</link>
+      <pubDate>Sat, 29 Oct 2011 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2011-10-29-welcome-and-some-guiding-words/</guid>
+      <description>Let&amp;rsquo;s begin with an inspiring quote from my favorite book on computer programming, &amp;ldquo;Structure and Interpretations of Computer Programs&amp;rdquo; (SICP) by Abelson and Sussman.&#xA;Underlying our approach to this subject (computer programming) is our conviction that “computer science” is not a science and that its significance has little to do with computers. The computer revolution is a revolution in the way we think and in the way we express what we think.</description>
+    </item>
+  </channel>
+</rss>

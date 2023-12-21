@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Applied Symbolic Execution with KLEE/LLVM</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Applied Symbolic Execution with KLEE/LLVM</h1>
+			<b><time>2011-11-10</time></b>
+		       
+		           <a href="/tags/clang">clang</a>
+        	       
+		           <a href="/tags/klee">klee</a>
+        	       
+		           <a href="/tags/llvm">llvm</a>
+        	       
+		           <a href="/tags/sat">sat</a>
+        	       
+		           <a href="/tags/symbolic-execution">symbolic execution</a>
+        	       
+		           <a href="/tags/valgrind">valgrind</a>
+        	       
+
+			<div>
+				<p>This article serves as a follow-up to my previous post on symbolic execution, which can be found <a href="https://martintrojer.github.io/post/2011-11-02-symbolic-execution/">here</a>. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.</p>
+<p>If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on <a href="https://github.com/martintrojer/symbolic-execution">GitHub</a>.</p>
+<p>One limitation of symbolic execution, as well as dynamic code analysis in general, is that the code under analysis needs to be buildable and linkable. Consequently, it is more challenging to analyze subsystems or code snippets compared to using a [lint tool](<a href="http://en.wikipedia.org/wiki/Lint_(software)">http://en.wikipedia.org/wiki/Lint_(software)</a>. Another complication arises from the fact that the symbolic executor&rsquo;s virtual machine must also comprehend and model the system calls used by the code. This makes the tool OS-dependent, as it requires emulating all calls that &ldquo;escape&rdquo; the executor. Cadar, Dunbar, and Engler explain how this can be achieved for Linux by analyzing GNU coreutils in [1].</p>
+<h3 id="overview">Overview</h3>
+<p>KLEE is built on the LLVM Compiler infrastructure, which defines a language-independent intermediate code representation known as LLVM-IR. KLEE features an LLVM-IR interpreter (executor) capable of executing any program in LLVM-IR format. Additionally, KLEE allows for marking certain areas of memory as symbolic, thereby modifying the execution to cover previously unexplored code. At a high level, KLEE creates an internal state for each execution instance, representing a unique path. The creation of new states (forks) typically occurs at branching points where the condition is symbolic.</p>
+<p>At any given time, KLEE can calculate concrete values for symbolic memory, thereby directing the code along a specific path. This technology can be used to generate a set of test vectors that drive full test coverage for any given piece of code.</p>
+<p>In its current implementation, KLEE also checks for erroneous memory references and division by zero defects. When such a defect is found, KLEE generates the concrete values that caused the defect. As a result, the set of defects discovered by KLEE contains no false positives.</p>
+<p>For a large program, a significant number of states can be created, leading to the CFG (Control Flow Graph) path explosion problem. This is one of the limitations of a symbolic executor.</p>
+<p>KLEE heavily utilizes a component called STP [2], a purpose-built constraint solver used to evaluate the accumulated path constraints for symbolic data. Solving the path constraints (and the Boolean SAT problems they are converted into) is an NP-complete problem. The time required to find a solution is unbounded. However, research in theorem provers and SAT solvers is actively progressing, and STP has proven to be highly effective, combining a state-of-the-art SAT solver with numerous heuristics and optimizations tailored for executing code.</p>
+<p>Finally, while executing a program and generating a large set of states, KLEE needs to determine the next state to &ldquo;schedule.&rdquo; Employing an optimized searcher (in KLEE terminology) is crucial for finding the correct path and solving the desired problem. KLEE provides a wide range of different searchers, each optimized for different use cases, such as achieving maximum code coverage.</p>
+<h3 id="usage">Usage</h3>
+<p>The first step in analyzing code with KLEE is to generate a single LLVM-IR executable that includes the code you want to test and the required libraries. Currently, there are two compilers available for generating LLVM-IR: llvm-gcc and clang. llvm-gcc supports all GCC front-ends (e.g., C, C++), while clang offers support for C and Objective-C (with ongoing support for C++).</p>
+<p>Once you have compiled all your code and libraries into LLVM-IR, you need to link them together into a single file using the llvm-link command. KLEE can then execute and analyze the code within this binary.</p>
+<p>However, in most cases, this will result in normal code execution, as KLEE needs to be informed about the parts of memory to treat as symbolic. Additionally, the code of interest is often not reachable from the default main() function in the binary. In such cases, modifications to the code are necessary. Fortunately, marking variables, arrays, etc., as symbolic is straightforward and only requires adding a single line to your code. Making the code of interest reachable can be more challenging. Typically, you will need to call into the APIs/functions of the code of interest. If you already have a test suite, it can serve as a good starting point. Otherwise, you will need to write at least a portion of it. It is worth noting that once a test suite exists, KLEE becomes a powerful tool for regression testing, automatically covering and searching for specific defects in new code.</p>
+<p>The manual aspects of setting up code for analysis are among the drawbacks of symbolic executors like KLEE, as they limit the level of automation that can be applied. However, certain aspects of this manual work can be simplified [6, 7].</p>
+<p>It is important to compile all libraries into LLVM-IR alongside the code you want to test. The KLEE interpreter relies on calling &ldquo;the environment&rdquo; (i.e., the runtime/operating system) for any unresolved symbols in the LLVM-IR binary. While this is suitable for normal execution, KLEE cannot make calls outside the LLVM-IR binary with symbolic arguments. Such calls would terminate the execution state.</p>
+<p>As a general rule, it is advisable to minimize calls outside the LLVM-IR environment to the lowest possible level (e.g., system calls). KLEE includes a model for the 40 most common Linux system calls and can handle calls to them, as this model understands the semantics of the desired actions well enough to generate the necessary constraints. By creating the model at this level, the size of the model is limited, and the rest of the library and runtimes are executed as usual by the KLEE interpreter.</p>
+<h3 id="how-we-altered-klee-and-llvm">How we altered KLEE and LLVM</h3>
+<p>During our study, we primarily focused on addressing the CFG path explosion problem. The fundamental challenge is to decide (using a searcher) which execution state to select in order to reach the desired code section. Randomly selecting a state or employing a depth-first search is likely to get lost in the combinatorial explosion of possible paths within large codebases.</p>
+<p>Based on the assumption that we would already know several areas of interest within the code under test, we developed a solution. Let&rsquo;s imagine an &ldquo;Oracle&rdquo; that identifies these areas of interest within the code, such as a Static Code Analysis tool like Coverity, CodeScanner, Lint, or even manual code review.</p>
+<p>In this case, KLEE can be used to verify the findings of these Oracles, eliminating false positives and generating test cases for true defects. It can also help answer questions about the circumstances under which a particular part of the code is executed.</p>
+<p>Given a set of areas of interest (identified by file names and line numbers) and an LLVM-IR binary of the code, we created an LLVM analysis pass that performs the following steps:</p>
+<ol>
+<li>Translates the file name and line number tuples to LLVM-IR basic blocks. This translation maps the potential problems identified by an Oracle (in the form of file name and line number) to specific basic blocks within the IR. The goal for the KLEE searcher is then to &ldquo;hit&rdquo; that block and determine if it contains a defect.</li>
+<li>Generates a set of N unique paths between the entry point and the basic block identified in step 1. To aid the searcher in finding a path, the set of basic blocks from step 1 is not sufficient. Additional hints about potential basic blocks leading to the target are required. We used a simple graph theory approach to generate numerous paths connecting the root block to the target block. Many of these paths may be infeasible, so it remains a rough approximation.</li>
+</ol>
+<p>The execution time of this operation depends on the complexity of the code.</p>
+<p>We also developed a new searcher to be used when executing the same LLVM-IR binary in KLEE. This searcher selects states by matching them to the pre-generated paths and terminates when all the desired basic blocks have been covered.</p>
+<h3 id="areas-of-improvement">Areas of improvement</h3>
+<p>A particularly hard problem for symbolic executors is how to reason with symbolic pointer dereferences. At its current implementation KLEE does an exhaustive search for each symbolic pointer deference. This implies checking if any solution of the pointer’s path constraint lies outside any allocated memory area. Though being correct, this is very expensive, and will lead to massive increase of states in a big program. There are suggested solutions to this problem; one that looks particularly promising is described in [4].</p>
+<p>The annotation of the code to mark memory areas as symbolic (i.e. mechanically inserting the klee_make_symbolic) can be automated. See DART [6] for API analysis, or KleeNet [7] for ANTLR solution.</p>
+<p>For supporting big real-world programs, more aggressive pruning of execution paths must be done. One very good way to do this is the record actual execution paths during program execution. This is done in both GodeFroid Dart [3] and <a href="http://bitblaze.cs.berkeley.edu/">Bitblaze</a>. They both use a emulated environment for non-symbolic execution (to track actual execution paths) which can then be fed into the symbolic executor for further analysis. Bitblaze uses <a href="http://wiki.qemu.org/Main_Page">QEMU</a> for this purpose, and is a nice practical hybrid of VMs and <a href="http://valgrind.org/">Valgrind</a> VEX-IR. <a href="http://code.google.com/p/avalanche/wiki/Avalanche">Avalanche</a> is a simpler solution relying solely on Valgrind.</p>
+<h3 id="references">References</h3>
+<ol>
+<li>Cadar, Dunbar, Engler 2008 - KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs</li>
+<li>Cadar, Ganesh, Pawlowski, Dill, Engler 2006 - EXE: Automatically Generating Inputs of Death</li>
+<li>GodeFroid, Nori, Rajamani, Tetali 2010 - Compositional May-Must Program Analysis: Unleashing The Power of Alternation</li>
+<li>Godefroid, Elkarablieh, Levin 2009 - Precise Pointer Reasoning for Dynamic Test Generation</li>
+<li>Godefroid, Levin, Molnar 2008 - Automated Whitebox Fuzz Testing</li>
+<li>Godefroid, Klarlund, Sen 2005 - DART: Directed Automated Random Testing</li>
+<li>Sasnauskas, Link, Alizai, Wehrle 2008 - Bug Hunting in Sensor Network Applications</li>
+</ol>
+
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

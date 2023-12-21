@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cloud on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/cloud/</link>
+    <description>Recent content in cloud on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 04 Dec 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Developing Clojure in the Cloud</title>
+      <link>https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/</link>
+      <pubDate>Thu, 04 Dec 2014 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/</guid>
+      <description>&lt;p&gt;Recently I gave a talk at the &lt;a href=&#34;https://skillsmatter.com/conferences/1956-clojure-exchange-2014&#34;&gt;Clojure eXchange 2014&lt;/a&gt; titled &amp;lsquo;Developing Clojure in the Cloud&amp;rsquo;. I described a way of creating and using (Clojure) development environments inside VMs, I&amp;rsquo;ve been developing like this for the last year (spanning 2 projects).&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

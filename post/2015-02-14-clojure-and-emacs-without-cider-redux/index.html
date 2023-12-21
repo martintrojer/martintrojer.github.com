@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<style type=text/css>body{font-family:monospace;}</style>
+	<title>Clojure and Emacs without Cider redux</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+	
+</head>
+<body>
+	<header>
+	===================<br>
+	== Martin Trojer ==
+	<div style="float: right;">A computer programming blog</div><br>
+	===================
+	<p>
+	<nav>
+			<a href="/"><b>Start</b></a>.
+			
+			
+			<a href="/about/"><b>About</b></a>.
+			
+			<a href="/categories/"><b>Categories</b></a>.
+			
+			<a href="/tags/"><b>Tags</b></a>.
+			
+	</nav>
+	</p>
+	
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Clojure and Emacs without Cider redux</h1>
+			<b><time>2015-02-14</time></b>
+		       
+		           <a href="/tags/clojure">clojure</a>
+        	       
+		           <a href="/tags/emacs">emacs</a>
+        	       
+
+			<div>
+				<p>Its been a couple of months since I&rsquo;ve stopped using <a href="https://github.com/clojure-emacs/cider">Cider</a> for Clojure development in Emacs. I find a simple &lsquo;inferior lisp&rsquo; setup faster and more reliable. For a good summary of why one would consider not using Cider, see <a href="https://gist.github.com/levand/b1012bb7bdb5fcc6486f">Luke VanderHart&rsquo;s excellent summary</a>.</p>
+<p>There&rsquo;s been some news in the non-cider/emacs/clojure world since I wrote <a href="https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/">my last post on the topic</a>. Mainly the release of <a href="https://github.com/clojure-emacs/inf-clojure">inf-clojure</a> by Mr Batsov himself. I recently switched my emacs config over to inf-clojure and it simplified the setup quite a bit. 2 additions remain, re-loading of, and switching to, namespaces, and code navigation (with the use of etags). For more details on how to get etags working from Clojure <a href="https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/#navigate">see here</a>.</p>
+<p>This is the current state of my Clojure-related Emacs setup.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-el" data-lang="el"><span style="display:flex;"><span><span style="color:#75715e">;; Clojure</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clojure-mode</span>)
+</span></span><span style="display:flex;"><span>(setq auto-mode-alist (<span style="color:#a6e22e">cons</span> <span style="color:#f92672">&#39;</span>(<span style="color:#e6db74">&#34;\\.cljs$&#34;</span> <span style="color:#f92672">.</span> clojure-mode) auto-mode-alist))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;inf-clojure</span>)
+</span></span><span style="display:flex;"><span>(setq inf-clojure-prompt-read-only <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;inf-clojure-minor-mode-hook</span>   <span style="color:#75715e">;; prevent company-mode from freezing Emacs when the REPL is busy</span>
+</span></span><span style="display:flex;"><span>          (lambda () (setq completion-at-point-functions <span style="color:#66d9ef">nil</span>)))
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> <span style="color:#e6db74">&#39;inf-clojure-minor-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun reload-current-clj-ns (next-p)
+</span></span><span style="display:flex;"><span>  (interactive <span style="color:#e6db74">&#34;P&#34;</span>)
+</span></span><span style="display:flex;"><span>  (let ((ns (clojure-find-ns)))
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">message</span> (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;Loading %s ...&#34;</span> ns))
+</span></span><span style="display:flex;"><span>    (inf-clojure-eval-string (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;(require &#39;%s :reload)&#34;</span> ns))
+</span></span><span style="display:flex;"><span>    (when (not next-p) (inf-clojure-eval-string (<span style="color:#a6e22e">format</span> <span style="color:#e6db74">&#34;(in-ns &#39;%s)&#34;</span> ns)))))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun find-tag-without-ns (next-p)
+</span></span><span style="display:flex;"><span>  (interactive <span style="color:#e6db74">&#34;P&#34;</span>)
+</span></span><span style="display:flex;"><span>  (find-tag (first (last (split-string (<span style="color:#a6e22e">symbol-name</span> (symbol-at-point)) <span style="color:#e6db74">&#34;/&#34;</span>)))
+</span></span><span style="display:flex;"><span>            next-p))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(defun erase-inf-buffer ()
+</span></span><span style="display:flex;"><span>  (interactive)
+</span></span><span style="display:flex;"><span>  (with-current-buffer (<span style="color:#a6e22e">get-buffer</span> <span style="color:#e6db74">&#34;*inf-clojure*&#34;</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">erase-buffer</span>))
+</span></span><span style="display:flex;"><span>  (inf-clojure-eval-string <span style="color:#e6db74">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#39;</span>(lambda ()
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\C-c\C-k&#34;</span> <span style="color:#e6db74">&#39;reload-current-clj-ns</span>)
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\M-.&#34;</span> <span style="color:#e6db74">&#39;find-tag-without-ns</span>)
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\C-cl&#34;</span> <span style="color:#e6db74">&#39;erase-inf-buffer</span>)
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\C-c\C-t&#34;</span> <span style="color:#e6db74">&#39;clojure-toggle-keyword-string</span>)))
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;inf-clojure-mode-hook</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#39;</span>(lambda ()
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> inf-clojure-mode-map <span style="color:#e6db74">&#34;\C-cl&#34;</span> <span style="color:#e6db74">&#39;erase-inf-buffer</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; clj-refactor</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clj-refactor</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> (lambda ()
+</span></span><span style="display:flex;"><span>                               (clj-refactor-mode <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>                               (cljr-add-keybindings-with-prefix <span style="color:#e6db74">&#34;C-c C-o&#34;</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; align-cljlet</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;align-cljlet</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#39;</span>(lambda ()
+</span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">define-key</span> clojure-mode-map <span style="color:#e6db74">&#34;\C-c\C-y&#34;</span> <span style="color:#e6db74">&#39;align-cljlet</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; paredit</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;paredit</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> <span style="color:#e6db74">&#39;paredit-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; projectile</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;projectile</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;clojure-mode-hook</span> <span style="color:#e6db74">&#39;projectile-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; company-mode</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;company</span>)
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;company-etags</span>)
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;company-etags-modes</span> <span style="color:#e6db74">&#39;clojure-mode</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;after-init-hook</span> <span style="color:#e6db74">&#39;global-company-mode</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; yasnippet</span>
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;yasnippet</span>)
+</span></span><span style="display:flex;"><span>(require <span style="color:#e6db74">&#39;clojure-snippets</span>)
+</span></span><span style="display:flex;"><span>(yas-global-mode <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;yas-snippet-dirs</span> <span style="color:#e6db74">&#34;~/.emacs.d/snippets&#34;</span>)
+</span></span><span style="display:flex;"><span>(yas-load-directory <span style="color:#e6db74">&#34;~/.emacs.d/snippets&#34;</span>)
+</span></span></code></pre></div>
+			</div>
+		</article>
+	</main>
+<aside>
+	<div>
+		<div>
+			<h3>LATEST POSTS</h3>
+		</div>
+		<div>
+			<ul>
+				
+				<li><a href="/post/2016-06-14-some-thoughts-on-clojurespec/">Some thoughts on clojure.spec</a></li>
+				
+				<li><a href="/post/2016-05-03-beyond-clojurescript-elm/">Beyond ClojureScript: Elm</a></li>
+				
+				<li><a href="/post/2016-04-21-beyond-clojure-haskell/">Beyond Clojure: Haskell</a></li>
+				
+				<li><a href="/post/2016-04-19-beyond-clojure-prelude/">Beyond Clojure: Prelude</a></li>
+				
+				<li><a href="/post/2015-10-04-enable-gzip-with-ring-and-jetty/">Enable gzip with Ring and Jetty</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</aside>
+
+
+	<footer>
+	<p>&copy; 2023 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<a href="https://github.com/martintrojer"><b>Github</b></a>.
+	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
+	</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>datalog on Martin Trojer</title>
+    <link>https://martintrojer.github.io/tags/datalog/</link>
+    <description>Recent content in datalog on Martin Trojer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 28 Aug 2012 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://martintrojer.github.io/tags/datalog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Some more Datalog</title>
+      <link>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</link>
+      <pubDate>Tue, 28 Aug 2012 00:00:00 +0000</pubDate>
+      <guid>https://martintrojer.github.io/post/2012-08-28-some-more-datalog/</guid>
+      <description>I&amp;rsquo;ve written about datalog and Datomic a bit recently. To conclude here&amp;rsquo;s another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found here.&#xA;The example I&amp;rsquo;m using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;&#xA;(q &amp;#39;[:find ?first ?height :in $a $b :where [$a ?last ?first ?email] [$b ?email ?height]] [[&amp;#34;Doe&amp;#34; &amp;#34;John&amp;#34; &amp;#34;jdoe@example.com&amp;#34;] [&amp;#34;Doe&amp;#34; &amp;#34;Jane&amp;#34; &amp;#34;jane@example.</description>
+    </item>
+  </channel>
+</rss>
