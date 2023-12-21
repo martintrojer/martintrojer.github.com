@@ -12,7 +12,6 @@ tags:
 - mono
 title: Why F# needs Mono (and really should be a JVM language)
 ---
-{% include JB/setup %}
 
 When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in <a href="http://www.reflector.net/">reflector</a> for technical proof). If you're writing a new Windows application (and it's not a high performant game), chances are you are reading <a href="http://en.wikipedia.org/wiki/Windows_Presentation_Foundation">WPF</a> books right now.
 

@@ -9,11 +9,9 @@ tags:
 title: 'Book Review: Clojure Cookbook'
 ---
 
-{{< figure src="/assets/images/cookbook/cover.png" >}}
+{{< figure src="/assets/images/cookbook/cover.png" class="floatright" >}}
 
 The Clojure Cookbook is part of the O'Reilly cookbook series. I'd describe this format as a 'curated wiki in print'. The wiki analogy is especially true for this volume since its contents was contributed by some 60 different developers. It's packed with small bite-sized recipes for solving common problems in Clojure. This is useful for developers in the entire spectrum from beginner to expert.
-
-<!--more-->
 
 The content is organized into 11 chapters each containing a number of recipes. The chapter layout is clear and serves its purpose when looking for content. The book covers a lot of ground, all from working with primitives and basic data structures to dealing with databases, writing web apps and running hadoop jobs. Each recipe comes with code and/or REPL examples, so its very easy and enlightening to 'play along'. In contrast to other books with code snippets, the authors have made all recipes self contained (no other projects / files need to be created and run in order for the examples to work) which makes it very easy to dive in at any point in the book.
 

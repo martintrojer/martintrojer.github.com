@@ -12,7 +12,6 @@ tags:
 - valgrind
 title: Applied Symbolic Execution with KLEE/LLVM
 ---
-{% include JB/setup %}
 
 This article serves as a follow-up to my previous post on symbolic execution, which can be found [here](/software/2011/11/02/symbolic-execution). In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.
 
@@ -70,12 +69,11 @@ The annotation of the code to mark memory areas as symbolic (i.e. mechanically i
 For supporting big real-world programs, more aggressive pruning of execution paths must be done. One very good way to do this is the record actual execution paths during program execution. This is done in both GodeFroid Dart \[3\] and [Bitblaze](http://bitblaze.cs.berkeley.edu/). They both use a emulated environment for non-symbolic execution (to track actual execution paths) which can then be fed into the symbolic executor for further analysis. Bitblaze uses [QEMU](http://wiki.qemu.org/Main_Page) for this purpose, and is a nice practical hybrid of VMs and [Valgrind](http://valgrind.org/) VEX-IR. [Avalanche](http://code.google.com/p/avalanche/wiki/Avalanche) is a simpler solution relying solely on Valgrind.
 
 ### References
-<ol>
-<li>Cadar, Dunbar, Engler 2008<br />KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs</li>
-<li>Cadar, Ganesh, Pawlowski, Dill, Engler 2006<br />EXE: Automatically Generating Inputs of Death</li>
-<li>GodeFroid, Nori, Rajamani, Tetali 2010<br />Compositional May-Must Program Analysis: Unleashing The Power of Alternation</li>
-<li>Godefroid, Elkarablieh, Levin 2009<br />Precise Pointer Reasoning for Dynamic Test Generation</li>
-<li>Godefroid, Levin, Molnar 2008<br />Automated Whitebox Fuzz Testing</li>
-<li>Godefroid, Klarlund, Sen 2005<br />DART: Directed Automated Random Testing</li>
-<li>Sasnauskas, Link, Alizai, Wehrle 2008<br />Bug Hunting in Sensor Network Applications</li>
-</ol>
+
+1. Cadar, Dunbar, Engler 2008 - KLEE: Unassisted and Automatic Generation of High-Coverage Tests for Complex Systems Programs
+1. Cadar, Ganesh, Pawlowski, Dill, Engler 2006 - EXE: Automatically Generating Inputs of Death
+1. GodeFroid, Nori, Rajamani, Tetali 2010 - Compositional May-Must Program Analysis: Unleashing The Power of Alternation
+1. Godefroid, Elkarablieh, Levin 2009 - Precise Pointer Reasoning for Dynamic Test Generation
+1. Godefroid, Levin, Molnar 2008 - Automated Whitebox Fuzz Testing
+1. Godefroid, Klarlund, Sen 2005 - DART: Directed Automated Random Testing
+1. Sasnauskas, Link, Alizai, Wehrle 2008 - Bug Hunting in Sensor Network Applications

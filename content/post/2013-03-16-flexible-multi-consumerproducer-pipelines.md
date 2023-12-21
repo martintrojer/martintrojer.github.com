@@ -7,13 +7,12 @@ tags:
 - clojure
 title: Flexible multi consumer/producer pipelines
 ---
-{% include JB/setup %}
 
 TL;DR [Pipejine](https://github.com/martintrojer/pipejine) - a lightweight Clojure library for multi-threaded producer/consumer pipelines supporting arbitrary DAG topologies.
 
 Recently a [colleague](https://twitter.com/jonpither) and I faced a problem where we needed to optimize the total running time of a complicated calculation. This calculation involved several asynchronous steps getting data from other systems (like elasticsearch and other home-grown services) and a bit of number crunching and tallying up the results at the end. Here is and simplified example of the system.
 
-<p align="center"><img src="/assets/images/pipejine/pipe.png"></p>
+{{< figure src="/assets/images/pipejine/pipe.png" >}}
 
 Some work items can come "out of order" and some had to hit different systems before "coming back" and be part of the remaining calculation.
 

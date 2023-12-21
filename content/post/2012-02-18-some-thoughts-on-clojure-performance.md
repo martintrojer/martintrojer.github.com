@@ -14,7 +14,6 @@ tags:
 - scala
 title: Some thoughts on Clojure performance
 ---
-{% include JB/setup %}
 
 _Edit_: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was "Why is Clojure so slow?"). I wrote this before [Rich Hickey's Clojure/Conj 2011 keynote](http://www.youtube.com/watch?v=I5iNUtrYQSM) was published, in which he talks about most of my concerns (and outlines possible solutions).
 
@@ -24,6 +23,18 @@ Measuring the speed of code is quite tricky, because there are many parts to a p
 
 ## Getting going...
 The slow startup time is probably what you will notice first when starting to code in Clojure. Anything from running your first "hello worlds" to starting the REPL is painful. Here's some average numbers for a simple "Hello world" program taken on a 2.5GHz Core2Duo MacBook Pro;
+
+| Language             | Total running time OSX | Relative | Total running time Ubuntu | Relative |
+|----------------------|------------------------|----------|---------------------------|----------|
+| C (printf)           | 0.011s                 | 1        | 0.001s                    | 1        |
+| C# (mono)            | 0.085s                 | 7.7      | 0.027s                    | 27       |
+| F# (mono)            | 0.105s                 | 9.5      | 0.036s                    | 36       |
+| Java                 | 0.350s                 | 32       | 0.038s                    | 38       |
+| Scala                | 0.710s                 | 64.5     | 0.228s                    | 228      |
+| Groovy               | 0.740s                 | 67.4     | 0.335s                    | 335      |
+| JRuby (non-compiled) | 0.820s                 | 74.5     |                           |          |
+| Clojure (uberjar)    | 1.250s                 | 113.5    | 0.652s                    | 652      |
+|                      |                        |          |                           |          |
 
 <table class="table-bordered">
 <thead>

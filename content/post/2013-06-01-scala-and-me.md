@@ -10,7 +10,7 @@ tags:
 - sicp
 title: Scala and me
 ---
-{% include JB/setup %}
+{{< figure src="/assets/images/scalame/martin.png" class="floatright" >}}
 
 <div style="float:right"><img src="/assets/images/scalame/martin.png"/></div>
 

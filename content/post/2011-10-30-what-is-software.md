@@ -7,10 +7,8 @@ tags:
 - sicp
 title: What is software?
 ---
-{% include JB/setup %}
 
 Having gained experience through numerous software projects and collaborations with diverse individuals, I've observed a recurring issue: a lack of understanding regarding the nature and process of software development. Surprisingly, even among developers, there persists a belief that seniority alone enables one to design and plan a problem, leaving less experienced developers to implement it. Some individuals still equate software development to assembly line production in the automotive industry.
-
 
 In chapter 1 of "Structure and Interpretation of Computer Programs" [SICP](http://mitpress.mit.edu/sicp/), Abelsson and Sussman describe a concept they call the "sorcerer's spirit"
 

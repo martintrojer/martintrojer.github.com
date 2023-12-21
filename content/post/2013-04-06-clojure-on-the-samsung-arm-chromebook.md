@@ -10,7 +10,8 @@ tags:
 - rpi
 title: Clojure Hacking on the Samsung ARM Chromebook
 ---
-{% include JB/setup %}
+
+{{< figure src="/assets/images/chromebook/cb.jpg" >}}
 
 <p align="center"><img src="/assets/images/chromebook/cb.jpg"></p>
 

@@ -8,6 +8,8 @@ tags:
 title: Kebab-case keywords in nested Clojure data structures
 ---
 
+<!--more-->
+
 ```clojure
 (ns kebab
   (:require [camel-snake-kebab :as kebab]

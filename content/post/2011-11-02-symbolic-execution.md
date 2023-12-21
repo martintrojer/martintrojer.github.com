@@ -10,7 +10,6 @@ tags:
 - symbolic execution
 title: Symbolic Execution
 ---
-{% include JB/setup %}
 
 A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called "Symbolic execution." Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.
 
@@ -25,18 +24,32 @@ Unlike other code analysis tools, symbolic execution executes the code under tes
 
 ### Symbolic Execution
 Symbolic execution involves "executing" a program in an abstracted manner. Let's examine the process using the following code fragment:
-<script src="https://gist.github.com/1698165.js?file=example1.c"> </script>
+
+```c
+int* func(int x; int y) {
+  int* p=0;
+  int s=x*y;
+  if (s!=0)
+    p=malloc(s);
+  else if(y==0)
+    p=malloc(x);
+  return p;
+}
+```
+
 Suppose our goal is to ensure that `func` always returns a valid (non-null) pointer.
 
 ### Control Flow Graph
 The first step in symbolic execution is to generate a Control Flow Graph (CFG), which provides an abstract representation of the code in the form of a directed graph. In the CFG, each node represents a "basic block" terminated by a conditional statement (in this case, an if statement). Each edge corresponds to a boolean "truth value" for the condition.
-<p align="center"><img src="/assets/images/symbolic/cfg.png"></p>
+
+{{< figure src="/assets/images/symbolic/cfg.png" >}}
 
 Generating the CFG helps visualize the paths of execution. It's worth noting that CFGs are not specific to symbolic execution; compilers also generate CFGs during code compilation as they lend themselves well to optimization techniques.
 
 ### Analysing the CFG with symbolic values
 With symbolic execution, our objective is to identify feasible paths that lead to undesirable outcomes or "bad things." In this scenario, we aim to find the path(s) that result in returning `p` without it being allocated first. To understand how the value of `p` changes, we assign a symbolic value to `p` at each node in the CFG. In other words, we're interested in the symbolic value of `p`; we don't care about the specific memory location it points to. Our focus is solely on whether `p` is null or non-null.
-<p align="center"><img src="/assets/images/symbolic/cfg-annotated.png"></p>
+
+{{< figure src="/assets/images/symbolic/cfg-annotated.png" >}}
 
 By annotating the CFG accordingly, we can easily identify a path that leads to returning p without prior initialization. This simple example demonstrates two fundamental techniques in practice:
 
@@ -57,7 +70,8 @@ Consider a simpler tool like a "lint" tool, which becomes less useful as it gene
 The scalability problem is compounded by the fact that we can't limit the analysis to paths within a single function for any non-trivial analysis. For example, in the previous code snippet, it doesn't matter if func returns a null pointer if all callers of func properly check for this possibility. To conduct a meaningful analysis, we must follow the path until the pointer is actually used. This necessitates analyzing paths that span multiple functions, which is known as inter-procedural analysis.
 
 Performing inter-procedural analysis enhances accuracy, but it exponentially increases the number of paths to analyze. A real-life CFG, taking inter-procedural analysis into account, is likely to be more complex:
-<p align="center"><img src="/assets/images/symbolic/cfg-real.png"></p>
+
+{{< figure src="/assets/images/symbolic/cfg-real.png" >}}
 
 An exhaustive enumeration of paths through such a CFG would never complete. Consequently, researchers and practitioners in this field focus on techniques to prune the CFG and identify a small set of "interesting" paths. The path explosion problem can be mitigated using heuristics derived from graph theory or by inferring additional information from the execution context.
 
@@ -66,14 +80,29 @@ Analyzing long paths introduces a complication: the path conditions along those 
 
 ### Path Condition
 Let's revisit the previous example and discuss path conditions. We'll rewrite the CFG, incorporating the truth values of the encountered conditions along the given paths. The path condition represents the boolean equation that synthesizes the truth values of the encountered conditional expressions at each node.
-<p align="center"><img src="/assets/images/symbolic/cfg-annotated2.png"></p>
+
+{{< figure src="/assets/images/symbolic/cfg-annotated2.png" >}}
 
 For the path of interest (leading to a null p), the corresponding expression is ```x * y == 0 && y != 0```. Thus, we can associate a set of boolean equations with each edge along a given path. In this example, we can conclude that ```x * y == 0 && y != 0``` implies ```p == 0```.
 
 ### Inter-Procedural analysis and Path condition
 Now that we understand path conditions, let's explore how they help solve the accuracy problem. We need to determine whether a path that appears feasible within the narrow context of a single function is valid in the larger context of the entire program, which involves interprocedural analysis. For instance, we might discover that all paths containing a call to func have an ASSERT statement before the call, checking if x is not equal to 0.
 
-<script src="https://gist.github.com/1698165.js?file=example2.c"> </script>
+```c
+//func as defined above
+int* func(int x; int y);
+
+//main calls func
+int main() {
+  int x,y;
+  int p*;
+  ...
+  ASSERT(x!=0);
+  p=func(x,y);
+  ...
+}
+```
+
 The path condition now becomes ```x * y != 0 && y != 0 && x != 0```. It is evident that this boolean equation cannot be satisfied, which aligns with the concept known as the <a href="http://en.wikipedia.org/wiki/Boolean_satisfiability_problem">Boolean Satisfiability Problem</a>.
 
 ### Boolean SAT applied to Symbolic Execution

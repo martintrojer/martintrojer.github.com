@@ -10,7 +10,6 @@ tags:
 - llvm
 title: Is LLVM the beginning of the end for GNU (as we know it)?
 ---
-{% include JB/setup %}
 
 [GNU](http://en.wikipedia.org/wiki/GNU_Project) and [Richard Stallman](http://en.wikipedia.org/wiki/Richard_stallman) was a real catalyst for the open source movement and it's crown jewel; the Linux kernel. Not only did [Mr Torvalds](http://en.wikipedia.org/wiki/Linus_Torvalds) early Linux releases have near 100% GNU "user-land", he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it's head with the [copy-left](http://en.wikipedia.org/wiki/Copyleft) licenses. The [Free Software Foundation](http://www.fsf.org/), the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.
 

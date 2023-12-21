@@ -8,7 +8,6 @@ tags:
 - frinj
 title: Adding Live Unit Feeds to Frinj
 ---
-{% include JB/setup %}
 
 A couple of weeks has passed since I've pushed <a href="https://github.com/martintrojer/frinj">Frinj to github</a> and blogged/tweeted about it. The response have been pretty awesome, one highlight being when <a href="https://twitter.com/#!/stuarthalloway">@stuarthalloway</a> showed me a <a href="https://gist.github.com/1980351">frinj+datomic example gist</a> on the #datomic IRC channel. In short, the Clojure community is #badass.
 
@@ -18,6 +17,16 @@ Frinj now supports live currency exchange rates, precious/industrial metals and 
 
 Currencies use the 3 letter (ISO 4217) currency acronym (uppercase), and the metals and commodities use capitalised names, see below for examples.
 
-I've also added an new convenience namespace called frinj.repl that will initialise the built-in units, start the feeds and immigrate the rest of the frinj vars. <script src="https://gist.github.com/2036735.js?file=frinj-exchange-rates.clj"> </script>
+I've also added an new convenience namespace called frinj.repl that will initialise the built-in units, start the feeds and immigrate the rest of the frinj vars.
+
+```clojure
+user=> (use 'frinj.repl)
+user=> (str (fj 10 :thousand :SEK :to :GBP))   ;; standard currency conversion
+"937.1075201531269 [dimensionless]"
+user=> (str (fj :Gold :per :Silver))           ;; Gold vs Silver price
+"49.95612708018155 [dimensionless]"
+user=> (str (fj :Milk))
+"0.3659673552268969 dollar kg^-1 [price_per_mass]"
+```
 
 Next time, I'll explain how to use Frinj in ClojureScript.

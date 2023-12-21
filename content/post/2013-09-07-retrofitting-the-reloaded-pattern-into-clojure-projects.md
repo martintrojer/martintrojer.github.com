@@ -20,11 +20,37 @@ Please note that not all defonces / atoms need to be lifecycled. Some of them ca
 
 After you found your candidates you should replace them with `defrecords` implementing some kind of `LifeCycle` protocol. Here's a version I use;
 
-{{< gist martintrojer 6473714 lifecycle.clj >}}
+```clojure
+(ns lifecycle)
+
+(defprotocol LifeCycle
+  (start [this])
+  (stop [this]))
+
+(defn start-system [system]
+  (doseq [s (->> system :order (map system))]
+    (start s)))
+
+(defn stop-system [system]
+  (doseq [s (->> system :order (map system) reverse)]
+    (stop s)))
+```
 
 The records themselves hold their state (typically in an atom) which gets updated by the `start` and `stop` functions. Here's an example;
 
-{{< gist martintrojer 6473714 jetty.clj >}}
+```clojure
+(defrecord JettyServer [cfg state]
+  LifeCycle
+  (start [_]
+    (reset! state (jetty/run-jetty my-site {:port (:port cfg) :join? false}))
+  (stop [_]
+    (when @state
+      (.stop @state)
+      (reset! state nil))))
+
+(defn create-jetty [cfg]
+  (->JettyServer cfg (atom nil)))
+```
 
 Turning your global state into lifecycle records is the most intrusive part of this whole operation, expect to touch quite a few files.
 
@@ -32,7 +58,19 @@ Turning your global state into lifecycle records is the most intrusive part of t
 
 After you created these records you need to create (and start) your system (the collection of the lifecycled records). This will most likely be done in 2 places, in your apps "main" function and in the `user` namespace (more on REPL usage below).
 
-{{< gist martintrojer 6473714 system.clj >}}
+```clojure
+(defn create-system [cfg]
+  {:jetty (create-jetty-server cfg)
+   :rabbit (create-rabbitmq-channel cfg)
+   :order [:rabbit :jetty])
+
+(defn app-main []
+  (let [cfg (config/create-config)
+        system (create-system cfg)]
+    (start-system system)
+    ;; (.await) / (.join) / (deref) etc...
+    (stop-system system)))
+```
 
 Simple huh?
 
@@ -48,7 +86,14 @@ If you have a `:main` (and `:aot`) key in your `project.clj` you might have noti
 
 One method to minimize the class files in your jar is a namespace containing your new entry point;
 
-{{< gist martintrojer 6473714 app.clj >}}
+```clojure
+(ns app
+  (:gen-class))
+
+(defn -main [& args]
+  (require 'myapp.core)
+  (eval `(apply myapp.core/old-main ~args)))
+```
 
 Note that this namespace doesn't require any other in the `ns` macro, this means you'll only get class files for this namespace in your jar.
 

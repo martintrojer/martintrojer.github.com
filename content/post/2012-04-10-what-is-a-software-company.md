@@ -7,7 +7,6 @@ tags:
 - software
 title: What is a software company?
 ---
-{% include JB/setup %}
 
 Software is <a href="http://martinsprogrammingblog.blogspot.co.uk/2011/10/what-is-software.html">different from most other things humans build</a>, hence companies creating/selling/licensing software must be different from other 'production' companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software? Why haven't most software companies learnt the hard lessons and started to operate like <a href="http://www.valvesoftware.com/company/Valve_Handbook_LowRes.pdf">Valve</a>?
 

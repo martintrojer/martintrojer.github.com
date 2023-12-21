@@ -32,4 +32,10 @@ Recently I started reading [Odersky](http://www.amazon.co.uk/Programming-In-Scal
 
 It's indeed possible to create a very fluent and powerful DSL using some of Scala's core language constructs!
 
-{{< gist martintrojer 5861174 >}}
+```scala
+// If you took the matter in a teaspoon of water, and converted that to energy,
+// how many gallons of gasoline would you have to burn to get an equal amount of energy?
+
+scala> 'teaspoon * 'water * ('c ** 2) to 'gallons * 'gasoline
+res0: frins.NumberT = 3164209.862836101  [dimensionless]
+```

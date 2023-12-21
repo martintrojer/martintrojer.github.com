@@ -8,7 +8,6 @@ tags:
 - frinj
 title: Announcing Frinj, a practical unit of measure calculator DSL for Clojure
 ---
-{% include JB/setup %}
 
 I am proud to announce a new Clojure project called "Frinj".
 

@@ -10,7 +10,6 @@ tags:
 - jvm
 title: Distributed Actors in Clojure
 ---
-{% include JB/setup %}
 
 Here's another post on a topic that have been discussed since the <a href="https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ">dawn-of-time</a>, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure?&nbsp;There has certainly been a few attempts, but Rich's post (above) still holds true today.
 
@@ -37,7 +36,43 @@ However, <a href="http://blog.darevay.com/2011/06/clojure-and-akka-a-match-made-
 
 ### Wishful thinking
 Ideally, Clojure should support distributed actors in it's core, that looks, behaves and interrops nicely with it's other concurrency primitives. It's pretty easy to create a ideal-world straw-man for how this might look from a code/syntax perspective; <a href="http://code.google.com/p/termite/">Termite</a>&nbsp;is a good place to start. Here is a cleaned-up version of the <a href="https://gist.github.com/2716711">hello-world examples in the gist above</a>.
-<script src="https://gist.github.com/2716711.js?file=clojure-builtin-actor-vision.clj"> </script>
+
+```clojure
+;; An (imaginary) actor macro takes an initial state and callback fns.
+;; (actor {} (fn1 [state message]) (fn2 [state message) ...)
+
+;; The most obvious callback fn is (receive [state message) that is called when a
+;; message is consumed from the agents mailbox. receive is called with the old state
+;; and the message as parameters -- it returns the new state.
+;; sender is bound to the senders pid.
+
+;; other callbacks are stuff broken link detection etc.
+
+;; (spawn) creates a lightweight actor process, also has remote-actor semantics
+;; (tell) is used to send messages to an spawned actor's pid.
+
+(def hello-actor
+  (actor {:world-actor
+          (spawn
+           (actor {}
+                  (receive [state [message-type word :as message]]
+                           (condp = message-type
+                             :hello (do
+                                      (tell sender (str (.toUpperCase word) "world!"))
+                                      state)
+                             (unhandled message)))))}
+         (receive [state [message-type word]]
+                  (condp = message-type
+                    :start (do
+                             (tell (:world-actor state) [:hello "hello"])
+                             state)
+                    (do
+                      (println (str "Received message:" word))
+                      (shutdown)))))
+
+(let [pid (spawn hello-actor)]
+  (tell pid [:start]))
+```
 
 Many problem arises, serialisation is a big one. Since Clojure's data structures can contain "anything", like Java objects, some limitations needs to be applied to strike a good usability / performance balance. Limiting the stuff you can distribute amongst actors to mimic Erlangs atoms/lists/tuples are probably a fair trade off (all you need is a hashmap right?), and maybe baking in <a href="https://github.com/flatland/clojure-protobuf">Google Protobuf</a> for efficiency.
 
@@ -47,11 +82,9 @@ With all that in place, it would be possible to build Clojure equivalents of Erl
 
 ### More reading
 
-<ul>
-<li><a href="http://learnyousomeerlang.com/">Learn you some Erlang for Great Good</a><br />Quickly get into the Erlang frame of mind</li>
-<li>A vision for Erlang-style actors in clojure-py<br /><a href="http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency.html">Part1</a> and <a href="http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency_18.html">Part2</a></li>
-<li><a href="http://elixir-lang.org/">Exlir</a><br />ErlangVM language with support for Lisp-style macros</li>
-<li><a href="http://joxa.org/">Joxa</a><br />Clojure-style Lisp for the ErlangVM</li>
-<li><a href="http://avout.io/">Avout</a><br />Distributed STM for Clojure, for synchronously updating of shared state.</li>
-<li><a href="https://github.com/antoniogarrote/jobim">Jobim</a> <br />An attempt to mimic the Erlang programming model in Clojure</li>
-</ul>
+- [Quickly get into the Erlang frame of mind](http://learnyousomeerlang.com/)
+- A vision for Erlang-style actors in clojure-py [part1](http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency.html) [part2](http://clojure-py.blogspot.co.uk/2012/04/clojure-py-and-distributed-concurrency_18.html)
+- [ErlangVM language with support for Lisp-style macros](http://elixir-lang.org/)
+- [Clojure-style Lisp for the ErlangVM](http://joxa.org/)
+- [Distributed STM for Clojure, for synchronously updating of shared state](http://avout.io/)
+- [An attempt to mimic the Erlang programming model in Clojure](https://github.com/antoniogarrote/jobim)
