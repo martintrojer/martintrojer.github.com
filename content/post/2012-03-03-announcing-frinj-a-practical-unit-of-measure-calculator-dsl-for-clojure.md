@@ -20,9 +20,9 @@ Key features;
 * Inspired by the [Frink project](http://futureboy.us/frinkdocs/)
 * Tries to combine Frink's fluent calculation style with idiomatic Clojure
 
-Full source code available on <a href="https://github.com/martintrojer/frinj">github</a>.
+Full source code available on [github](https://github.com/martintrojer/frinj).
 
-To wet your apatite head straight over to the <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj">sample calculations</a> page to see what Frinj can do!
+To wet your apatite head straight over to the [sample calculations](https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj) page to see what Frinj can do!
 
 Also check the [live clojuresript page](/frinj-demo/index.html)
 

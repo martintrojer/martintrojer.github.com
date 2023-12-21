@@ -15,7 +15,7 @@ A while back, I had the opportunity to collaborate with my colleague, Philippe G
 
 I want to acknowledge the significant contributions made by Dawson Engler at Stanford and Patrice Godefroid at Microsoft Research in advancing this field of research. Their detailed papers are captivating and offer valuable insights.
 
-In this article, I provide background information about symbolic execution. In a future post, I will delve into its practical applications, utilizing frameworks such as <a href="http://llvm.org/">LLVM</a> and <a href="http://klee.llvm.org/">klee</a>).
+In this article, I provide background information about symbolic execution. In a future post, I will delve into its practical applications, utilizing frameworks such as [LLVM](http://llvm.org/) and [klee](http://klee.llvm.org/)).
 
 ### Introduction
 In recent years, static code analysis has made remarkable progress, allowing its application to large real-world codebases and generating reliable results. A crucial metric for success in this area is the ratio of actual defects to false positives. Achieving an optimal ratio is an incredibly challenging problem that involves employing heuristics, optimization techniques, and fine-tuning. One of the most significant advantages of static code analysis is that it analyzes the source code itself, eliminating the need to build, link, and run the code under scrutiny. It operates on "snippets" of code, which are perfectly valid in isolation.
@@ -103,7 +103,7 @@ int main() {
 }
 ```
 
-The path condition now becomes ```x * y != 0 && y != 0 && x != 0```. It is evident that this boolean equation cannot be satisfied, which aligns with the concept known as the <a href="http://en.wikipedia.org/wiki/Boolean_satisfiability_problem">Boolean Satisfiability Problem</a>.
+The path condition now becomes ```x * y != 0 && y != 0 && x != 0```. It is evident that this boolean equation cannot be satisfied, which aligns with the concept known as the [Boolean Satisfiability Problem](http://en.wikipedia.org/wiki/Boolean_satisfiability_problem).
 
 ### Boolean SAT applied to Symbolic Execution
 Now, let's delve into the good news and the bad news...

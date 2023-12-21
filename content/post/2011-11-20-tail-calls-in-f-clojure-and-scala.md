@@ -77,7 +77,7 @@ If we call it with the id function as shown above, result of the "closure-chain"
 ### Clever compilers
 We have now converted our simple example to a tail recursive version, so now it should run with very big n-s without any problem right? Well, not always. To understand why we need to dig into how our compiler and runtimes work (in this case .NET and JVM).
 
-If we look at what the F# compiler produces for a accumulator-tail-recursive sum function above we'll see this (de-compiled into C# with <a href="http://wiki.sharpdevelop.net/ILSpy.ashx">ILSpy</a>).
+If we look at what the F# compiler produces for a accumulator-tail-recursive sum function above we'll see this (de-compiled into C# with [ILSpy](http://wiki.sharpdevelop.net/ILSpy.ashx)).
 
 ```csharp
 public static int sum(int acc, int n) {
@@ -89,7 +89,7 @@ public static int sum(int acc, int n) {
 }
 ```
 
-That's is great, the compiler has realised that the tail recursion can be converted to a while loop and removed any recursive calls. The Scala compiler does the same (de-compiled to java with <a href="http://java.decompiler.free.fr/">Java Decompiler</a>)<br />
+That's is great, the compiler has realised that the tail recursion can be converted to a while loop and removed any recursive calls. The Scala compiler does the same (de-compiled to java with [Java Decompiler](http://java.decompiler.free.fr/))
 
 ```java
 public int sum2(int acc, int n) {
@@ -123,7 +123,7 @@ let rec b n =
    a b (n + 1)
 ```
 
-This is called mutual recursion, and are commonly used in functional implementations of finite state machines. Even though the a+b functions are tail recursive, we cannot convert to while loops but must proceed with the recursive calls. Quite naturally this will blow up with stack overflow quite quickly. Steele and Sussman realised in their famous <a href="http://library.readscheme.org/page1.html">lambda papers</a> back in the 70's, that a tail-recursive functions' stack resources can be freed as soon as the call is made, there is not point of keeping that stack frame around.
+This is called mutual recursion, and are commonly used in functional implementations of finite state machines. Even though the a+b functions are tail recursive, we cannot convert to while loops but must proceed with the recursive calls. Quite naturally this will blow up with stack overflow quite quickly. Steele and Sussman realised in their famous [lambda papers](http://library.readscheme.org/page1.html) back in the 70's, that a tail-recursive functions' stack resources can be freed as soon as the call is made, there is not point of keeping that stack frame around.
 
 {{< figure src="/assets/images/tailcalls/recur2.png" >}}
 
@@ -144,7 +144,7 @@ The "dealloc-on-call" functionality is something the runtime have to support, wh
 
 Please note the "tail." op code, that's the secret sauce! The F# compiler has found a tail call and inserted the "tail." op code. This tells the .NET runtime to destroy the caller's resources and proceed "in" the callee's stack. This allows the a/b example above to run indefinitely without any stack overflows.
 
-So what about the JVM? The bad news is that there is no "tail." java byte code (even if experimental implementations do <a href="http://blogs.oracle.com/jrose/entry/tail_calls_in_the_vm">exist</a>). Here is a what the Clojure compiler produced for the b function (the invokeinterface is the recursive call to a);
+So what about the JVM? The bad news is that there is no "tail." java byte code (even if experimental implementations do [exist](http://blogs.oracle.com/jrose/entry/tail_calls_in_the_vm)). Here is a what the Clojure compiler produced for the b function (the invokeinterface is the recursive call to a);
 
 ```
  0 getstatic #27 <app stack$b.const__0="">

@@ -11,7 +11,7 @@ title: N Queens with core.logic, take 2
 
 This post is a follow-up to my [previous post on NQueens and core.logic](/2012/07/07/n-queens-with-corelogic-take-1/), in which I tried to find the solutions using "pure" logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.
 
-After some excellent feedback and hints from Mr <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&amp;qid=1341989805&amp;sr=8-2">good old Bratko</a>.
+After some excellent feedback and hints from Mr [David Nolen](https://twitter.com/swannodette) (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to [good old Bratko](http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&qid=1341989805&sr=8-2).
 
 First, let's fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given 2 prerequisites; the fresh variable must be bound to a finite (number) space and we much use _project_ to bind the values. This means we can get rid of subo altogether.
 
@@ -115,6 +115,6 @@ We're almost done now, we just to need rewrite the (run\* ...) form. We can actu
 
 As you can see, with looping we are generating drastically less associations for core.logic to consider, that's good for performance.
 
-Now it's ~70x faster than the original solution in the previous post. For a 8-queens run, this is ~50x slower than the hand-rolled functional backtracking solution in <a href="http://martinsprogrammingblog.blogspot.co.uk/2012/03/enumerate-n-queens-solutions.html">the very first posting</a>. That's still pretty good for a generic prolog machinery with all the extra expression power that it packs.
+Now it's ~70x faster than the original solution in the previous post. For a 8-queens run, this is ~50x slower than the hand-rolled functional backtracking solution in [the very first posting]({{< ref "2012-03-25-enumerate-n-queens-solutions.md" >}}). That's still pretty good for a generic prolog machinery with all the extra expression power that it packs.
 
 Next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!

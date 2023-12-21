@@ -9,9 +9,9 @@ tags:
 - core.logic
 title: Replicating Datomic/Datalog queries with core.logic, take 2
 ---
-This is a follow-up to my [previous post](/clojure//2012/07/16/replicating-datomicdatalog-queries-with-corelogic/) on datalog-equivalent queries in core.logic.
+This is a follow-up to my [previous post]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) on datalog-equivalent queries in core.logic.
 
-Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First let's consider this datomic query;
+Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, [described here](https://github.com/clojure/core.logic/wiki/Features). First let's consider this datomic query;
 
 ```clojure
 (q '[:find ?first ?height
@@ -192,4 +192,4 @@ So how does this perform for larger datasets compared to the unification / cloju
 ;; 5000
 ```
 
-<a href="https://gist.github.com/3150994">Follow this link for some more datalog-y queries in core.logic</a>.
+[Follow this link for some more datalog-y queries in core.logic](https://gist.github.com/3150994).

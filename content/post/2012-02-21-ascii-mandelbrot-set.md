@@ -42,4 +42,4 @@ title: ASCII Mandelbrot Set
  (print-mandel 75))
 ```
 
-Credit to <a href="http://futureboy.us/frinkdocs/">Frink</a> for inspiration.
+Credit to [Frink](http://futureboy.us/frinkdocs/) for inspiration.

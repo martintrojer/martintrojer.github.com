@@ -9,11 +9,11 @@ tags:
 title: N Queens with core.logic, take 1
 ---
 
-I've been "hammock-reading" the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.
+I've been "hammock-reading" the excellent [Reasoned Schemer](http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&tid=10663) book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.
 
-My first attempt is to apply it to a problem where (as it turns out) miniKanren isn't a good fit, <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people over at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.
+My first attempt is to apply it to a problem where (as it turns out) miniKanren isn't a good fit, [n-queens](http://en.wikipedia.org/wiki/Eight_queens_puzzle). What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in [cKanren](http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf). The good people over at core.logic are working on integrating CLP and cKanren in core.logic [in version 0.8](https://github.com/clojure/core.logic/), so I intend to revisit this problem as that work progresses.
 
-Let's have a crack at this problem anyway shall we? I've previously posted a [functional implementation on n-queens](/clojure/2012/03/25/enumerate-n-queens-solutions/) in Clojure, and it's both nice to read and fast. What would this look like using core.logic?
+Let's have a crack at this problem anyway shall we? I've previously posted a [functional implementation on n-queens]({{< ref "2012-03-25-enumerate-n-queens-solutions.md" >}}) in Clojure, and it's both nice to read and fast. What would this look like using core.logic?
 
 Here's the core function (in Clojure) which determines if 2 queens are threatening each other.
 
@@ -135,6 +135,6 @@ Here's a complete listing to the whole thing, with an example of a 7-queens run;
 (time (count (queens-run 7)))
 ```
 
-So how does it perform? Well, you guessed it, terribly. My previous [functional Clojure implementation](/clojure/2012/03/25/enumerate-n-queens-solutions/) finds all 4 solutions for 6-queens in ~7ms. The core.logic one above does it in ~6.5 seconds, 3 orders of magnitude, ouch!
+So how does it perform? Well, you guessed it, terribly. My previous [functional Clojure implementation]({{< ref "2012-03-25-enumerate-n-queens-solutions.md" >}}) finds all 4 solutions for 6-queens in ~7ms. The core.logic one above does it in ~6.5 seconds, 3 orders of magnitude, ouch!
 
 It's quite possible that this brute force approach is a very inefficient way of solving n-queens using miniKanren. Maybe building / removing queens from solution lists are a better approach? Also, cKanren in core.logic promises much faster and cleaner solutions. Either way, I'll keep you posted...

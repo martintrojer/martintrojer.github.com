@@ -37,7 +37,7 @@ The magic here is that you can write continuation-style code in a sequential man
 (future (fetch-url "http://www.google.co.uk/"))
 ```
 
-While naively this looks good; we are handing over some tasks to a worker thread, but this is infact the old "one thread per connection" chestnut. It will spawn a thread in a thread pool that just sits around and waits for the IO to complete. Here is a picture (credit to <a href="http://tomasp.net/">Tomas Petricek</a>) that tries to visualise the problem;
+While naively this looks good; we are handing over some tasks to a worker thread, but this is infact the old "one thread per connection" chestnut. It will spawn a thread in a thread pool that just sits around and waits for the IO to complete. Here is a picture (credit to [Tomas Petricek](http://tomasp.net/)) that tries to visualise the problem;
 
 {{< figure src="/assets/images/asyncclj/oneperconnection.png" >}}
 
@@ -47,7 +47,7 @@ In our example we have 2 function calls that can take a long time; _openStream_ 
 
 Why is it so bad with many threads you might wonder. Well, first of all they are expensive, both in the JVM and on .NET. If you want to write some code that can scale to thousands of connections, one thread per connection simply doesn't work. If you are using futures like above, when you try to make thousands of simultaneous connections, they will just queue on the thread pool, and the threads that are claimed will spend almost all their time blocked on IO (plus it will be dominated by accesses to slow servers). So either you kill you system spawning thousands of threads or you take for ever to complete when the thread pool slowly easts through the queued up work.
 
-We need non blocking versions of openStream and the readers to have a chance to make this work. While .NET have plentiful supply for async begin/end "callback" APIs, the JVM has been relying on 3rd party libraries such as <a href="http://www.jboss.org/netty">Netty</a>. Java7 shipped with something called "NIO.2" which provides async channels for sockets and files, but it's still quite new and is hard to get on for instance OSX.
+We need non blocking versions of openStream and the readers to have a chance to make this work. While .NET have plentiful supply for async begin/end "callback" APIs, the JVM has been relying on 3rd party libraries such as [Netty](http://www.jboss.org/netty). Java7 shipped with something called "NIO.2" which provides async channels for sockets and files, but it's still quite new and is hard to get on for instance OSX.
 
 Let's get back to our web client example; here's how a better version could look like using Netty;
 
@@ -108,7 +108,7 @@ This example downloads 70 F# snippets in parallel. This is better than the seque
 
 We managed to solve the scalability problem, but we also made the code much harder to read and maintain. And if we were to make this code "real" it would get even worse. All error handling try/catch would have to be duplicated in all callbacks, since they are run in separate contexts. Just imagine what happens when we have more than 2 callbacks!
 
-How can we get closer to the F# example above? One solution is to embrace the concept of channels and pipelines and wrap the netty internals in some Clojure idiomatic way. Fortunately this is exactly what the projects <a href="https://github.com/ztellman/lamina">lamina</a> and <a href="https://github.com/ztellman/aleph">aleph</a> have done. With aleph the example above can be written as succinctly as this;
+How can we get closer to the F# example above? One solution is to embrace the concept of channels and pipelines and wrap the netty internals in some Clojure idiomatic way. Fortunately this is exactly what the projects [lamina](https://github.com/ztellman/lamina) and [aleph](https://github.com/ztellman/aleph) have done. With aleph the example above can be written as succinctly as this;
 
 ```clojure
 def result (agent []))

@@ -8,7 +8,7 @@ tags:
 title: Untying the Recursive Knot
 ---
 
-Here I present a couple of examples of the functional design pattern "untying the recursive knot". I've found this useful in a couple of occasions, for instance when breaking apart mutually recursive functions. Material inspired by Jon Harrop's excellent <a href="http://www.ffconsultancy.com/products/fsharp_for_technical_computing/">Visual F# to Technical Computing</a>.
+Here I present a couple of examples of the functional design pattern "untying the recursive knot". I've found this useful in a couple of occasions, for instance when breaking apart mutually recursive functions. Material inspired by Jon Harrop's excellent [Visual F# to Technical Computing](http://www.ffconsultancy.com/products/fsharp_for_technical_computing/).
 
 First, let's look at a simple factorial implementation using direct recursion;
 ```clojure

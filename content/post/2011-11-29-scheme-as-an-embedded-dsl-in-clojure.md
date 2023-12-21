@@ -23,7 +23,7 @@ When you write programs in Lisp, you tend to solve problems very differently fro
 
 One big benefit of internal DSLs are the speed of execution. Since we map to Clojures native constructs, the examples below will run at the same speed as one defined directly in Clojure (they are infact the same!). In future posts, when we look at external DSLs using interpreters which are much slower.
 
-So here's an example of how (a subset of) Scheme can be written as an internal DSL in Clojure. The full code is <a href="https://github.com/martintrojer/scheme-clojure">available on github</a>.
+So here's an example of how (a subset of) Scheme can be written as an internal DSL in Clojure. The full code is [available on github](https://github.com/martintrojer/scheme-clojure).
 
 As you might suspect, this is pretty simple since a lot of functions are exactly the same in Scheme and Clojure.
 
@@ -53,7 +53,7 @@ Scheme's define form is called def in Clojure, and since def is a special form, 
   `(def ~@args))
 {{< /highlight >}}
 
-This uses syntax quotes to get a new list and unquote slicing to get back to the argument list that def requires. Note that this example ignores the fact that in Scheme "define" is used for simple var bindings and function definitions <a href="https://github.com/martintrojer/scheme-clojure/blob/master/internal/mtscheme.clj#L42">see full source code</a> for a macro that handles both cases.
+This uses syntax quotes to get a new list and unquote slicing to get back to the argument list that def requires. Note that this example ignores the fact that in Scheme "define" is used for simple var bindings and function definitions [see full source code](https://github.com/martintrojer/scheme-clojure/blob/master/internal/src/mtscheme/core.clj#L38) for a macro that handles both cases.
 
 A slightly more involved example is Scheme's cond form which uses a extra pair of parens for each case;
 

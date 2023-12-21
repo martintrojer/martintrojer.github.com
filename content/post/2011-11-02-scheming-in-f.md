@@ -9,11 +9,11 @@ tags:
 title: Scheming in F#
 ---
 
-Given the fact that I worship at the <a href="http://mitpress.mit.edu/sicp/">SICP</a> altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a <a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a> interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just "big enough" for to force me to drill into what the language have to offer.
+Given the fact that I worship at the [SICP](https://web.mit.edu/6.001/6.037/sicp.pdf) altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a [Scheme](http://en.wikipedia.org/wiki/Scheme_(programming_language)) interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just "big enough" for to force me to drill into what the language have to offer.
 
-I'll post the source of the interpreters on <a href="https://github.com/martintrojer/">github</a> in this and future posts and highlight some of my findings in more detail in the posts. I am not going to write and explain too much about the languages themselves, there are plenty of books and tutorials for that purpose, just highlights :)
+I'll post the source of the interpreters on [github](https://github.com/martintrojer/) in this and future posts and highlight some of my findings in more detail in the posts. I am not going to write and explain too much about the languages themselves, there are plenty of books and tutorials for that purpose, just highlights :)
 
-F# is part of the <a href="http://en.wikipedia.org/wiki/ML_(programming_language)">ML</a> family and largely compatible with OCaml. It's one of the new hybrid functional / OO languages (like Scala, Clojure etc) that the kids are raving about these days. This means it can expose and interact with .NET libraries and objets code seamlessly. It also have a whole host of other functionality like active patterns, asynchronous workflows and (soon) type providers that I will get back to in future posts.
+F# is part of the [ML](http://en.wikipedia.org/wiki/ML_(programming_language)) family and largely compatible with OCaml. It's one of the new hybrid functional / OO languages (like Scala, Clojure etc) that the kids are raving about these days. This means it can expose and interact with .NET libraries and objets code seamlessly. It also have a whole host of other functionality like active patterns, asynchronous workflows and (soon) type providers that I will get back to in future posts.
 
 Let's start with discriminated unions which is a very powerful way of concisely describing (in this case) the syntax of the language;
 
@@ -88,7 +88,7 @@ So that try/catch is basically saying;
 
 Please note that the new environment map is passed as parameter in the loop, meaning it can be immutable!
 
-All the code can be found <a href="https://github.com/martintrojer/scheme-fsharp">here</a>, there are few bugs (see failing tests) that I might fix later, or maybe you are up for it! :)
+All the code can be found [here](https://github.com/martintrojer/scheme-fsharp), there are few bugs (see failing tests) that I might fix later, or maybe you are up for it! :)
 
 ```
 mtscheme v0.1

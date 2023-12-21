@@ -10,7 +10,7 @@ tags:
 title: Replicating Datomic/Datalog queries with core.logic
 ---
 
-I've been toying with <a href="http://datomic.com/">Datomic </a>recently, and I particularly like the power of it's query language (~<a href="http://en.wikipedia.org/wiki/Datalog">Datalog</a>). Mr <a href="https://twitter.com/stuarthalloway">Halloway</a> showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, <a href="https://gist.github.com/2645453">gist here</a>. Here is an example from that page of a simple join;
+I've been toying with [Datomic](http://datomic.com/) recently, and I particularly like the power of it's query language (~[Datalog](http://en.wikipedia.org/wiki/Datalog)). Mr [Halloway](https://twitter.com/stuarthalloway) showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, [gist here](https://gist.github.com/2645453). Here is an example from that page of a simple join;
 
 ```clojure
 (q '[:find ?first ?height
@@ -22,7 +22,7 @@ I've been toying with <a href="http://datomic.com/">Datomic </a>recently, and I 
 ;; #<HashSet [["Jane" 73], ["John" 71]]>
 ```
 
-A question you might ask yourself is how can I use <a href="https://github.com/clojure/core.logic">core.logic</a> to do the same kind of queries? It turns out that it's pretty straight forward, and also very fast. Core.logic provides some convenient helper functions for <a href="https://github.com/clojure/core.logic#unification">unification</a>, that we are going to use. Here's an example of how to get a binding map for some logical variables over a collection;
+A question you might ask yourself is how can I use [core.logic](https://github.com/clojure/core.logic) to do the same kind of queries? It turns out that it's pretty straight forward, and also very fast. Core.logic provides some convenient helper functions for [unification](https://github.com/clojure/core.logic#unification), that we are going to use. Here's an example of how to get a binding map for some logical variables over a collection;
 
 ```clojure
 (binding-map '(?first ?last) ["John" "Doe"])
@@ -97,4 +97,4 @@ _Edit_: The Datomic query used in the benchmark is not optimal as it turns out. 
 
 Obviously this little example doesn't convey the true power of either datomic/datalog or core.logic/unifier. Be careful writing your Datomic queries, the running time can be vastly different!
 
-<a href="https://gist.github.com/3122375">Here some more of the datomic queries converted in a similar fashion.</a>
+[Here some more of the datomic queries converted in a similar fashion](https://gist.github.com/3122375).

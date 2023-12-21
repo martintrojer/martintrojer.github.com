@@ -12,7 +12,8 @@ title: cKanren time!
 Mr David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event I'm writing up some core.logic/cKanren stuff I've been looking at recently.
 
 ### Enter the Queens
-If you've followed this blog, you've perhaps seen my previous posts on solving N-Queens in core.logic ([part1](/clojure/2012/07/16/replicating-datomicdatalog-queries-with-corelogic/) and [part2](/clojure/2012/07/17/replicating-datomicdatalog-queries-with-corelogic-take-2/)). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here's a core.logic-irized version of the solution described in the <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren paper</a> (please read paragraph 4.2 for an in-depth explanation);
+If you've followed this blog, you've perhaps seen my previous posts on solving N-Queens in core.logic ([part1]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) and [part2]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}})). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here's a core.logic-irized version of the solution described in the [cKanren paper](http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf) (please read paragraph 4.2 for an in-depth explanation);
+
 ```clojure
 (defn diago [qi qj d rng]
   (fresh [qid qjd]
@@ -230,5 +231,5 @@ In most cases where "searching" is involved, I warmly recommend using core.logic
 
 Some other stuff;
 
-* The excellent <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren paper</a> is getting a bit obsolete. It's still a very good read, but for the latest innovation check out it's <a href="https://github.com/calvis/cKanren">github page</a>, and ofcourse core.logic.
-* If you can't get enough of logic programming, the next step is to dip into the ocean of Prolog, there are plenty of awesome (and practical) books written over many years. Here's a <a href="http://dosync.posterous.com/a-logic-programming-reading-list">good list of books</a> to get you started
+* The excellent [cKanren paper](http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf) is getting a bit obsolete. It's still a very good read, but for the latest innovation check out it's [github page](https://github.com/calvis/cKanren), and ofcourse core.logic.
+* If you can't get enough of logic programming, the next step is to dip into the ocean of Prolog, there are plenty of awesome (and practical) books written over many years. Here's a [good list of books](http://dosync.posterous.com/a-logic-programming-reading-list) to get you started

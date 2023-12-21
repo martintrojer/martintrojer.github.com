@@ -72,7 +72,7 @@ Javascript is [huge language nowadays](http://www.tiobe.com/index.php/content/pa
 Due to the fact that all browsers can run javascript, the language have unmatched reach. Over the last couple of years it has become the "bytecode of the web", meaning that lots of languages/compilers has emerged that targets javascript. For example; [CoffeScript](http://coffeescript.org/), [ClojureScript](https://github.com/clojure/clojurescript), [TypeScript](http://www.typescriptlang.org/) to mention just a few.
 
 ### Option 3/ Medium-weight, generic runtime - Guile
-Guile is the official extension language in the GNU universe. Originally it's been a <a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a>, but with guile2.0 parsers for Javascript, [Emacs lisp](http://en.wikipedia.org/wiki/Emacs_Lisp) was added. Support for Lua is also in the works. The idea is to expose the innards of your app to scheme programs, in the form of Scheme functions, and thus making it possible for you and your users to use the software in a very flexible way.
+Guile is the official extension language in the GNU universe. Originally it's been a [Scheme](http://en.wikipedia.org/wiki/Scheme_(programming_language)), but with guile2.0 parsers for Javascript, [Emacs lisp](http://en.wikipedia.org/wiki/Emacs_Lisp) was added. Support for Lua is also in the works. The idea is to expose the innards of your app to scheme programs, in the form of Scheme functions, and thus making it possible for you and your users to use the software in a very flexible way.
 
 |                                             |                                                      |
 |---------------------------------------------|------------------------------------------------------|

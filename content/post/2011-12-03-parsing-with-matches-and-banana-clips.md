@@ -8,7 +8,7 @@ tags:
 title: Parsing with Matches and Banana Clips
 ---
 
-I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the <a href="http://msdn.microsoft.com/en-us/library/dd547125.aspx">basics of pattern matching</a> here, rather show how F#'s <a href="http://msdn.microsoft.com/en-us/library/dd233248.aspx">active patterns</a> can be used to take pattern matching to the next level.
+I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the [basics of pattern matching](http://msdn.microsoft.com/en-us/library/dd547125.aspx) here, rather show how F#'s [active patterns](http://msdn.microsoft.com/en-us/library/dd233248.aspx) can be used to take pattern matching to the next level.
 
 The traditional steps of a "parser" are roughly lexical analysis (tokenizer), syntactic analysis (parser) and then evaluator (interpreter). In this post we'll focus on the parsing step of a simple DSL. A parser typically consume a list of tokens and produces an Abstract Syntax Tree (AST), ready to be passed on the evaluator/interpreter.
 

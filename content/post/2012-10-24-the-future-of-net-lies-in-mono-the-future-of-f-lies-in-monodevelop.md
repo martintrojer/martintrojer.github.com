@@ -10,7 +10,7 @@ tags:
 title: The future of .NET lies in Mono. The future of F# lies in MonoDevelop.
 ---
 
-It's been a year since [I last wrote about F# and Mono](/fsharp/2011/11/03/why-f-needs-mono-and-really-should-be-a-jvm-language) - what's happened since then?
+It's been a year since [I last wrote about F# and Mono]({{< ref "2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language.md" >}}) - what's happened since then?
 
 F# 3.0 has recently been released, bundled in with the new [all-grey](http://www.theregister.co.uk/2012/08/28/visual_studio_2012_review/), [ALL-CAPS](http://blogs.msdn.com/b/visualstudio/archive/2012/06/05/a-design-with-all-caps.aspx) Visual Studio 2012. The biggest new feature is [type providers](http://msdn.microsoft.com/en-us/library/hh156509.aspx), bringing some of the benefits of dynamic languages into type safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up pretty soon so more developers (including me) can enjoy the benefits.
 
@@ -18,7 +18,7 @@ OK, that's cool, but how is good old F# doing? Well, about the same. It lumbers 
 
 Take a look at [ThoughWorks latest Tech Radar](http://www.thoughtworks.com/articles/technology-radar-october-2012). F# distant relatives (as in fairly new [functional-first](http://skillsmatter.com/podcast/home/practical-fsharp/js-4400)  languages) Scala and Clojure are steaming ahead and have both reached "Adopt" status. F# is stuck in "assess" never-land. I don't see many signs of that changing anytime soon.
 
-Take a look at&nbsp;<a href="http://www.thoughtworks.com/articles/technology-radar-october-2012">ThoughWorks latest Tech Radar</a>. F# distant relatives (as in fairly new "<a href="http://skillsmatter.com/podcast/home/practical-fsharp/js-4400">functional-first</a>"  languages) Scala and Clojure are steaming ahead and have both reached "Adopt" status. F# is stuck in "assess" never-land. I don't see many signs of that changing anytime soon.
+Take a look at [ThoughWorks latest Tech Radar](http://www.thoughtworks.com/articles/technology-radar-october-2012). F# distant relatives (as in fairly new "[functional-first](http://skillsmatter.com/podcast/home/practical-fsharp/js-4400)"  languages) Scala and Clojure are steaming ahead and have both reached "Adopt" status. F# is stuck in "assess" never-land. I don't see many signs of that changing anytime soon.
 
 F# has limited credibility because of Microsoft. Even though [F# is actually open source](https://github.com/fsharp), it has a very small open source community. The development is completely driven from Microsoft, and there is very little "open source buzz" about it, typical for any Microsoft products. F# moves with the same slow cadence as Visual Studio, which is software terms are eons between releases. Any big and open F# frameworks are sorely lacking. Microsoft's completely r\*\*\*\*\*\*d (there, I said it) messaging regarding F# and .NET is also to blame.
 
