@@ -34,7 +34,6 @@ The slow startup time is probably what you will notice first when starting to co
 | Groovy               | 0.740s                 | 67.4     | 0.335s                    | 335      |
 | JRuby (non-compiled) | 0.820s                 | 74.5     |                           |          |
 | Clojure (uberjar)    | 1.250s                 | 113.5    | 0.652s                    | 652      |
-|                      |                        |          |                           |          |
 
 What we can see it that Java itself accounts for 0.35s of the startup time, but unfortunately Clojure adds another second(!) on top of that. This 1.3s pause before main gets called is why Clojure is unsuitable for "terminal scripts". The running time of any scripts (like lein or starting the REPL) will be totally dominated by the startup time. Most Clojure developers will not notice this too much to, since they spend almost all their time in the REPL itself, but users of those Clojure programs will!
 
