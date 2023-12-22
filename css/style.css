@@ -32,3 +32,8 @@ code {
     -moz-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
+
+table, th, td {
+  border: 1px solid;
+  border-collapse: collapse;
+}
