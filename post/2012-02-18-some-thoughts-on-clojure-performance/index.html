@@ -130,13 +130,6 @@
 <td>0.652s</td>
 <td>652</td>
 </tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
 <p>What we can see it that Java itself accounts for 0.35s of the startup time, but unfortunately Clojure adds another second(!) on top of that. This 1.3s pause before main gets called is why Clojure is unsuitable for &ldquo;terminal scripts&rdquo;. The running time of any scripts (like lein or starting the REPL) will be totally dominated by the startup time. Most Clojure developers will not notice this too much to, since they spend almost all their time in the REPL itself, but users of those Clojure programs will!</p>

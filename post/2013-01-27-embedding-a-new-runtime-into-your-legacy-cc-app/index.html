@@ -76,47 +76,47 @@
 <tbody>
 <tr>
 <td>Pros</td>
-<td>- General purpose, supports many languages</td>
+<td>General purpose, supports many languages</td>
 </tr>
 <tr>
 <td></td>
-<td>- Speed</td>
+<td>Speed</td>
 </tr>
 <tr>
 <td></td>
-<td>- Big eco-system with <a href="https://www.nuget.org">ready-made libraries</a></td>
+<td>Big eco-system with <a href="https://www.nuget.org">ready-made libraries</a></td>
 </tr>
 <tr>
 <td></td>
-<td>- Multi threaded applications</td>
+<td>Multi threaded applications</td>
 </tr>
 <tr>
 <td></td>
-<td>- Great IDE support</td>
+<td>Great IDE support</td>
 </tr>
 <tr>
 <td>Cons</td>
-<td>- Big</td>
+<td>Big</td>
 </tr>
 <tr>
 <td></td>
-<td>- Somewhat clunky <a href="https://www.mono-project.com/docs/advanced/pinvoke/">interrop with native code</a></td>
+<td>Somewhat clunky <a href="https://www.mono-project.com/docs/advanced/pinvoke/">interrop with native code</a></td>
 </tr>
 <tr>
 <td></td>
-<td>- Assemblies needs to be stored/shipped in binar form, not as simple scripts</td>
+<td>Assemblies needs to be stored/shipped in binar form, not as simple scripts</td>
 </tr>
 <tr>
 <td></td>
-<td>- No natural way to work with the GAC from the embedded VM</td>
+<td>No natural way to work with the GAC from the embedded VM</td>
 </tr>
 <tr>
 <td></td>
-<td>- C# and F# are statically typed languages (might not be a great fit for scripting purposes)</td>
+<td>C# and F# are statically typed languages (might not be a great fit for scripting purposes)</td>
 </tr>
 <tr>
 <td></td>
-<td>- Hard to static-link (embed) into your app</td>
+<td>Hard to static-link (embed) into your app</td>
 </tr>
 <tr>
 <td>Size of (static-linked) hello world example</td>
@@ -134,10 +134,6 @@
 <td>Future proof (10 years from now)</td>
 <td>3 out of 5</td>
 </tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
 <p>The static-link issue can be a major headache when embedding Mono. Other than this it&rsquo;s a very powerful and stable runtime. Mono can also use LLVM for it&rsquo;s JIT code generation making is suitable for many different CPU architectures. The fact that C# and F# &ldquo;scripts&rdquo; need to be shipped / stored as binary assemblies can be a deal-breaker if you&rsquo;re looking for a easily editable/patchable script solution. Note that this is only true for the compiled CLR languages as C# / F#, IronPython/Clojure for instance can be shipped in source.</p>
@@ -153,43 +149,43 @@
 <tbody>
 <tr>
 <td>Pros</td>
-<td>- Fast</td>
+<td>Fast</td>
 </tr>
 <tr>
 <td></td>
-<td>- Small</td>
+<td>Small</td>
 </tr>
 <tr>
 <td></td>
-<td>- Wide industry usage</td>
+<td>Wide industry usage</td>
 </tr>
 <tr>
 <td></td>
-<td>- Big ecosystem (node.js is a great source)</td>
+<td>Big ecosystem (node.js is a great source)</td>
 </tr>
 <tr>
 <td></td>
-<td>- Easy to embed / interrop (again, node.js is a great example)</td>
+<td>Easy to embed / interrop (again, node.js is a great example)</td>
 </tr>
 <tr>
 <td></td>
-<td>- Reads scripts in source format so they can be stored/shipped in that manner</td>
+<td>Reads scripts in source format so they can be stored/shipped in that manner</td>
 </tr>
 <tr>
 <td></td>
-<td>- Dynamically typed</td>
+<td>Dynamically typed</td>
 </tr>
 <tr>
 <td></td>
-<td>- Huge industry uptake, you can safely assume that all your new devs will know it</td>
+<td>Huge industry uptake, you can safely assume that all your new devs will know it</td>
 </tr>
 <tr>
 <td>Cons</td>
-<td>- Single threaded</td>
+<td>Single threaded</td>
 </tr>
 <tr>
 <td></td>
-<td>- <a href="http://www.youtube.com/watch?v=kXEgk1Hdze0">Quirky syntax and other language artefacts</a></td>
+<td><a href="http://www.youtube.com/watch?v=kXEgk1Hdze0">Quirky syntax and other language artefacts</a></td>
 </tr>
 <tr>
 <td>Size of (static-linked) hello world example</td>
@@ -207,10 +203,6 @@
 <td>Future proof (10 years from now)</td>
 <td>5 out of 5</td>
 </tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
 <p>Due to the fact that all browsers can run javascript, the language have unmatched reach. Over the last couple of years it has become the &ldquo;bytecode of the web&rdquo;, meaning that lots of languages/compilers has emerged that targets javascript. For example; <a href="http://coffeescript.org/">CoffeScript</a>, <a href="https://github.com/clojure/clojurescript">ClojureScript</a>, <a href="http://www.typescriptlang.org/">TypeScript</a> to mention just a few.</p>
@@ -226,31 +218,31 @@
 <tbody>
 <tr>
 <td>Pros</td>
-<td>- Good interrop</td>
+<td>Good interrop</td>
 </tr>
 <tr>
 <td></td>
-<td>- Very powerful language</td>
+<td>Very powerful language</td>
 </tr>
 <tr>
 <td></td>
-<td>- Dynamically typed</td>
+<td>Dynamically typed</td>
 </tr>
 <tr>
 <td>Cons</td>
-<td>- Quite slow, order of magnitude slower than Mono/v8</td>
+<td>Quite slow, order of magnitude slower than Mono/v8</td>
 </tr>
 <tr>
 <td></td>
-<td>- Hard to static-link (embed) into your app</td>
+<td>Hard to static-link (embed) into your app</td>
 </tr>
 <tr>
 <td></td>
-<td>- Small ecosystem of ready-made libraries</td>
+<td>Small ecosystem of ready-made libraries</td>
 </tr>
 <tr>
 <td></td>
-<td>- Restrictive licensing</td>
+<td>Restrictive licensing</td>
 </tr>
 <tr>
 <td>Size of (static-linked) hello world example</td>
@@ -268,10 +260,6 @@
 <td>Future proof (10 years from now)</td>
 <td>5 out of 5</td>
 </tr>
-<tr>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
 <p>Picking a Lisp for you scripting might seem controversial, but the level of expressiveness it gives in unmatched by any other language. If licensing is problem, there are other Scheme implementations worth considering, <a href="http://www.call-cc.org/">Chicken</a>, <a href="http://gambitscheme.org/wiki/index.php/Main_Page">Gambit</a>, <a href="http://www-sop.inria.fr/indes/fp/Bigloo/">Bigloo</a>. <a href="http://www.cs.utah.edu/%7Emflatt/benchmarks-20100126/log3/Benchmarks.html">Guile tends to be slowest</a> of them all. Guile also shares some of the headaches with Mono when it comes to static compile it into your app.</p>
@@ -287,35 +275,35 @@
 <tbody>
 <tr>
 <td>Pros</td>
-<td>- Extremely lightweight</td>
+<td>Extremely lightweight</td>
 </tr>
 <tr>
 <td></td>
-<td>- Amazing interrop</td>
+<td>Amazing interrop</td>
 </tr>
 <tr>
 <td></td>
-<td>- Simple yet powerful language</td>
+<td>Simple yet powerful language</td>
 </tr>
 <tr>
 <td></td>
-<td>- Broad industry uptake</td>
+<td>Broad industry uptake</td>
 </tr>
 <tr>
 <td></td>
-<td>- Dynamically typed</td>
+<td>Dynamically typed</td>
 </tr>
 <tr>
 <td>Cons</td>
-<td>- Slow (about 30x slower than v8/mono)</td>
+<td>Slow (about 30x slower than v8/mono)</td>
 </tr>
 <tr>
 <td></td>
-<td>- Single threaded</td>
+<td>Single threaded</td>
 </tr>
 <tr>
 <td></td>
-<td>- Small ecosystem of ready-made libraries</td>
+<td>Small ecosystem of ready-made libraries</td>
 </tr>
 <tr>
 <td>Size of (static-linked) hello world example</td>
@@ -332,10 +320,6 @@
 <tr>
 <td>Future proof (10 years from now)</td>
 <td>5 out of 5</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
