@@ -13,7 +13,7 @@ tags:
 title: This year in F#
 ---
 
-For the third year running, here's my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what's been happening was on my wish-list outlined in [last year's post]({{< ref "2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop.md" >}}. What are the highlights?
+For the third year running, here's my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what's been happening was on my wish-list outlined in [last year's post]({{< ref "2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop.md" >}}). What are the highlights?
 
 <!--more-->
 
@@ -21,7 +21,7 @@ Let's start with the [F# foundation](http://fsharp.org/). This is a fantastic mo
 
 One thing I want to point out is the [F# organization on github](https://github.com/fsharp/). This is already an impressive collection of projects, and most importantly it hosts the open source edition of the F# compiler and core libraries. This is a nice improvement over the once-every-3-year code drop approach that F# have adopted so far. I'm still waiting for the official announcement that this github repo is now the official (and only) version of F#, something tells me it's just around the corner.
 
-The next huge thing is meteoric rise of [Xamarin](http://xamarin.com/), the custodians of the [Mono project](http://www.mono-project.com/Main_Page) -- which I predicted is the future of .NET (and thus F#). Xamarin focuses on tooling and libraries for mobile devices, and their success it's a very good thing for Mono in general. I would personally like to see a bit more focus on Mono for server / back-end usage but I understand Xamarin have to go where the money is. My small F# toys are constantly getting faster with Mono, but they are still a factor 2-4 off the Windows benchmark. I do think Mono will eventually catch up, and more importantly I think it's going to take the lead on ARM platforms -- which is going to be important for servers in the future. [ARMv8 is the dogs bullocks.](https://twitter.com/migueldeicaza/statuses/382307711213260801)
+The next huge thing is meteoric rise of [Xamarin](http://xamarin.com/), the custodians of the [Mono project](http://www.mono-project.com/Main_Page) -- which I predicted is the future of .NET (and thus F#). Xamarin focuses on tooling and libraries for mobile devices, and their success it's a very good thing for Mono in general. I would personally like to see a bit more focus on Mono for server / back-end usage but I understand Xamarin have to go where the money is. My small F# toys are constantly getting faster with Mono, but they are still a factor 2-4 off the Windows benchmark. I do think Mono will eventually catch up, and more importantly I think it's going to take the lead on ARM platforms -- which is going to be important for servers in the future. [ARMv8 is the dogs b**s.](https://twitter.com/migueldeicaza/statuses/382307711213260801)
 
 Mr de Icaza seems to warming to F#, and recently spoke at a F# event at a [skillsmatter event in New York](http://skillsmatter.com/podcast/scala/keynote-4066). Xamarin is also hiring people with F# background, this is a slam dunk for F# is you ask me.
 
