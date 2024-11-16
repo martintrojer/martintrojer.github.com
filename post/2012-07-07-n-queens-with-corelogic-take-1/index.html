@@ -46,10 +46,10 @@
         	       
 
 			<div>
-				<p>I&rsquo;ve been &ldquo;hammock-reading&rdquo; the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.</p>
-<p>My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&rsquo;t a good fit, <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people over at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.</p>
-<p>Let&rsquo;s have a crack at this problem anyway shall we? I&rsquo;ve previously posted a <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional implementation on n-queens</a> in Clojure, and it&rsquo;s both nice to read and fast. What would this look like using core.logic?</p>
-<p>Here&rsquo;s the core function (in Clojure) which determines if 2 queens are threatening each other.</p>
+				<p>I&rsquo;ve been &ldquo;hammock-reading&rdquo; the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book these last couple of months, on my quest to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.</p>
+<p>My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&rsquo;t a good fit: <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this problem in the logical programming world is something called constraint logic programming (CLP), which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.</p>
+<p>Let&rsquo;s have a crack at this problem anyway, shall we? I&rsquo;ve previously posted a <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional implementation of n-queens</a> in Clojure, and it&rsquo;s both nice to read and fast. What would this look like using core.logic?</p>
+<p>Here&rsquo;s the core function (in Clojure) which determines if two queens are threatening each other:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safe? [[x1 y1] [x2 y2]]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">and</span>
 </span></span><span style="display:flex;"><span>   (not= x1 x2)
@@ -58,7 +58,7 @@
 </span></span><span style="display:flex;"><span>   (not= (- x1 y2) (- x2 y1))))
 </span></span></code></pre></div><p>The main problem in core.logic is the subtraction operator, which cannot be applied to fresh variables. We need a goal that has all the subtraction algebra &ldquo;mapped out&rdquo; as associations, let&rsquo;s call it subo. If we had that, our safeo function could look like this;</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each ohter?&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each other?&#34;</span>
 </span></span><span style="display:flex;"><span>  [[x1 y1] [x2 y2]]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fresh</span> [d1 d2 d3 d4]
 </span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 x1 d1)
@@ -115,7 +115,7 @@
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">declare </span>subo)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each ohter?&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Are 2 queens threatening each other?&#34;</span>
 </span></span><span style="display:flex;"><span>  [[x1 y1] [x2 y2]]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fresh</span> [d1 d2 d3 d4]
 </span></span><span style="display:flex;"><span>         (<span style="color:#a6e22e">subo</span> x2 x1 d1)
@@ -147,8 +147,8 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">def-subo</span> subo <span style="color:#ae81ff">7</span>)
 </span></span><span style="display:flex;"><span>(time (count (<span style="color:#a6e22e">queens-run</span> <span style="color:#ae81ff">7</span>)))
-</span></span></code></pre></div><p>So how does it perform? Well, you guessed it, terribly. My previous <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional Clojure implementation</a> finds all 4 solutions for 6-queens in ~7ms. The core.logic one above does it in ~6.5 seconds, 3 orders of magnitude, ouch!</p>
-<p>It&rsquo;s quite possible that this brute force approach is a very inefficient way of solving n-queens using miniKanren. Maybe building / removing queens from solution lists are a better approach? Also, cKanren in core.logic promises much faster and cleaner solutions. Either way, I&rsquo;ll keep you posted&hellip;</p>
+</span></span></code></pre></div><p>So how does it perform? Well, you guessed it: terribly. My previous <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">functional Clojure implementation</a> finds all four solutions for 6-queens in ~7ms. The core.logic one above does it in ~6.5 seconds, three orders of magnitude slower. Ouch!</p>
+<p>It&rsquo;s quite possible that this brute-force approach is a very inefficient way of solving n-queens using miniKanren. Maybe building/removing queens from solution lists would be a better approach? Also, cKanren in core.logic promises much faster and cleaner solutions. Either way, I&rsquo;ll keep you posted&hellip;</p>
 
 			</div>
 		</article>

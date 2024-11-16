@@ -44,13 +44,13 @@
         	       
 
 			<div>
-				<p>Have you ever tried to log from multi threaded program? Have you tried to make sense of the log output which multiple subsystems were logging to? Have you tried to do average latency calculations based on that log file?</p>
-<p>If you reading this blog, I am guessing you answered yes to a couple of the questions above.</p>
-<p>There are multiple problems here; multiple producers (race conditions), out-of-order logs, conflated subsystem in the same logs etc. You gotta put a lot of effort into you log post-processor to make any sense at all of the data, decorating it with various metadata to make it at all possible.</p>
-<p>In this post I point out a few ways you can use Clojure (both the language and it&rsquo;s general ethos) to overcome these problems. The solutions here are primarily tailored to &ldquo;pipeline systems&rdquo; where you want to find time consuming bottle-necks and produce latency reports etc. For simplicity, this is in-process logging, where all the parts (threads) can share a log resource and tick timer etc.</p>
+				<p>Have you ever tried to log from a multi-threaded program? Have you tried to make sense of log output when multiple subsystems were logging to it? Have you tried to do average latency calculations based on that log file?</p>
+<p>If you&rsquo;re reading this blog, I&rsquo;m guessing you answered yes to a couple of the questions above.</p>
+<p>There are multiple problems here: multiple producers (race conditions), out-of-order logs, conflated subsystems in the same logs, etc. You have to put a lot of effort into your log post-processor to make any sense of the data, decorating it with various metadata to make it possible at all.</p>
+<p>In this post, I point out a few ways you can use Clojure (both the language and its general ethos) to overcome these problems. The solutions here are primarily tailored to &ldquo;pipeline systems&rdquo; where you want to find time-consuming bottlenecks and produce latency reports, etc. For simplicity, this is in-process logging, where all the parts (threads) can share a log resource and tick timer, etc.</p>
 <p>TL;DR <a href="https://gist.github.com/3041849">the complete code snippet</a>.</p>
 <h3 id="agents">Agents</h3>
-<p>First off, the race conditions; if the log is simply a file, or a in-memory data structure, you have to somehow serialise the &ldquo;emit&rdquo; calls. Conventional wisdom would have you put the emit call in a critical section, but this is a) ugly b) can introduce deadlocks c) can effect the system under stress. We want to post a log entry using a lock free, asynchronous mechanism, that&rsquo;s why we have agents in Clojure;</p>
+<p>First off, the race conditions; if the log is simply a file, or a in-memory data structure, you have to somehow serialize the &ldquo;emit&rdquo; calls. Conventional wisdom would have you put the emit call in a critical section, but this is a) ugly b) can introduce deadlocks c) can effect the system under stress. We want to post a log entry using a lock free, asynchronous mechanism, that&rsquo;s why we have agents in Clojure;</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>log (agent []))
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>emit
@@ -66,7 +66,7 @@
 <h3 id="tree-logging">Tree Logging</h3>
 <p>How do we apply structure to the log data? One idea is to put the log data into a tree instead of a flat vector (or file). Then log entries from different subsystems can be separated (for easier post-processing), and we can express dependancy between log events for latency calculations.</p>
 <p>Lets say each log entry is associated with one id and multiple correlation ids. The id is typically an UUID which you assign to a request, operation, instruction that &ldquo;travels&rdquo; through multiple parts of your system. The correlation ids can be used a splitting your logs into categories of arbitrary depth, yield possibly more meaningful reports etc.</p>
-<figure><img src="/assets/images/logging/tree-log.png"/>
+<figure><img src="/assets/images/logging/tree-log.png">
 </figure>
 
 <p>Here&rsquo;s how such a tree structure can be built using Clojure&rsquo;s maps and the mighty <a href="http://clojuredocs.org/clojure_core/clojure.core/assoc-in">assoc-in</a> function;</p>
@@ -133,8 +133,8 @@
 </span></span><span style="display:flex;"><span>       (sort-by <span style="color:#e6db74">:time</span>)))
 </span></span></code></pre></div><p>Please note that these functions take a (de-referenced) log rather than using @log directly. This helps testing, but is also very important for more complicated (looping) functions which should work on a stable snapshot of the log events.</p>
 <h3 id="conclusion">Conclusion</h3>
-<p>The flat log file, with simple events described as Clojure maps worked out really well, and it&rsquo;s certainly more idiomatic. The log is easier to serialise, we only need parts of it in memory for meaningful analysis, we can treat it as a continuos stream. The analysis functions that we write can leverage the power of Clojure&rsquo;s library directly and compose beautifully. Also, we are not forcing any structure (or schema) on the log events (more than any analysis functions expect) which make it very flexible and future proof. The only price we are paying is additional (redundant) metadata to that can be more cheaply expressed in a tree data structure.</p>
-<p>Here&rsquo;s a complete <a href="https://gist.github.com/3041849">listing of a event logger</a>, using metadata, with statistical reporting.</p>
+<p>The flat log file with simple events described as Clojure maps worked out really well, and it&rsquo;s certainly more idiomatic. The log is easier to serialize; we only need parts of it in memory for meaningful analysis, and we can treat it as a continuous stream. The analysis functions that we write can leverage the power of Clojure&rsquo;s library directly and compose beautifully. Also, we are not forcing any structure (or schema) on the log events (more than any analysis functions expect), which makes it very flexible and future-proof. The only price we are paying is additional (redundant) metadata that can be more cheaply expressed in a tree data structure.</p>
+<p>Here&rsquo;s a complete <a href="https://gist.github.com/3041849">listing of an event logger</a> using metadata, with statistical reporting.</p>
 <h3 id="more-reading">More reading</h3>
 <ul>
 <li><a href="http://blip.tv/clojure/mark-mcgranaghan-logs-as-data-5953857">Mark McGranaghan Clojure/conj 2011 &ndash; Logs as data</a></li>

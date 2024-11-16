@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>haskell on Martin Trojer</title>
+    <title>Haskell on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/haskell/</link>
-    <description>Recent content in haskell on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Haskell on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 21 Apr 2016 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/haskell/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2016-04-21-beyond-clojure-haskell/</link>
       <pubDate>Thu, 21 Apr 2016 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2016-04-21-beyond-clojure-haskell/</guid>
-      <description>&lt;p&gt;This is a post in the  &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.&lt;/p&gt;&#xA;&lt;p&gt;If you are interested in typed functional languages one stands taller than the rest. Its impossible not to get sucked into the Haskell vortex, but why fight it? In spite of its reputation of being extremely hard to learn and even harder to master, there are several excellent resources out there and you are guaranteed to learn a lots of very valuable lessons.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This is a post in the  &lt;a href=&#34;https://martintrojer.github.io/categories/beyond-clojure/&#34;&gt;Beyond Clojure&lt;/a&gt; blog series, in which a Clojure developer looks at typed languages for web app development. This is by no means a complete survey of the Haskell web development landscape, rather a random collection of thoughts.&lt;/p&gt;&#xA;&lt;p&gt;If you are interested in typed functional languages one stands taller than the rest. It&amp;rsquo;s impossible not to get sucked into the Haskell vortex, but why fight it? In spite of its reputation of being extremely hard to learn and even harder to master, there are several excellent resources out there and you are guaranteed to learn lots of very valuable lessons.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

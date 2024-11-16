@@ -44,12 +44,12 @@
         	       
 
 			<div>
-				<p><a href="https://twitter.com/stuartsierra">Stuart Sierra</a> has done a great job with <a href="https://github.com/clojure/tools.namespace">clojure.tools.namespace</a> and the <a href="https://github.com/stuartsierra/reloaded">reloaded</a> leiningen template. If you haven&rsquo;t heard about this before please have a look at c.t.n readme and watch <a href="http://www.infoq.com/presentations/Clojure-Large-scale-patterns-techniques">this presentation</a>.</p>
-<p>I&rsquo;ve have retrofitted this pattern into two rather big clojure projects (20k and 5k lines) with several modules and here are some of my findings.</p>
+				<p><a href="https://twitter.com/stuartsierra">Stuart Sierra</a> has done a great job with <a href="https://github.com/clojure/tools.namespace">clojure.tools.namespace</a> and the <a href="https://github.com/stuartsierra/reloaded">reloaded</a> Leiningen template. If you haven&rsquo;t heard about this before, please have a look at c.t.n&rsquo;s readme and watch <a href="http://www.infoq.com/presentations/Clojure-Large-scale-patterns-techniques">this presentation</a>.</p>
+<p>I have retrofitted this pattern into two rather large Clojure projects (20,000 and 5,000 lines) with several modules, and here are some of my findings.</p>
 <h2 id="removing-global-state">Removing global state</h2>
-<p>The first step is to find all resources that needs to be &ldquo;lifecycled&rdquo;. Typical examples are Jetty servers, database / message bus clients etc. It&rsquo;s common that these resources are in a <code>(defonce server (atom ...))</code> form. I tend to grep for <code>defonce</code> and <code>atom</code> to find these guys.</p>
-<p>Please note that not all defonces / atoms need to be lifecycled. Some of them can be safely &ldquo;dropped&rdquo; when you un-/re-load the namespace. In this case you can leave them as <code>(def thing (atom ...))</code>. The rule of thumb is to lifecycle the ones that create a system wide resource, like a network port, message queue channel etc.</p>
-<p>After you found your candidates you should replace them with <code>defrecords</code> implementing some kind of <code>LifeCycle</code> protocol. Here&rsquo;s a version I use;</p>
+<p>The first step is to find all resources that need to be &ldquo;lifecycled.&rdquo; Typical examples are Jetty servers, database/message bus clients, etc. It&rsquo;s common that these resources are in a <code>(defonce server (atom ...))</code> form. I tend to grep for <code>defonce</code> and <code>atom</code> to find these items.</p>
+<p>Please note that not all defonces/atoms need to be lifecycled. Some of them can be safely &ldquo;dropped&rdquo; when you un/reload the namespace. In this case, you can leave them as <code>(def thing (atom ...))</code>. The rule of thumb is to lifecycle the ones that create system-wide resources, like network ports, message queue channels, etc.</p>
+<p>After you find your candidates, you should replace them with <code>defrecords</code> implementing some kind of <code>LifeCycle</code> protocol. Here&rsquo;s a version I use:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>lifecycle)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defprotocol </span>LifeCycle
@@ -63,7 +63,7 @@
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>stop-system [system]
 </span></span><span style="display:flex;"><span>  (doseq [s (<span style="color:#a6e22e">-&gt;&gt;</span> system <span style="color:#e6db74">:order</span> (map system) reverse)]
 </span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">stop</span> s)))
-</span></span></code></pre></div><p>The records themselves hold their state (typically in an atom) which gets updated by the <code>start</code> and <code>stop</code> functions. Here&rsquo;s an example;</p>
+</span></span></code></pre></div><p>The records themselves hold their state (typically in an atom) which gets updated by the <code>start</code> and <code>stop</code> functions. Here&rsquo;s an example:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defrecord </span>JettyServer [cfg state]
 </span></span><span style="display:flex;"><span>  LifeCycle
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">start</span> [_]
@@ -77,7 +77,7 @@
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">-&gt;JettyServer</span> cfg (<span style="color:#a6e22e">atom</span> nil)))
 </span></span></code></pre></div><p>Turning your global state into lifecycle records is the most intrusive part of this whole operation, expect to touch quite a few files.</p>
 <h2 id="creating-the-system">Creating the system</h2>
-<p>After you created these records you need to create (and start) your system (the collection of the lifecycled records). This will most likely be done in 2 places, in your apps &ldquo;main&rdquo; function and in the <code>user</code> namespace (more on REPL usage below).</p>
+<p>After you create these records, you need to create (and start) your system (the collection of the lifecycled records). This will most likely be done in two places: in your app&rsquo;s &ldquo;main&rdquo; function and in the <code>user</code> namespace (more on REPL usage below).</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>create-system [cfg]
 </span></span><span style="display:flex;"><span>  {<span style="color:#e6db74">:jetty</span> (<span style="color:#a6e22e">create-jetty-server</span> cfg)
 </span></span><span style="display:flex;"><span>   <span style="color:#e6db74">:rabbit</span> (<span style="color:#a6e22e">create-rabbitmq-channel</span> cfg)
@@ -95,7 +95,7 @@
 <p>When retrofitting this pattern into existing codebases, having the system passed around everywhere can be a big change. Furtunately you can cheat a little here, and still get all the REPL benefits. A compromise I&rsquo;ve settled on is after the resource have been lifecycled in a record as described above, I put a dynamic var where the atom used to be. Then the start/stop functions does a <code>alter-var-root</code> on this var, and test fixtures can (safely) bind it. This doesn&rsquo;t solve the fundamental problem of implied resources, but it does let me move on and get the REPL environment I want (without terrifying my co-workers with a monumental pull request).</p>
 <h2 id="removing-class-files-from-the-jar">Removing class files from the jar</h2>
 <p>If you have a <code>:main</code> (and <code>:aot</code>) key in your <code>project.clj</code> you might have noticed that you have quite a few .class files in your jar. This is usually not a big deal, but it causes problems for clojure.tools.namespace since it can&rsquo;t unload these namespaces correctly.</p>
-<p>One method to minimize the class files in your jar is a namespace containing your new entry point;</p>
+<p>One method to minimize the class files in your jar is a namespace containing your new entry point:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">ns </span>app
 </span></span><span style="display:flex;"><span>  (<span style="color:#e6db74">:gen-class</span>))
 </span></span><span style="display:flex;"><span>
@@ -105,7 +105,7 @@
 </span></span></code></pre></div><p>Note that this namespace doesn&rsquo;t require any other in the <code>ns</code> macro, this means you&rsquo;ll only get class files for this namespace in your jar.</p>
 <h2 id="dealing-with-dependant-services">Dealing with dependant services</h2>
 <p>Now, your application probably consist of more than one service. So you&rsquo;ll have to apply the steps described above to all of them. Then, in order to maximize your REPL productivity you want to include and control all the services your current project interact with. This is only done in the <code>:dev</code> profile, since you wouldn&rsquo;t do this in the &ldquo;real&rdquo; entry point of your service.</p>
-<p>To make this work you need 2 things; Add a leiningen dependency to these services (under the <code>:dev</code> profile) and soft links to their folders in the current projects <a href="https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies">checkouts folder</a>. The reason for the dependency is that we want to pull in all of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.</p>
+<p>To make this work you need 2 things: Add a leiningen dependency to these services (under the <code>:dev</code> profile) and soft links to their folders in the current projects <a href="https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies">checkouts folder</a>. The reason for the dependency is that we want to pull in all of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.</p>
 <p>This means that you are probably going to need a local <a href="http://www.sonatype.org/nexus/go">nexus</a> / <a href="http://archiva.apache.org/index.cgi">archiva</a> / <a href="https://github.com/ato/clojars-web">clojars</a>. Then have your CI system do a <code>lein deploy</code> after each successful build.</p>
 <h2 id="userclj">user.clj</h2>
 <p>The final piece is to add the reloaded template&rsquo;s user.clj to your project. Simply copy reloaded&rsquo;s <a href="https://github.com/stuartsierra/reloaded/blob/master/src/leiningen/new/reloaded/templates/user.clj">user.clj</a> into <code>dev/user.clj</code> and do some modifications to it. You want to require the namespace with your <code>create-system</code> function, and do a <code>(alter-var-root #'system (fn [_] (system/create-system)))</code> in the <code>init</code> function. Then add the <code>(lifecycle/start-system system)</code> in <code>start</code> (and the equivalent for stop).</p>

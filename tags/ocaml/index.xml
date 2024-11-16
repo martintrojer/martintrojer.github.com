@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>ocaml on Martin Trojer</title>
+    <title>Ocaml on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/ocaml/</link>
-    <description>Recent content in ocaml on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Ocaml on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 29 Oct 2013 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/ocaml/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</link>
       <pubDate>Tue, 29 Oct 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-10-29-this-year-in-f/</guid>
-      <description>&lt;p&gt;For the third year running, here&amp;rsquo;s my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. Alot of what&amp;rsquo;s been happening was on my wish-list outlined in &lt;a href=&#34;https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/&#34;&gt;last year&amp;rsquo;s post&lt;/a&gt;. What are the highlights?&lt;/p&gt;</description>
+      <description>&lt;p&gt;For the third year running, here&amp;rsquo;s my annual (and extremely subjective) review of the state of the F# language, its community and other loosely connected things. How would I sum up the noises coming from F# the last year? Pretty darn awesome. A lot of what&amp;rsquo;s been happening was on my wish-list outlined in &lt;a href=&#34;https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/&#34;&gt;last year&amp;rsquo;s post&lt;/a&gt;. What are the highlights?&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>erlang on Martin Trojer</title>
+    <title>Erlang on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/erlang/</link>
-    <description>Recent content in erlang on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Erlang on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 17 May 2012 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/erlang/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</link>
       <pubDate>Thu, 17 May 2012 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/</guid>
-      <description>Here&amp;rsquo;s another post on a topic that have been discussed since the dawn-of-time, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&amp;rsquo;s post (above) still holds true today.&#xA;First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;&#xA;clojure-hadoop swamiji cacalog zookeeper-clj storm etc&amp;hellip; Akka and the Erlang legacy I am trying to write programs that solve problems in the areas where Erlang typically excels such as</description>
+      <description>&lt;p&gt;Here&amp;rsquo;s another post on a topic that has been discussed since the &lt;a href=&#34;https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ&#34;&gt;dawn-of-time&lt;/a&gt;: is there a nice and idiomatic way to write Erlang/Actor-style distributed programs in Clojure? There have certainly been a few attempts, but Rich&amp;rsquo;s post (above) still holds true today.&lt;/p&gt;&#xA;&lt;p&gt;First, some clarification: I am not primarily thinking about number-crunching, map/reduce-style stuff, where Clojure has a pretty good story:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/stuartsierra/clojure-hadoop&#34;&gt;clojure-hadoop&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/amitrathore/swarmiji&#34;&gt;swarmiji&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/nathanmarz/cascalog&#34;&gt;cascalog&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/liebke/zookeeper-clj&#34;&gt;zookeeper-clj&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/nathanmarz/storm&#34;&gt;storm&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;etc.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;akka-and-the-erlang-legacy&#34;&gt;Akka and the Erlang legacy&lt;/h3&gt;&#xA;&lt;p&gt;I am trying to write programs that solve problems in the areas where &lt;a href=&#34;http://www.erlang.org/&#34;&gt;Erlang&lt;/a&gt; typically excels, such as:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

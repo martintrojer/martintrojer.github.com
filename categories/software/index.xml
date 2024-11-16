@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>software on Martin Trojer</title>
+    <title>Software on Martin Trojer</title>
     <link>https://martintrojer.github.io/categories/software/</link>
-    <description>Recent content in software on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Software on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 18 Mar 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/categories/software/index.xml" rel="self" type="application/rss+xml" />
@@ -13,63 +13,63 @@
       <link>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</link>
       <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</guid>
-      <description>&lt;p&gt;By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
+      <description>&lt;p&gt;By reading the title of this post, you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Moving my devboxes to Docker</title>
       <link>https://martintrojer.github.io/post/2015-02-22-moving-my-devboxes-to-docker/</link>
       <pubDate>Sun, 22 Feb 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-02-22-moving-my-devboxes-to-docker/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been quite vocal about my opinions on development environments and automating the creation of them &lt;a href=&#34;https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/&#34;&gt;on this blog&lt;/a&gt; and &lt;a href=&#34;https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud&#34;&gt;elsewhere&lt;/a&gt;. Boiling it down to the 2 points I feel most strongly about it would be;&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Always develop in a production-like environment&lt;/li&gt;&#xA;&lt;li&gt;Automate the creation of these environments&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve been quite vocal about my opinions on development environments and automating the creation of them &lt;a href=&#34;https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/&#34;&gt;on this blog&lt;/a&gt; and &lt;a href=&#34;https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud&#34;&gt;elsewhere&lt;/a&gt;. Boiling it down to the two points I feel most strongly about:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Always develop in a production-like environment&lt;/li&gt;&#xA;&lt;li&gt;Automate the creation of these environments&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
     </item>
     <item>
       <title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
       <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
       <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
-      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+      <description>&lt;p&gt;Let&amp;rsquo;s say you have a big legacy C++ app. Then you&amp;rsquo;re undoubtedly covered by &lt;a href=&#34;http://en.wikipedia.org/wiki/Greenspun&#39;s_tenth_rule&#34;&gt;Greenspun&amp;rsquo;s tenth rule&lt;/a&gt;. Let&amp;rsquo;s also say that your home-grown, buggy, and slow DSL/scripting language has been pushed to its limit and cannot be tweaked any further. What do you do? How can you replace it?&lt;/p&gt;&#xA;&lt;p&gt;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular. There are famous examples from gaming where &lt;a href=&#34;http://en.wikipedia.org/wiki/Game_Oriented_Assembly_Lisp&#34;&gt;Lisps&lt;/a&gt; and &lt;a href=&#34;http://www.wowwiki.com/Lua&#34;&gt;Lua&lt;/a&gt; are widely used.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What is a software company?</title>
       <link>https://martintrojer.github.io/post/2012-04-10-what-is-a-software-company/</link>
       <pubDate>Tue, 10 Apr 2012 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2012-04-10-what-is-a-software-company/</guid>
-      <description>Software is different from most other things humans build, hence companies creating/selling/licensing software must be different from other &amp;lsquo;production&amp;rsquo; companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software?</description>
+      <description>&lt;p&gt;Software is &lt;a href=&#34;https://martintrojer.github.io/post/2011-10-30-what-is-software/&#34;&gt;different from most other things humans build&lt;/a&gt;, hence companies creating/selling/licensing software must be different from other &amp;lsquo;production&amp;rsquo; companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software? Why haven&amp;rsquo;t most software companies learnt the hard lessons and started to operate like &lt;a href=&#34;http://www.valvesoftware.com/company/Valve_Handbook_LowRes.pdf&#34;&gt;Valve&lt;/a&gt;?&lt;/p&gt;</description>
     </item>
     <item>
       <title>Applied Symbolic Execution with KLEE/LLVM</title>
       <link>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</link>
       <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</guid>
-      <description>This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&#xA;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.</description>
+      <description>&lt;p&gt;This article serves as a follow-up to my previous post on symbolic execution, which can be found &lt;a href=&#34;https://martintrojer.github.io/post/2011-11-02-symbolic-execution/&#34;&gt;here&lt;/a&gt;. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on &lt;a href=&#34;https://github.com/martintrojer/symbolic-execution&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;One limitation of symbolic execution, as well as dynamic code analysis in general, is that the code under analysis needs to be buildable and linkable. Consequently, it is more challenging to analyze subsystems or code snippets compared to using a &lt;a href=&#34;http://en.wikipedia.org/wiki/Lint_(software)&#34;&gt;lint tool&lt;/a&gt;. Another complication arises from the fact that the symbolic executor&amp;rsquo;s virtual machine must also comprehend and model the system calls used by the code. This makes the tool OS-dependent, as it requires emulating all calls that &amp;ldquo;escape&amp;rdquo; the executor. Cadar, Dunbar, and Engler explain how this can be achieved for Linux by analyzing GNU coreutils in [1].&lt;/p&gt;</description>
     </item>
     <item>
       <title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
       <link>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</link>
       <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</guid>
-      <description>GNU and Richard Stallman was a real catalyst for the open source movement and it&amp;rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&amp;rsquo;s head with the copy-left licenses.</description>
+      <description>&lt;p&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/GNU_Project&#34;&gt;GNU&lt;/a&gt; and &lt;a href=&#34;http://en.wikipedia.org/wiki/Richard_stallman&#34;&gt;Richard Stallman&lt;/a&gt; were a real catalyst for the open source movement and its crown jewel: the Linux kernel. Not only did Mr. Torvalds&amp;rsquo; early Linux releases had nearly 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to release it under the GNU Public License (GPL). GNU and Stallman are forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on their head with the copyleft licenses. The &lt;a href=&#34;http://www.fsf.org/&#34;&gt;Free Software Foundation&lt;/a&gt;, the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Symbolic Execution</title>
       <link>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</link>
       <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</guid>
-      <description>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.</description>
+      <description>&lt;p&gt;A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.&amp;rdquo; Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What is software?</title>
       <link>https://martintrojer.github.io/post/2011-10-30-what-is-software/</link>
       <pubDate>Sun, 30 Oct 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-10-30-what-is-software/</guid>
-      <description>Having gained experience through numerous software projects and collaborations with diverse individuals, I&amp;rsquo;ve observed a recurring issue: a lack of understanding regarding the nature and process of software development. Surprisingly, even among developers, there persists a belief that seniority alone enables one to design and plan a problem, leaving less experienced developers to implement it. Some individuals still equate software development to assembly line production in the automotive industry.&#xA;In chapter 1 of &amp;ldquo;Structure and Interpretation of Computer Programs&amp;rdquo; SICP, Abelsson and Sussman describe a concept they call the &amp;ldquo;sorcerer&amp;rsquo;s spirit&amp;rdquo;</description>
+      <description>&lt;p&gt;Having gained experience through numerous software projects and collaborations with diverse individuals, I&amp;rsquo;ve observed a recurring issue: a lack of understanding regarding the nature and process of software development. Surprisingly, even among developers, there persists a belief that seniority alone enables one to design and plan a problem, leaving less experienced developers to implement it. Some individuals still equate software development to assembly line production in the automotive industry.&lt;/p&gt;&#xA;&lt;p&gt;In chapter 1 of &amp;ldquo;Structure and Interpretation of Computer Programs&amp;rdquo; &lt;a href=&#34;http://mitpress.mit.edu/sicp/&#34;&gt;SICP&lt;/a&gt;, Abelsson and Sussman describe a concept they call the &amp;ldquo;sorcerer&amp;rsquo;s spirit&amp;rdquo;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Welcome and some guiding words...</title>
       <link>https://martintrojer.github.io/post/2011-10-29-welcome-and-some-guiding-words/</link>
       <pubDate>Sat, 29 Oct 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-10-29-welcome-and-some-guiding-words/</guid>
-      <description>Let&amp;rsquo;s begin with an inspiring quote from my favorite book on computer programming, &amp;ldquo;Structure and Interpretations of Computer Programs&amp;rdquo; (SICP) by Abelson and Sussman.&#xA;Underlying our approach to this subject (computer programming) is our conviction that “computer science” is not a science and that its significance has little to do with computers. The computer revolution is a revolution in the way we think and in the way we express what we think.</description>
+      <description>&lt;p&gt;Let&amp;rsquo;s begin with an inspiring quote from my favorite book on computer programming, &amp;ldquo;Structure and Interpretations of Computer Programs&amp;rdquo; (SICP) by Abelson and Sussman.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Underlying our approach to this subject (computer programming) is our conviction that “computer science” is not a science and that its significance has little to do with computers. The computer revolution is a revolution in the way we think and in the way we express what we think. The essence of this change is the emergence of what might best be called procedural epistemology – the study of the structure of knowledge from an imperative point of view, as opposed to the more declarative point of view taken by classical mathematical subjects. Mathematics provides a framework for dealing precisely with notions of “what is”. Computation provides a framework for dealing precisely with notions of “how to”.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

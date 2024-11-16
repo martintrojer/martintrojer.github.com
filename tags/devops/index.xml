@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>devops on Martin Trojer</title>
+    <title>Devops on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/devops/</link>
-    <description>Recent content in devops on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Devops on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 22 Feb 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2015-02-22-moving-my-devboxes-to-docker/</link>
       <pubDate>Sun, 22 Feb 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-02-22-moving-my-devboxes-to-docker/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been quite vocal about my opinions on development environments and automating the creation of them &lt;a href=&#34;https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/&#34;&gt;on this blog&lt;/a&gt; and &lt;a href=&#34;https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud&#34;&gt;elsewhere&lt;/a&gt;. Boiling it down to the 2 points I feel most strongly about it would be;&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Always develop in a production-like environment&lt;/li&gt;&#xA;&lt;li&gt;Automate the creation of these environments&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve been quite vocal about my opinions on development environments and automating the creation of them &lt;a href=&#34;https://martintrojer.github.io/post/2014-12-04-developing-clojure-in-the-cloud/&#34;&gt;on this blog&lt;/a&gt; and &lt;a href=&#34;https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud&#34;&gt;elsewhere&lt;/a&gt;. Boiling it down to the two points I feel most strongly about:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Always develop in a production-like environment&lt;/li&gt;&#xA;&lt;li&gt;Automate the creation of these environments&lt;/li&gt;&#xA;&lt;/ol&gt;</description>
     </item>
   </channel>
 </rss>

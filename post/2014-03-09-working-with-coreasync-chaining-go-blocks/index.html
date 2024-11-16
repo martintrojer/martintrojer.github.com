@@ -48,7 +48,7 @@
         	       
 
 			<div>
-				<p>One particularly annoying difference between the core.async and <a href="http://golang.org">Go</a> is that you can&rsquo;t wrap function calls with the <code>go</code> macro. This is due to implementation details of core.async, which can only see the body &lsquo;inside&rsquo; the macro and not the functions it may call. This is obviously not a problem if the called function doesn&rsquo;t interact with any channels, but if it does when you might be in trouble. I&rsquo;ve touched on this subject in a <a href="https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/">previous post</a>.</p>
+				<p>One particularly annoying difference between core.async and <a href="http://golang.org">Go</a> is that you can&rsquo;t wrap function calls with the <code>go</code> macro. This is due to implementation details of core.async, which can only see the body &lsquo;inside&rsquo; the macro and not the functions it may call. This is obviously not a problem if the called function doesn&rsquo;t interact with any channels, but if it does, then you might be in trouble. I&rsquo;ve touched on this subject in a <a href="https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/">previous post</a>.</p>
 <p>Anyway, let me explain what I mean.</p>
 <p>Let&rsquo;s say we have a complicated <code>get-result</code> function that hits some external services (waits for the result) and then feeds the input to a big calculation function multiple times. All examples below simplified for brevity.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>calculation []
@@ -77,7 +77,7 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">async/&lt;!!</span> (<span style="color:#a6e22e">get-result-go</span>))
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; =&gt; nil</span>
-</span></span></code></pre></div><p>Nope, you can&rsquo;t to that, <code>Assert failed: &lt;! used not in (go ...) block</code>. It&rsquo;s also &lsquo;returns&rsquo; nil, <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-exceptions-in-go-blocks/">explained in this post</a>. Let&rsquo;s try another way;</p>
+</span></span></code></pre></div><p>Nope, you can&rsquo;t to that, <code>Assert failed: &lt;! used not in (go ...) block</code>. It&rsquo;s also &lsquo;returns&rsquo; nil, <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-exceptions-in-go-blocks/">explained in this post</a>. Let&rsquo;s try another way:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>calculation-go2 [ch]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">async/go</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">;; wait for some stuff</span>

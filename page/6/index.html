@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.121.1">
+	<meta name="generator" content="Hugo 0.138.0">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,8 +52,8 @@
 	<a href="/tags/sicp">sicp</a>
 	
 	<div>
-		This is a follow-up post to my previous &ldquo;Scheme in Clojure&rdquo; post.
-This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code).
+		<p>This is a follow-up post to my previous <a href="https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/">&ldquo;Scheme in Clojure&rdquo; post</a>.</p>
+<p>This time we implement a Scheme interpreter as an external DSL. This means that we consider the DSL as completely foreign to the host language, so we need to write our own parser (or reader as it&rsquo;s called in Clojure) and interpreter. I have to admit that this is a bit of an academic exercise because the internal DSL version I wrote about previously is both smaller (less code) and faster (as fast as any other Clojure code). However, this can serve as an example of how to write parsers in Clojure and it also highlights how elegant and succinct such a parser/interpreter can be. And of course, it&rsquo;s pretty darn fun :-)</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-01-28-scheme-as-an-external-dsl-in-clojure/">Read more...</a>
 		
@@ -74,9 +74,16 @@ This time we implement a Scheme interpreter as an external DSL. This means that 
 	<a href="/tags/jvm">jvm</a>
 	
 	<div>
-		Asynchronous workflows is a very powerful feature of F#, and recently I wanted to explore the state of the JVM and in particular Clojure when it comes to replicate the functionality. In this post I&rsquo;ll share some of my findings and I&rsquo;ll include some background material to explain the problems.
-Let&rsquo;s start with an example of a webclient using &ldquo;async&rdquo; in F#.
-let download url = async { let request = HttpWebRequest.
+		<p>Asynchronous workflows is a very powerful feature of F#, and recently I wanted to explore the state of the JVM and in particular Clojure when it comes to replicate the functionality. In this post I&rsquo;ll share some of my findings and I&rsquo;ll include some background material to explain the problems.</p>
+<p>Let&rsquo;s start with an example of a webclient using &ldquo;async&rdquo; in F#.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> download url <span style="color:#f92672">=</span> async <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let</span> request <span style="color:#f92672">=</span> HttpWebRequest.Create<span style="color:#f92672">(</span>Uri<span style="color:#f92672">(</span>url<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let!</span> response <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>AsyncGetResponse()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">use</span> stream <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>GetResponseStream()
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">let!</span> res <span style="color:#f92672">=</span> asyncReadToEnd stream
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> res
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>The magic here is that you can write continuation-style code in a sequential manner. This combines the scalability of asynchronous programs with the readability of sequential code. So, what lessons can we learn from this code and how would we do this with the JVM and Clojure? First of all, this is not the same as using futures over blocking calls;</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/">Read more...</a>
 		
@@ -91,8 +98,8 @@ let download url = async { let request = HttpWebRequest.
 	<a href="/tags/fsharp">fsharp</a>
 	
 	<div>
-		I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the basics of pattern matching here, rather show how F#&rsquo;s active patterns can be used to take pattern matching to the next level.
-The traditional steps of a &ldquo;parser&rdquo; are roughly lexical analysis (tokenizer), syntactic analysis (parser) and then evaluator (interpreter).
+		<p>I find myself working with DSLs quite a bit, and thus I write a few parsers. Some languages are better than others for parsers and pattern matching is a technique that makes writing parsers a true joy. I will not go over the <a href="http://msdn.microsoft.com/en-us/library/dd547125.aspx">basics of pattern matching</a> here, rather show how F#&rsquo;s <a href="http://msdn.microsoft.com/en-us/library/dd233248.aspx">active patterns</a> can be used to take pattern matching to the next level.</p>
+<p>The traditional steps of a &ldquo;parser&rdquo; are roughly lexical analysis (tokenizer), syntactic analysis (parser) and then evaluator (interpreter). In this post we&rsquo;ll focus on the parsing step of a simple DSL. A parser typically consume a list of tokens and produces an Abstract Syntax Tree (AST), ready to be passed on the evaluator/interpreter.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-12-03-parsing-with-matches-and-banana-clips/">Read more...</a>
 		
@@ -113,10 +120,16 @@ The traditional steps of a &ldquo;parser&rdquo; are roughly lexical analysis (to
 	<a href="/tags/sicp">sicp</a>
 	
 	<div>
-		If you give someone Fortran, he has Fortran.
-If you give someone Lisp, he has any language he pleases.
-&ndash; Guy Steele
-Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&rsquo;s built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.
+		<blockquote>
+<p>If you give someone Fortran, he has Fortran.</p>
+</blockquote>
+<blockquote>
+<p>If you give someone Lisp, he has any language he pleases.</p>
+</blockquote>
+<blockquote>
+<p>&ndash; Guy Steele</p>
+</blockquote>
+<p>Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it&rsquo;s built-in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-29-scheme-as-an-embedded-dsl-in-clojure/">Read more...</a>
 		
@@ -139,8 +152,8 @@ Replace Fortran with whatever language you are currently using, and the quote st
 	<a href="/tags/scala">scala</a>
 	
 	<div>
-		I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
-TCO is a well documented topic in books and articles about functional programming and the TCO in .
+		<p>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)</p>
+<p>TCO is a well documented topic in books and articles about functional programming, and the TCO in .NET and the lack thereof in the JVM has been debated &ldquo;to death&rdquo; on various programmers&rsquo; boards. I don&rsquo;t intend to add any fuel to the fire here, rather some background and practical implications.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-20-tail-calls-in-f-clojure-and-scala/">Read more...</a>
 		
@@ -165,8 +178,9 @@ TCO is a well documented topic in books and articles about functional programmin
 	<a href="/tags/valgrind">valgrind</a>
 	
 	<div>
-		This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.
-If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.
+		<p>This article serves as a follow-up to my previous post on symbolic execution, which can be found <a href="https://martintrojer.github.io/post/2011-11-02-symbolic-execution/">here</a>. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.</p>
+<p>If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on <a href="https://github.com/martintrojer/symbolic-execution">GitHub</a>.</p>
+<p>One limitation of symbolic execution, as well as dynamic code analysis in general, is that the code under analysis needs to be buildable and linkable. Consequently, it is more challenging to analyze subsystems or code snippets compared to using a <a href="http://en.wikipedia.org/wiki/Lint_(software)">lint tool</a>. Another complication arises from the fact that the symbolic executor&rsquo;s virtual machine must also comprehend and model the system calls used by the code. This makes the tool OS-dependent, as it requires emulating all calls that &ldquo;escape&rdquo; the executor. Cadar, Dunbar, and Engler explain how this can be achieved for Linux by analyzing GNU coreutils in [1].</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/">Read more...</a>
 		
@@ -187,7 +201,7 @@ If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can fin
 	<a href="/tags/llvm">llvm</a>
 	
 	<div>
-		GNU and Richard Stallman was a real catalyst for the open source movement and it&rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &ldquo;user-land&rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&rsquo;s head with the copy-left licenses.
+		<p><a href="http://en.wikipedia.org/wiki/GNU_Project">GNU</a> and <a href="http://en.wikipedia.org/wiki/Richard_stallman">Richard Stallman</a> were a real catalyst for the open source movement and its crown jewel: the Linux kernel. Not only did Mr. Torvalds&rsquo; early Linux releases had nearly 100% GNU &ldquo;user-land&rdquo;, he also decided to release it under the GNU Public License (GPL). GNU and Stallman are forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on their head with the copyleft licenses. The <a href="http://www.fsf.org/">Free Software Foundation</a>, the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/">Read more...</a>
 		
@@ -212,8 +226,8 @@ If you&rsquo;re interested in the changes we made for KLEE and LLVM, you can fin
 	<a href="/tags/mono">mono</a>
 	
 	<div>
-		When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&rsquo;re writing a new Windows application (and it&rsquo;s not a high performant game), chances are you are reading WPF books right now.
-One of the promises of .NET when it was released was &ldquo;the great language independent&rdquo; runtime, making all these languages interoperate in joyful blizz.
+		<p>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in <a href="http://www.reflector.net/">reflector</a> for technical proof). If you&rsquo;re writing a new Windows application (and it&rsquo;s not a high performant game), chances are you are reading <a href="http://en.wikipedia.org/wiki/Windows_Presentation_Foundation">WPF</a> books right now.</p>
+<p>One of the promises of .NET when it was released was &ldquo;the great language independent&rdquo; runtime, making all these languages interoperate in joyful bliss. Technically this still holds, but in practice it&rsquo;s all about C#.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/">Read more...</a>
 		
@@ -230,7 +244,7 @@ One of the promises of .NET when it was released was &ldquo;the great language i
 	<a href="/tags/sicp">sicp</a>
 	
 	<div>
-		Given the fact that I worship at the SICP altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a Scheme interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just &ldquo;big enough&rdquo; for to force me to drill into what the language have to offer.
+		<p>Given the fact that I worship at the <a href="https://web.mit.edu/6.001/6.037/sicp.pdf">SICP</a> altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a <a href="http://en.wikipedia.org/wiki/Scheme_(programming_language)">Scheme</a> interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just &ldquo;big enough&rdquo; to force me to drill into what the languages have to offer.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-02-scheming-in-f/">Read more...</a>
 		
@@ -251,7 +265,7 @@ One of the promises of .NET when it was released was &ldquo;the great language i
 	<a href="/tags/symbolic-execution">symbolic execution</a>
 	
 	<div>
-		A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &ldquo;Symbolic execution.
+		<p>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &ldquo;Symbolic execution.&rdquo; Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.</p>
 		
 			<a href="https://martintrojer.github.io/post/2011-11-02-symbolic-execution/">Read more...</a>
 		

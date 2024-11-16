@@ -52,15 +52,15 @@
         	       
 
 			<div>
-				<p>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)</p>
-<p>TCO is a well documented topic in books and articles about functional programming and the TCO in .NET and the lack their of in the JVM has been debated &ldquo;to death&rdquo; on various programmer&rsquo;s boards. I don&rsquo;t indend to add any fuel to the fire here, rather some background and practical implications.</p>
+				<p>I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my findings. If you&rsquo;re new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)</p>
+<p>TCO is a well documented topic in books and articles about functional programming, and the TCO in .NET and the lack thereof in the JVM has been debated &ldquo;to death&rdquo; on various programmers&rsquo; boards. I don&rsquo;t intend to add any fuel to the fire here, rather some background and practical implications.</p>
 <h3 id="background">Background</h3>
 <p>Recursion is a fundamental corner stone of programming and is particularly emphasised in functional programming. It is the idiomatic way to loop over sequences in languages like Clojure. Here&rsquo;s a classic example of a function calculating the sum of all natural number less or equal to n.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fsharp" data-lang="fsharp"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> rec sum n <span style="color:#f92672">=</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> n <span style="color:#f92672">=</span> 0 <span style="color:#66d9ef">then</span> 0
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> n <span style="color:#f92672">+</span> sum<span style="color:#f92672">(</span>n<span style="color:#f92672">-</span>1<span style="color:#f92672">)</span>
-</span></span></code></pre></div><p>This implementation is both very easy to understand and correct, so what&rsquo;s the problem? Well, this implementation is not &ldquo;tail recursive&rdquo;. A tail recursive function has the recursive call at it&rsquo;s tail and noting else (immediately returning the result of the call). In this case the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results &ldquo;bubble up&rdquo;.</p>
-<figure><img src="/assets/images/tailcalls/recur1.png"/>
+</span></span></code></pre></div><p>This implementation is both very easy to understand and correct, so what&rsquo;s the problem? Well, this implementation is not &ldquo;tail recursive&rdquo;. A tail recursive function has the recursive call at its tail and nothing else (immediately returning the result of the call). In this case, the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results &ldquo;bubble up&rdquo;.</p>
+<figure><img src="/assets/images/tailcalls/recur1.png">
 </figure>
 
 <p>When n is large this will lead to a “Stack Overflow” exception</p>
@@ -121,7 +121,7 @@ Process is terminated due to StackOverflowException.
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> rec b n <span style="color:#f92672">=</span>
 </span></span><span style="display:flex;"><span>   a b <span style="color:#f92672">(</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span>
 </span></span></code></pre></div><p>This is called mutual recursion, and are commonly used in functional implementations of finite state machines. Even though the a+b functions are tail recursive, we cannot convert to while loops but must proceed with the recursive calls. Quite naturally this will blow up with stack overflow quite quickly. Steele and Sussman realised in their famous <a href="http://library.readscheme.org/page1.html">lambda papers</a> back in the 70&rsquo;s, that a tail-recursive functions&rsquo; stack resources can be freed as soon as the call is made, there is not point of keeping that stack frame around.</p>
-<figure><img src="/assets/images/tailcalls/recur2.png"/>
+<figure><img src="/assets/images/tailcalls/recur2.png">
 </figure>
 
 <p>For a tail recursive sum example, with TCO we don&rsquo;t build up a chain of stacks and can thus handle summations of any depth (value of n).</p>

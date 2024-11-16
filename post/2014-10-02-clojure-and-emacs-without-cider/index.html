@@ -46,8 +46,8 @@
         	       
 
 			<div>
-				<p>I&rsquo;ve been hacking Clojure for many years now, and I&rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will &lsquo;make your day&rsquo;.</p>
-<p>However, the last couple of months have been rough for the Cider project. I&rsquo;ve experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler &amp; snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is &rsquo;re-inventing&rsquo; an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out <a href="https://cursiveclojure.com">Cursive Clojure</a>, its great.</p>
+				<p>I&rsquo;ve been hacking Clojure for many years now, and I&rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs toolchain has come a long way during this time: swank-clojure, nREPL, nrepl.el, and now Cider. The feature list is ever-growing, and every time you look, there are some new awesome shortcuts that will &lsquo;make your day&rsquo;.</p>
+<p>However, the last couple of months have been rough for the Cider project. I&rsquo;ve experienced lots of instability, crashes, and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler &amp; snappier Emacs for a reason, and there is a part of me that feels concerned that Cider is &rsquo;re-inventing&rsquo; an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out <a href="https://cursiveclojure.com">Cursive Clojure</a>; it&rsquo;s great.</p>
 <p>In this post I&rsquo;ll describe a simpler Emacs/Clojure setup that I&rsquo;ve been using for the last couple of weeks. It&rsquo;s much closer to &lsquo;vanilla Emacs&rsquo; and thus have much fewer features. On the flip side, it&rsquo;s very fast and super stable.</p>
 <p>It&rsquo;s based on Emacs standard way to talk to Lisp REPLs, <code>inferior-lisp-mode</code>. This setup bypasses nREPL completely, it simply launches <code>lein repl</code> in a buffer and communicates via stdin/stdout.</p>
 <p>The setup consists of the following emacs modes (all available on <a href="http://melpa.milkbox.net/#/">Melpa</a>);</p>
@@ -163,7 +163,7 @@
 <!-- raw HTML omitted -->
 <p>You will also need to add <code>--langmap=Lisp:+.clj.cljs</code> into <code>~/.ctags</code>; <a href="https://github.com/martintrojer/dotfiles/blob/master/.ctags">see here</a>.</p>
 <p>Then use <code>C-c p R</code> to rebuild your TAGS file (this works when you&rsquo;re in projectile mode). After that just can either do <code>M-.</code> to jump to definition (and <code>C-u M-.</code> for next match), remember that <code>M-*</code> takes you back. One great thing about tags is that you don&rsquo;t have to be &lsquo;jacked in&rsquo; to use them! That goes for both navigation and auto-complete.</p>
-<p>That&rsquo;s it really, nice and simple! If you have any additions to make this setup even better I&rsquo;d love to hear about them.</p>
+<p>That&rsquo;s it really - nice and simple! If you have any additions to make this setup even better, I&rsquo;d love to hear about them.</p>
 			</div>
 		</article>
 	</main>
