@@ -10,13 +10,13 @@ tags:
 title: Non tail-recursive functions in core.async go blocks
 ---
 
-I've been using various [Go](http://go-lang.org/) examples / tutorials to take a deeper look into [core.async](https://github.com/clojure/core.async). The [CSP](http://en.wikipedia.org/wiki/Communicating_sequential_processes) pattern is a very interesting and powerful, it's good move for Clojure to "throw in" with Go and push this style of programming.
+I've been using various [Go](http://go-lang.org/) examples and tutorials to take a deeper look into [core.async](https://github.com/clojure/core.async). The [CSP](http://en.wikipedia.org/wiki/Communicating_sequential_processes) pattern is very interesting and powerful; it's a good move for Clojure to "throw in" with Go and push this style of programming.
 
-core.sync works at s-expression level, where some other JVM solutions ([Kilim](http://www.malhar.net/sriram/kilim/), [Pulsar](https://github.com/puniverse/pulsar)) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. [David has written about this](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/).
+core.async works at the s-expression level, where some other JVM solutions ([Kilim](http://www.malhar.net/sriram/kilim/), [Pulsar](https://github.com/puniverse/pulsar)) do the same at the byte-code level. The main benefit of doing these transforms at the s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. [David has written about this](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/).
 
 ### The go macro
 
-Now, one limitation of the go macro is that it can't "look into" other functions / closures. This difference stands out quite clearly when reading Go code where you can put "go" in-front of function calls.
+Now, one limitation of the go macro is that it can't "look into" other functions or closures. This difference stands out quite clearly when reading Go code where you can put "go" in front of function calls.
 
 ```clojure
 (defn put-all! [vs ch]
@@ -57,7 +57,7 @@ I.e. it's possible to simulate putting go around a function call by inlining it'
 
 ### Non-tail recursive functions
 
-Now for a more [involved example](http://tour.golang.org/#68), we want to walk a binary search tree and put the values on a channel. When all results have been put on the channel we want to close it.
+Now for a more [involved example](http://tour.golang.org/#68), we want to walk a binary search tree and put the values on a channel. When all results have been put on the channel, we want to close it.
 
 Here's a simple version of the walker (using the thread blocking `>!!` call).
 
@@ -132,7 +132,7 @@ Let's give up the idea of using one go process per tree and see if we can't use 
     (go
      (<! (walker tree))
      (close! ch))))
- ```
+```
 
 Here we put the `walker` and `close!` calls in another go block and then we wait for the call to walker to "finish" before moving on to close the channel. What it means for the "walker to finish" is that the go block for the top node of the tree terminates (since every node in the tree will have it's own go block).
 
@@ -161,4 +161,4 @@ The complete solution can be found [here](https://github.com/martintrojer/go-tut
 
 [Some more Go tutorials converted to core.async](https://github.com/martintrojer/go-tutorials-core-async/)
 
-A final word of advice, when converting Go examples to core.async remember no to do `Thread/sleep` in your go blocks! In go, the sleep function is integrated in the go routine scheduling, this is not the case in core.async. See [here]({{< ref "2013-07-07-coreasync-and-blocking-io.md" >}}) for a deeper explanation why.
+A final word of advice: when converting Go examples to core.async, remember not to do `Thread/sleep` in your go blocks! In Go, the sleep function is integrated into the go routine scheduling; this is not the case in core.async. See [here]({{< ref "2013-07-07-coreasync-and-blocking-io.md" >}}) for a deeper explanation of why.

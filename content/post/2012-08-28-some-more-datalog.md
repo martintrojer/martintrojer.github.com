@@ -10,9 +10,9 @@ tags:
 title: Some more Datalog
 ---
 
-I've [written about datalog]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}}) and [Datomic](http://www.datomic.com) a bit recently. To conclude here's another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found [here](https://github.com/martintrojer/datalog).
+I've [written about Datalog]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}}) and [Datomic](http://www.datomic.com) recently. To conclude, here's another post comparing execution speed with the contrib.datalog library by Jeffrey Straszheim. Clojure 1.4-ready source can be found [here](https://github.com/martintrojer/datalog).
 
-The example I'm using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;
+The example I'm using in my benchmark is a simple join between two relations. In Datomic/Datalog, it would look like this:
 ```clojure
 (q '[:find ?first ?height
      :in $a $b
@@ -24,7 +24,7 @@ The example I'm using in my benchmark is a simple join between two relations, in
 ;; #<HashSet [["Jane" 73], ["John" 71]]>
 ```
 
-In contrib.datalog the same query requires a bit more ceremony, you can write it like this;
+In contrib.datalog, the same query requires more ceremony. You can write it like this:
 ```clojure
 (def db-base (make-database
                  (relation :last-first-email [:last :first :email])
@@ -50,12 +50,12 @@ In contrib.datalog the same query requires a bit more ceremony, you can write it
 ;; ({:height 73, :first "Jane"} {:height 71, :first "John"})
 ```
 
-In my previous posts I described a number of different way to use core.logic, unify+clojure.set/join to replicate the same query. How does the execution times compare? I use the same benchmark as in the previous post (the same query, with 5000 joins between the 2 'tables').
+In my previous posts, I described several different ways to use core.logic, unify+clojure.set/join to replicate the same query. How do the execution times compare? I use the same benchmark as in the previous post (the same query, with 5,000 joins between the two 'tables').
 
-Datomic/datalog is fastest by far needing ~11ms to complete. Second fastest is the unify + clojure.set/join solution [described here]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) about an order of magnitude slower at ~150ms. The core.logic defrel/fact and contrib.datalog is about equal in speed at ~320ms, ie. 2x slower than unify+join and ~30x slower than datomic/datalog.
+Datomic/Datalog is fastest by far, needing about 11ms to complete. Second fastest is the unify + clojure.set/join solution [described here]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}), about an order of magnitude slower at around 150ms. The core.logic defrel/fact and contrib.datalog solutions are about equal in speed at approximately 320ms, i.e., twice as slow as unify+join and about 30 times slower than Datomic/Datalog.
 
 ### Conclusion
-My recent datalog posts focused on querying in-memoy data structures (like log rings etc). This is not exactly what Datomic was designed to do, still it's query engine performs really well. An added bonus is that it's low on ceremony. The recently announced Datomic free edition eradicates some of my initial fear of using it in my projects. The main drawback is that Datomic is closed sourced, even the free edition. Another detail that's annoying is that even if you're just after the datalog/query machinery -- by adding datomic-free, you pull in all of datomics 27 jar dependencies weighing in at 19Mb. That's quite a heavy tax on your uberjar. <br/><br/>There are certainly alternatives, like core.logic and contrib.datalog. But the order of magnitude worse execution time can be hard to live with if your datasets are big. By using datomic/datalog queries you also have the flexibility to move into disk-based databases if your datasets explodes. More on this in upcoming blog posts.
+My recent Datalog posts focused on querying in-memory data structures (like log rings, etc.). This is not exactly what Datomic was designed to do, yet its query engine performs remarkably well. An added bonus is that it's low on ceremony. The recently announced Datomic free edition eliminates some of my initial fears about using it in my projects. The main drawback is that Datomic is closed source, even in the free edition. Another detail that's annoying is that even if you're just after the Datalog/query machinery, adding datomic-free pulls in all 27 of Datomic's jar dependencies, weighing in at 19MB. That's quite a heavy tax on your uberjar.
 
 For completeness, here's the join-test function I used for the contrib.datalog benchmark;
 

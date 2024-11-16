@@ -9,10 +9,10 @@ tags:
 title: cKanren time!
 ---
 
-Mr David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event I'm writing up some core.logic/cKanren stuff I've been looking at recently.
+Mr. David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event, I'm writing up some core.logic/cKanren stuff I've been looking at recently.
 
 ### Enter the Queens
-If you've followed this blog, you've perhaps seen my previous posts on solving N-Queens in core.logic ([part1]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) and [part2]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}})). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here's a core.logic-irized version of the solution described in the [cKanren paper](http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf) (please read paragraph 4.2 for an in-depth explanation);
+If you've followed this blog, you've perhaps seen my previous posts on solving N-Queens in core.logic ([part 1]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) and [part 2]({{< ref "2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2.md" >}})). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously, there are many (new) ways to solve this problem. Here's a core.logic-styled version of the solution described in the [cKanren paper](http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf) (please read paragraph 4.2 for an in-depth explanation):
 
 ```clojure
 (defn diago [qi qj d rng]
@@ -165,9 +165,9 @@ In this example I will use a 4x4 sudoku for simplicity.
      (all-distincto t)))
 ```
 
-That's it, exactly how the rules for sudoku was written, logic programming really is magical!
+That's it - exactly how the rules for sudoku were written. Logic programming really is magical!
 
-Writing it this way is good for understanding the solution, but not very practical for a real 9x9 board. Fortunately we can write some more helpers to make this compact, here's an example from Mr Nolen himself;
+Writing it this way is good for understanding the solution but not very practical for a real 9x9 board. Fortunately, we can write some more helpers to make this compact. Here's an example from Mr. Nolen himself:
 
 ```clojure
 (ns sudoku
@@ -227,7 +227,7 @@ So how fast is this then? How does it stack up against the hand-rolled implement
 the core.logic code terminates in ~6 seconds where as the hand rolled code loops forever (well, I gave up after 20 minutes).
 
 ### Conclusion
-In most cases where "searching" is involved, I warmly recommend using core.logic. The expressive power makes for easy to read code, and the performance cost over hand rolled code is either not very significant or reverse (i.e. core.logic is faster). The new constraints primitives (cKanren) in core.logic-0.8 is a great addition to an already impressive library.
+In most cases where "searching" is involved, I warmly recommend using core.logic. The expressive power makes for easy-to-read code, and the performance cost over hand-rolled code is either not very significant or reversed (i.e., core.logic is faster). The new constraints primitives (cKanren) in core.logic-0.8 are a great addition to an already impressive library.
 
 Some other stuff;
 

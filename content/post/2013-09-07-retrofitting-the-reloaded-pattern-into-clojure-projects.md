@@ -8,17 +8,17 @@ tags:
 title: Retrofitting the Reloaded pattern into Clojure projects
 ---
 
-[Stuart Sierra](https://twitter.com/stuartsierra) has done a great job with [clojure.tools.namespace](https://github.com/clojure/tools.namespace) and the [reloaded](https://github.com/stuartsierra/reloaded) leiningen template. If you haven't heard about this before please have a look at c.t.n readme and watch [this presentation](http://www.infoq.com/presentations/Clojure-Large-scale-patterns-techniques).
+[Stuart Sierra](https://twitter.com/stuartsierra) has done a great job with [clojure.tools.namespace](https://github.com/clojure/tools.namespace) and the [reloaded](https://github.com/stuartsierra/reloaded) Leiningen template. If you haven't heard about this before, please have a look at c.t.n's readme and watch [this presentation](http://www.infoq.com/presentations/Clojure-Large-scale-patterns-techniques).
 
-I've have retrofitted this pattern into two rather big clojure projects (20k and 5k lines) with several modules and here are some of my findings.
+I have retrofitted this pattern into two rather large Clojure projects (20,000 and 5,000 lines) with several modules, and here are some of my findings.
 
 ## Removing global state
 
-The first step is to find all resources that needs to be "lifecycled". Typical examples are Jetty servers, database / message bus clients etc. It's common that these resources are in a `(defonce server (atom ...))` form. I tend to grep for `defonce` and `atom` to find these guys.
+The first step is to find all resources that need to be "lifecycled." Typical examples are Jetty servers, database/message bus clients, etc. It's common that these resources are in a `(defonce server (atom ...))` form. I tend to grep for `defonce` and `atom` to find these items.
 
-Please note that not all defonces / atoms need to be lifecycled. Some of them can be safely "dropped" when you un-/re-load the namespace. In this case you can leave them as `(def thing (atom ...))`. The rule of thumb is to lifecycle the ones that create a system wide resource, like a network port, message queue channel etc.
+Please note that not all defonces/atoms need to be lifecycled. Some of them can be safely "dropped" when you un/reload the namespace. In this case, you can leave them as `(def thing (atom ...))`. The rule of thumb is to lifecycle the ones that create system-wide resources, like network ports, message queue channels, etc.
 
-After you found your candidates you should replace them with `defrecords` implementing some kind of `LifeCycle` protocol. Here's a version I use;
+After you find your candidates, you should replace them with `defrecords` implementing some kind of `LifeCycle` protocol. Here's a version I use:
 
 ```clojure
 (ns lifecycle)
@@ -36,7 +36,7 @@ After you found your candidates you should replace them with `defrecords` implem
     (stop s)))
 ```
 
-The records themselves hold their state (typically in an atom) which gets updated by the `start` and `stop` functions. Here's an example;
+The records themselves hold their state (typically in an atom) which gets updated by the `start` and `stop` functions. Here's an example:
 
 ```clojure
 (defrecord JettyServer [cfg state]
@@ -56,7 +56,7 @@ Turning your global state into lifecycle records is the most intrusive part of t
 
 ## Creating the system
 
-After you created these records you need to create (and start) your system (the collection of the lifecycled records). This will most likely be done in 2 places, in your apps "main" function and in the `user` namespace (more on REPL usage below).
+After you create these records, you need to create (and start) your system (the collection of the lifecycled records). This will most likely be done in two places: in your app's "main" function and in the `user` namespace (more on REPL usage below).
 
 ```clojure
 (defn create-system [cfg]
@@ -84,7 +84,7 @@ When retrofitting this pattern into existing codebases, having the system passed
 
 If you have a `:main` (and `:aot`) key in your `project.clj` you might have noticed that you have quite a few .class files in your jar. This is usually not a big deal, but it causes problems for clojure.tools.namespace since it can't unload these namespaces correctly.
 
-One method to minimize the class files in your jar is a namespace containing your new entry point;
+One method to minimize the class files in your jar is a namespace containing your new entry point:
 
 ```clojure
 (ns app
@@ -101,7 +101,7 @@ Note that this namespace doesn't require any other in the `ns` macro, this means
 
 Now, your application probably consist of more than one service. So you'll have to apply the steps described above to all of them. Then, in order to maximize your REPL productivity you want to include and control all the services your current project interact with. This is only done in the `:dev` profile, since you wouldn't do this in the "real" entry point of your service.
 
-To make this work you need 2 things; Add a leiningen dependency to these services (under the `:dev` profile) and soft links to their folders in the current projects [checkouts folder](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies). The reason for the dependency is that we want to pull in all of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.
+To make this work you need 2 things: Add a leiningen dependency to these services (under the `:dev` profile) and soft links to their folders in the current projects [checkouts folder](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies). The reason for the dependency is that we want to pull in all of the sub-projects dependencies (in the REPL) and checkouts is where we will do our edits.
 
 This means that you are probably going to need a local [nexus](http://www.sonatype.org/nexus/go) / [archiva](http://archiva.apache.org/index.cgi) / [clojars](https://github.com/ato/clojars-web). Then have your CI system do a `lein deploy` after each successful build.
 

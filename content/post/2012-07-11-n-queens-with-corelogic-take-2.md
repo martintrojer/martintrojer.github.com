@@ -9,13 +9,13 @@ tags:
 title: N Queens with core.logic, take 2
 ---
 
-This post is a follow-up to my [previous post on NQueens and core.logic]({{< ref "2012-07-07-n-queens-with-corelogic-take-1.md" >}}), in which I tried to find the solutions using "pure" logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.
+This post is a follow-up to my [previous post on N Queens and core.logic]({{< ref "2012-07-07-n-queens-with-corelogic-take-1.md" >}}), in which I tried to find solutions using "pure" logic (without arithmetic goals) and basic miniKanren/Reasoned Schemer building blocks.
 
-After some excellent feedback and hints from Mr [David Nolen](https://twitter.com/swannodette) (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to [good old Bratko](http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&qid=1341989805&sr=8-2).
+After excellent feedback and hints from [David Nolen](https://twitter.com/swannodette) (big thanks), I present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to [good old Bratko](http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/).
 
-First, let's fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given 2 prerequisites; the fresh variable must be bound to a finite (number) space and we much use _project_ to bind the values. This means we can get rid of subo altogether.
+First, let's fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given two prerequisites: the fresh variable must be bound to a finite (number) space, and we must use _project_ to bind the values. This means we can get rid of subo altogether.
 
-Project is mentioned in passing in the Reasoned Schemer book, it says "project is syntactically like fresh, but it binds different values to the lexical variables. project binds walk\*ed values, whereas fresh binds variables using var". What that means in this case is that we can perform arithmetic operations of the projected variables. Here's our new safeo;
+Project is mentioned in passing in the Reasoned Schemer book. It says "project is syntactically like fresh, but it binds different values to the lexical variables. project binds walk*ed values, whereas fresh binds variables using var". What that means in this case is that we can perform arithmetic operations on the projected variables. Here's our new safeo:
 
 ```clojure
 (defn safeo [[x1 y1] [x2 y2]]
@@ -25,7 +25,7 @@ Project is mentioned in passing in the Reasoned Schemer book, it says "project i
    (project [x1 x2 y1 y2]
             (!= (- x2 x1) (- y2 y1))
             (!= (- x1 y2) (- x2 y1)))))
-````
+```
 
 This works if the x's as bound to number range with membero (remember that the y's are never fresh), this is done in a updated queens-run macro;
 
@@ -115,6 +115,6 @@ We're almost done now, we just to need rewrite the (run\* ...) form. We can actu
 
 As you can see, with looping we are generating drastically less associations for core.logic to consider, that's good for performance.
 
-Now it's ~70x faster than the original solution in the previous post. For a 8-queens run, this is ~50x slower than the hand-rolled functional backtracking solution in [the very first posting]({{< ref "2012-03-25-enumerate-n-queens-solutions.md" >}}). That's still pretty good for a generic prolog machinery with all the extra expression power that it packs.
+Now it's approximately 70 times faster than the original solution in the previous post. For an 8-queens run, this is about 50 times slower than the hand-rolled functional backtracking solution in [the very first posting]({{< ref "2012-03-25-enumerate-n-queens-solutions.md" >}}). That's still pretty good for a generic Prolog machinery with all the extra expressive power that it provides.
 
-Next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!
+The next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!

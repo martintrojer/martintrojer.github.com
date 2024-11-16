@@ -8,36 +8,36 @@ tags:
 title: Untying the Recursive Knot
 ---
 
-Here I present a couple of examples of the functional design pattern "untying the recursive knot". I've found this useful in a couple of occasions, for instance when breaking apart mutually recursive functions. Material inspired by Jon Harrop's excellent [Visual F# to Technical Computing](http://www.ffconsultancy.com/products/fsharp_for_technical_computing/).
+Here I present a couple of examples of the functional design pattern "untying the recursive knot." I've found this useful on several occasions, for instance, when breaking apart mutually recursive functions. This material was inspired by Jon Harrop's excellent [Visual F# for Technical Computing](http://www.ffconsultancy.com/products/fsharp_for_technical_computing/).
 
-First, let's look at a simple factorial implementation using direct recursion;
+First, let's look at a simple factorial implementation using direct recursion:
 ```clojure
 (defn fact [n]
   (if (= n 0) 1
       (* n (fact (dec n)))))
 ```
 
-We can break the direct recursive dependency by replacing the recursive calls with calls to a function argument;
+We can break the direct recursive dependency by replacing the recursive calls with calls to a function argument:
 ```clojure
 (defn fact' [fact n]
   (if (= n 0) 1
       (* n (fact (dec n)))))
 ```
 
-We have now broken the recursive knot! The functionality can be recovered by tying the recursive knot using the following y combinator;
+We have now broken the recursive knot! The functionality can be recovered by tying the recursive knot using the following Y combinator:
 
 ```clojure
 (defn y [f & xs]
   (apply f (partial y f) xs))
 ```
 
-For example;
+For example:
 ```clojure
 (y fact' 10)
 ;; 3628800
 ```
 
-This has given us extra power, we may for instance inject new functionality into every invocation without touching the original definition;
+This has given us extra power, we may for instance inject new functionality into every invocation without touching the original definition:
 
 ```clojure
 (y (fn [f n]
@@ -53,7 +53,7 @@ This has given us extra power, we may for instance inject new functionality into
 ;; 120
 ```
 
-Now for a more practical example when we have mutually recursive functions;
+Now for a more practical example when we have mutually recursive functions:
 
 ```clojure
 (declare odd)
@@ -72,7 +72,7 @@ Now for a more practical example when we have mutually recursive functions;
 ;; [[0 2 4 6] [1 3 5]]
 ```
 
-We can break these functions apart using the same strategy as with fact' above;
+We can break these functions apart using the same strategy as with fact' above:
 
 ```clojure
 (defn even' [odd es os [e & t]]
@@ -88,7 +88,7 @@ We can break these functions apart using the same strategy as with fact' above;
 
 Please note that the (declare ...) form is no longer required. The functions are now entirely independent and could live in different namespaces.
 
-Using the same y combinator above, we can get back to the original functionalty;
+Using the same y combinator above, we can get back to the original functionality:
 
 ```clojure
 (y (fn [f & args] (apply even' (partial odd' f) args)) [] [] (range 7))

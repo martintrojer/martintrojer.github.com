@@ -11,19 +11,17 @@ tags:
 title: Software archaeology, hunting bugs in Emacs
 ---
 
-By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it's actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).
+By reading the title of this post, you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it's actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).
 
 <!--more-->
 
 ## Background
 
-Let me set the scene, I tend to do all my development inside VMs and/or Docker containers. Why? well see [here]({{ ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [here]({{< ref "2015-02-22-moving-my-devboxes-to-docker.md" >}}). My host OS is OSX and my guests Linux, I use [VirtualBox](http://virtualbox.org) for local VM-ing. After upgrading to OSX 10.10 I saw strange glitches when using Emacs terminal-mode in my VMs;
+Let me set the scene: I tend to do all my development inside VMs and/or Docker containers. Why? Well, see [here]({{< ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [here]({{< ref "2015-02-22-moving-my-devboxes-to-docker.md" >}}). My host OS is OSX, and my guests are Linux. I use [VirtualBox](http://virtualbox.org) for local VM-ing. After upgrading to OSX 10.10, I saw strange glitches when using Emacs terminal-mode in my VMs.
 
-{{< figure src="/assets/images/emacs/garbled.png" >}}
+First port of call when Emacs draws garbled text to the terminal is to check the TERM/TERMCAP environment variables. If Emacs is outputting control chars that the terminal can't understand, then you've found your problem. One way to check this is to do `C-l` when your screen is garbled; this causes Emacs to re-draw the screen. In my case, the re-draw command rendered the screen correctly.
 
-First port of call when Emacs draws garbled text to the terminal is to check the TERM / TERMCAP environment variables. If Emacs is outputting control chars that the terminal can't understand then you found your problem. One way to check this is to do `C-l` when your screen is garbled, this causes Emacs to re-draw the screen. In my case the re-draw command rendered the screen correctly.
-
-Some brave soul on the internet had found out that if you change the number of virtual CPUs to 1 on the VM, the problems goes away. Very strange indeed. This tells me its some kind on timing issue. After some googling I learned that world of terminals and [control codes](http://en.wikipedia.org/wiki/ANSI_escape_code#CSI_codes) is complex and messy. Control codes and the text is a byte stream which the network stack can flush at its leisure, and if you mix in the user input these network transactions becomes quite unpredictable. The problem is that this byte stream can be cut off in the middle of a control char (network packet envelope) and the terminal emulator can timeout and misinterpret the remaining stream of bytes resulting in garbled output. One possible scenario is then that OSX 10.10 made some changes to the network stack resulting in these control codes being chopped of more often. What can I say, welcome the wonderful world of computers.
+Some brave soul on the internet had found out that if you change the number of virtual CPUs to 1 on the VM, the problem goes away. Very strange indeed. This tells me it's some kind of timing issue. After some googling, I learned that the world of terminals and [control codes](http://en.wikipedia.org/wiki/ANSI_escape_code#CSI_codes) is complex and messy. Control codes and text form a byte stream which the network stack can flush at its leisure, and if you mix in user input, these network transactions become quite unpredictable.
 
 ## Finding a solution
 

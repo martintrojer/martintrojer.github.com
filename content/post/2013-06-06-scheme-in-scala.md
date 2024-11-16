@@ -8,11 +8,11 @@ tags:
 - lisp
 title: Scheme in Scala
 ---
-In this post I present some of my experiences writing a [Scheme interpreter in Scala](https://github.com/martintrojer/scheme-scala) (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.
+In this post, I present some of my experiences writing a [Scheme interpreter in Scala](https://github.com/martintrojer/scheme-scala) (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.
 
-Overall, the Scala solution is very similar to the [F# one](https://github.com/martintrojer/scheme-fsharp). Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of a Hindley-Milner type inference. Scala uses a "flow based" type inferrer, which is less powerful than ML, but apparently works better for OO sub-classes etc. I will look into this in a future blog post.
+Overall, the Scala solution is very similar to the [F# one](https://github.com/martintrojer/scheme-fsharp). Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of Hindley-Milner type inference. Scala uses a "flow-based" type inferrer, which is less powerful than ML but apparently works better for OO subclasses, etc. I will look into this in a future blog post.
 
-Here's the eval / apply functions;
+Here's the eval/apply function:
 
 {{< highlight scala >}}
 def eval(env: Env, expr: ExprT): (Env, ExprT) = expr match {
@@ -46,13 +46,13 @@ private def apply(f: ((Env, List[ExprT]) => (Env, ExprT)),
 
 ## OO vs. FP
 
-Scala feels like a OO language with FP features, where Clojure and F# appears the other way around. In Clojure and F#, you typically group functions that somehow "belong together" in namespaces/modules, in Scala you put them in classes and objects (scala speak for singletons). You can treat these object like namespaces if you want, but that doesn't feel like idiomatic Scala. One example of this, in this particular case, is the environment (or stack) functions that sat quite happily in the interpreter namespace in F# / Clojure. In Scala that felt awkward, I ended up creating a [Env class](https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/Env.scala), with some methods, to model this better.
+Scala feels like an OO language with FP features, whereas Clojure and F# appear the other way around. In Clojure and F#, you typically group functions that somehow "belong together" in namespaces/modules; in Scala, you put them in classes and objects (Scala speak for singletons). You can treat these objects like namespaces if you want, but that doesn't feel like idiomatic Scala. One example of this, in this particular case, is the environment (or stack) functions that sat quite happily in the interpreter namespace in F#/Clojure. In Scala, that felt awkward, so I ended up creating an [Env class](https://github.com/martintrojer/scheme-scala/blob/master/src/main/scala/mtscheme/Env.scala) with some methods to model this better.
 
-This Scheme implementation is still very FP, and I don't really feel the OO parts gets in the way. But it highlights the issue that Scala isn't a very opinionated language. Many paradigms are supported; Old-school OO with mutable variables / collections is idiomatic just as strict immutable, function-oriented code. Discipline is needed if a codebase of any size, worked on by many individuals, is to be kept coherent.
+This Scheme implementation is still very FP, and I don't really feel the OO parts get in the way. But it highlights the issue that Scala isn't a very opinionated language. Many paradigms are supported: old-school OO with mutable variables/collections is idiomatic just as strict immutable, function-oriented code. Discipline is needed if a codebase of any size, worked on by many individuals, is to be kept coherent.
 
-Scala tries to fix some of the common problems found in popular OO languages, with featrues like [abstract types](http://www.scala-lang.org/node/105), [implicits](http://blog.joa-ebert.com/2010/12/26/understanding-scala-implicits/), [co/contra-variance](http://blogs.atlassian.com/2013/01/covariance-and-contravariance-in-scala/) and more. It's all very clever stuff, but be prepared to spend quite a bit of time getting the type declarations right if you want to leverage all this.
+Scala tries to fix some of the common problems found in popular OO languages with features like [abstract types](http://www.scala-lang.org/node/105), [implicits](http://blog.joa-ebert.com/2010/12/26/understanding-scala-implicits/), [co/contra-variance](http://blogs.atlassian.com/2013/01/covariance-and-contravariance-in-scala/), and more. It's all very clever stuff, but be prepared to spend quite a bit of time getting the type declarations right if you want to leverage all this.
 
-It can be argued that time is better spend working on the problems/functions themselves instead of messing about with clever type annotations ([speaking to the problem vs speaking to the compiler](http://vimeo.com/16753929#)). The just as valid counter-argument is that once you gotten your types and model right, the type system will help you drive your code and eliminate many logical errors early. I do enjoy that warm fuzzy feeling you get when to compiler tells you about forgotten pattern match cases, and the "if it compiles it works" experience.
+It can be argued that time is better spent working on the problems/functions themselves instead of messing about with clever type annotations ([speaking to the problem vs. speaking to the compiler](http://vimeo.com/16753929#)). The just as valid counter-argument is that once you've gotten your types and model right, the type system will help you drive your code and eliminate many logical errors early. I do enjoy that warm fuzzy feeling you get when the compiler tells you about forgotten pattern match cases, and the "if it compiles, it works" experience.
 
 ## Parsing
 

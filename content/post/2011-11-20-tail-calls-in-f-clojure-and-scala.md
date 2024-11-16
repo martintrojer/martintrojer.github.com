@@ -12,9 +12,9 @@ tags:
 title: Tail Calls in F#, Clojure and Scala
 ---
 
-I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my my findings. If you're new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
+I recently looked into Tail Call Optimisation/Elimination (TCO) and the implications for 3 modern languages, namely F#, Clojure and Scala. In this post I share my findings. If you're new to the subject or just looking into some of these languages I hope this post can be of some use to you. I will mix code snippets in the 3 languages freely (and without warning! :)
 
-TCO is a well documented topic in books and articles about functional programming and the TCO in .NET and the lack their of in the JVM has been debated "to death" on various programmer's boards. I don't indend to add any fuel to the fire here, rather some background and practical implications.
+TCO is a well documented topic in books and articles about functional programming, and the TCO in .NET and the lack thereof in the JVM has been debated "to death" on various programmers' boards. I don't intend to add any fuel to the fire here, rather some background and practical implications.
 
 ### Background
 Recursion is a fundamental corner stone of programming and is particularly emphasised in functional programming. It is the idiomatic way to loop over sequences in languages like Clojure. Here's a classic example of a function calculating the sum of all natural number less or equal to n.
@@ -25,7 +25,7 @@ let rec sum n =
   else n + sum(n-1)
 ```
 
-This implementation is both very easy to understand and correct, so what's the problem? Well, this implementation is not "tail recursive". A tail recursive function has the recursive call at it's tail and noting else (immediately returning the result of the call). In this case the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results "bubble up".
+This implementation is both very easy to understand and correct, so what's the problem? Well, this implementation is not "tail recursive". A tail recursive function has the recursive call at its tail and nothing else (immediately returning the result of the call). In this case, the result of the recursive function is used in an addition, and the result of the addition is returned. The practical implication of this is that during execution we are building up a chain of call-stacks, which cannot be freed until we reach n=0 and the results "bubble up".
 
 {{< figure src="/assets/images/tailcalls/recur1.png" >}}
 

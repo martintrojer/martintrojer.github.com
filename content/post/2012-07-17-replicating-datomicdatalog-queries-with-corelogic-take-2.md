@@ -11,7 +11,7 @@ title: Replicating Datomic/Datalog queries with core.logic, take 2
 ---
 This is a follow-up to my [previous post]({{< ref "2012-07-16-replicating-datomicdatalog-queries-with-corelogic.md" >}}) on datalog-equivalent queries in core.logic.
 
-Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, [described here](https://github.com/clojure/core.logic/wiki/Features). First let's consider this datomic query;
+Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the relationships/facts API in core.logic, [described here](https://github.com/clojure/core.logic/wiki/Features). First, let's consider this Datomic query:
 
 ```clojure
 (q '[:find ?first ?height
@@ -23,14 +23,14 @@ Here I present an alternate way to do the unification and join inside core.logic
 ;; #<HashSet [["Jane" 73], ["John" 71]]>
 ```
 
-In core.logic we start by defining the relationships between our 2 datasets;
+In core.logic we start by defining the relationships between our 2 datasets:
 
 ```clojure
 (defrel last-first-email p1 p2 p3)
 (defrel email-height p1 p2)
 ```
 
-This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels;
+This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels:
 
 ```clojure
 (fact last-first-email "Doe" "John" "jdoe@example.com")
@@ -45,9 +45,9 @@ This mirrors the layout of the data above. The actual datapoints are defined as 
 ;; (["Jane" 73] ["John" 71])
 ```
 
-The join is accomplished by using the same lvar (email) is both defrel goals.
+The join is accomplished by using the same lvar (email) in both defrel goals.
 
-Now consider a slightly more complicated query;
+Now consider a slightly more complicated query:
 
 ```clojure
 ;; simple in-memory join, two database bindings
@@ -68,8 +68,7 @@ Now consider a slightly more complicated query;
 ;; #<HashSet [["Jane" 73], ["John" 71]]>
 ```
 
-
-Applying the same technique (with some more defrels) we get;
+Applying the same technique (with some more defrels) we get:
 
 ```clojure
 (do
@@ -95,7 +94,7 @@ Applying the same technique (with some more defrels) we get;
 ;; (["John" 71] ["Jane" 73])
 ```
 
-Hmm, this looks suspiciously like a victim-of-a-macro(tm), maybe something like this;
+Hmm, this looks suspiciously like a victim of a macro. Maybe something like this:
 
 ```clojure
 (defmacro defquery [relname find rels]
@@ -113,7 +112,7 @@ Hmm, this looks suspiciously like a victim-of-a-macro(tm), maybe something like 
                       (== q# [~@(lvars find)])))))))
 ```
 
-The two examples above can now be written like so;
+The two examples above can now be written like so:
 
 ```clojure
 (do
@@ -138,11 +137,9 @@ The two examples above can now be written like so;
   (join2-run))
 ;; (["John" 71] ["Jane" 73])
 ```
-
-
 An important point here is that we have separated the definition of the relationships, definition (loading) of the facts, and the actual running of the query.
 
-So how does this perform for larger datasets compared to the unification / clojure.set/join described in the previous post? If we look at the time for running the query it's ~33% faster and about 12x slower than the optimal datomic/datalog query.
+So how does this perform for larger datasets compared to the unification/clojure.set/join described in the previous post? If we look at the time for running the query, it's ~33% faster and about 12 times slower than the optimal Datomic/Datalog query.
 ```clojure
 (defn join-test2 [xs ys]
   ;; setup the relations

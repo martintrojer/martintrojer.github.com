@@ -9,7 +9,7 @@ tags:
 - cloud
 title: Developing Clojure in the Cloud
 ---
-Recently I gave a talk at the [Clojure eXchange 2014](https://skillsmatter.com/conferences/1956-clojure-exchange-2014) titled 'Developing Clojure in the Cloud'. I described a way of creating and using (Clojure) development environments inside VMs, I've been developing like this for the last year (spanning 2 projects).
+Recently, I gave a talk at the [Clojure eXchange 2014](https://skillsmatter.com/conferences/1956-clojure-exchange-2014) titled 'Developing Clojure in the Cloud'. I described a way of creating and using (Clojure) development environments inside VMs. I've been developing like this for the last year (spanning 2 projects).
 
 <!--more-->
 
@@ -63,8 +63,8 @@ It is definitely better than lengthy wikis entries, but unless you know that con
 
 One of the reasons I've been holding back from pushing Docker to clients is that deployment options have been been spartan, but that is rapidly changing. Amazon just announced the [EC2 container service](http://aws.amazon.com/ecs/) and that takes care of many of my reservations.
 
-Some reservations that do remain is that how to actually construct the more complicated containers (for databases etc) that you rely on. Dockerfiles are just not powerful enough, while [alternatives](http://ianmiell.github.io/shutit/) are being built I feel that these guys are reinventing Chef/puppet. How to handle secuirty updates is another problem area.
+Some reservations that do remain are how to actually construct the more complicated containers (for databases etc.) that you rely on. Dockerfiles are just not powerful enough; while [alternatives](http://ianmiell.github.io/shutit/) are being built, I feel that these developers are reinventing Chef/Puppet. How to handle security updates is another problem area.
 
 There is also a split in the Docker family currently unfolding; CoreOS just announced their Docker alternative [Rocket](https://coreos.com/blog/rocket/). It will be interesting to see where it will end up.
 
-Finally, when talking about non-VM deployment options. One thing that has me really exited is unikernels or library OSes. [OSv](http://osv.io/) and [MirageOS](http://www.openmirage.org/) looks incredibly promising.
+Finally, when talking about non-VM deployment options, one thing that has me really excited is unikernels or library OSes. [OSv](http://osv.io/) and [MirageOS](http://www.openmirage.org/) look incredibly promising.

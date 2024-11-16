@@ -17,11 +17,11 @@ title: Scheme as an embedded DSL in Clojure
 
 > -- Guy Steele
 
-Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it's built in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.
+Replace Fortran with whatever language you are currently using, and the quote still holds true today. Lisp has been around for a long time, and it's built-in flexibility is still unmatched by other languages. In this post we will look at key Lisp concepts such as code-is-data and powerful macro semantics.
 
-When you write programs in Lisp, you tend to solve problems very differently from how you would solve them with OO languages, and also different how you would in other functional languages. Where in ML you would write a set of types and functions to operate (match) on them, in Lisp and Clojure specifically you are more likely to stick to the core data types and write functions and macros that make up a Domain Specific Language (DSL) for the problem at hand. More specifically, an internal/embedded DSL using the Lisp syntax but with new functionality that makes the solution or logic simple and clear. The ability to transform code in Lisp is very powerful indeed, and makes you think of code in a different way.
+When you write programs in Lisp, you tend to solve problems very differently from how you would solve them with OO languages, and also differently from how you would in other functional languages. Where in ML you would write a set of types and functions to operate (match) on them, in Lisp and Clojure specifically you are more likely to stick to the core data types and write functions and macros that make up a Domain Specific Language (DSL) for the problem at hand. More specifically, an internal/embedded DSL using the Lisp syntax but with new functionality that makes the solution or logic simple and clear. The ability to transform code in Lisp is very powerful indeed, and makes you think of code in a different way.
 
-One big benefit of internal DSLs are the speed of execution. Since we map to Clojures native constructs, the examples below will run at the same speed as one defined directly in Clojure (they are infact the same!). In future posts, when we look at external DSLs using interpreters which are much slower.
+One big benefit of internal DSLs is the speed of execution. Since we map to Clojure's native constructs, the examples below will run at the same speed as one defined directly in Clojure (they are in fact the same!). In future posts, when we look at external DSLs using interpreters which are much slower.
 
 So here's an example of how (a subset of) Scheme can be written as an internal DSL in Clojure. The full code is [available on github](https://github.com/martintrojer/scheme-clojure).
 
@@ -96,7 +96,7 @@ Here we can observe the recursive nature of the macro, any errors in the macro w
 
 One note on this cond macro in particular is that replacing build-in function in the "host language" is a bad idea for an internal DSL. The user of the DSL expects to use the power of that host language and the extra functionality provided by the DSL. Replacing Clojure's cond can be very confusing!
 
-Not everything is a macro, if we look at the cons funcion, there is a subtle difference between Scheme and Clojure;
+Not everything is a macro. If we look at the cons function, there is a subtle difference between Scheme and Clojure:
 
 ```clojure
 ;Scheme
@@ -105,7 +105,7 @@ Not everything is a macro, if we look at the cons funcion, there is a subtle dif
 (cons 1 [2])
 ```
 
-The second parameter in clojure is a sequence. A function is more suited than a macro to translate this;
+The second parameter in clojure is a sequence. A function is more suited than a macro to translate this:
 
 ```clojure
 (defn cons [fst snd]

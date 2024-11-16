@@ -10,29 +10,29 @@ tags:
 title: core.async and Blocking IO
 ---
 
-Some time ago I wrote about [Asynchronous workflows in Clojure]({{< ref "2011-12-22-asynchronous-workflows-in-clojure.md" >}}). With the recent release and excitement of [core.async](https://github.com/clojure/core.async), I though it a good time to revisit that post.
+Some time ago I wrote about [Asynchronous workflows in Clojure]({{< ref "2011-12-22-asynchronous-workflows-in-clojure.md" >}}). With the recent release and excitement of [core.async](https://github.com/clojure/core.async), I thought it a good time to revisit that post.
 
-While there are already some good example and comparison-with-[go](http://golang.org) posts out there, I'd like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It's important to understand the implications of blocking IO and it's effects on 'async code', in this case core.async.
+While there are already some good examples and comparison-with-[go](http://golang.org) posts out there, I'd like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It's important to understand the implications of blocking IO and its effects on 'async code', in this case core.async.
 
-Here's a little diagram visualizing thread activity when using blocking IO calls;
+Here's a little diagram visualizing thread activity when using blocking IO calls:
 
 {{< figure src="/assets/images/asyncclj/oneperconnection.png" >}}
 
-As you can see the threads mostly wait. What we are trying to achieve is to get more work out of each thread. In order to do this we want other work to be scheduled on the thread "while they wait". Thus getting more work done with fewer threads.
+As you can see, the threads mostly wait. What we are trying to achieve is to get more work out of each thread. In order to do this, we want other work to be scheduled on the thread "while it waits." Thus getting more work done with fewer threads.
 
 {{< figure src="/assets/images/asyncclj/asyncthreads.png" >}}
 
-When we have a long-running API call, we want to "park the thread", schedule some unrelated work and resume later when the result is available.
+When we have a long-running API call, we want to "park the thread," schedule some unrelated work, and resume later when the result is available.
 
-This will break the 1 job = 1 thread knot, thus this thread parking will allow us to scale the number of jobs way beyond any thread limit on the platform (usually around 1000 on the JVM).
+This will break the 1-job = 1-thread knot, thus this thread parking will allow us to scale the number of jobs way beyond any thread limit on the platform (usually around 1,000 on the JVM).
 
 ## core.async
 
-core.async gives (blocking) channels and a new (unbounded) thread pool when using 'thread'. This (in effect) is just some sugar over using java threads (or clojure futures) and BlockingQueues from java.util.concurrent. The main feature is [go blocks](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html) in which threads can be parked and resumed on the (potentially) blocking calls dealing with core.async's channels.
+core.async gives (blocking) channels and a new (unbounded) thread pool when using 'thread'. This (in effect) is just some sugar over using Java threads (or Clojure futures) and BlockingQueues from java.util.concurrent. The main feature is [go blocks](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html) in which threads can be parked and resumed on the (potentially) blocking calls dealing with core.async's channels.
 
-The go blocks are run on a fix sized thread pool (2+number of cores) -- this is plenty for asynchronous workflows where we spend almost all our time waiting for callbacks and pushing / popping data on channels.
+The go blocks are run on a fixed-size thread pool (2 + number of cores) -- this is plenty for asynchronous workflows where we spend almost all our time waiting for callbacks and pushing/popping data on channels.
 
-__However__ if you are using go blocks and blocking IO calls you're in trouble. You will in fact often get worse performance than using threads (in the normal case) since you will quickly hog all the threads in the go block thread pool and block out any other work!
+__However__, if you are using go blocks and blocking IO calls, you're in trouble. You will, in fact, often get worse performance than using threads (in the normal case) since you will quickly hog all the threads in the go block thread pool and block out any other work!
 
 ## Http client example
 

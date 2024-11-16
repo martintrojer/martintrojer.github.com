@@ -12,7 +12,7 @@ Here we are, after five years of learning and later doing Clojure full time, I'v
 
 <!--more-->
 
-The brain is a muscle like any other, it needs constant and regular exercise to thrive. Looking back at my arc, Clojure transitioned from a hobby to a job about 2 years ago. I haven't touched a single line of Clojure in my spare time since then, and I stopped writing on this blog. Its not good a situation, I want to care, I want to be passionate. But what I miss most of all is learning, and sadly Clojure stopped being an inspiration of learning some time ago.
+The brain is a muscle like any other, it needs constant and regular exercise to thrive. Looking back at my arc, Clojure transitioned from a hobby to a job about 2 years ago. I haven't touched a single line of Clojure in my spare time since then, and I stopped writing on this blog. Its not a good situation, I want to care, I want to be passionate. But what I miss most of all is learning, and sadly Clojure stopped being an inspiration of learning some time ago.
 
 Back when I started with Clojure it was hugely exciting, the old noodle was working hard devouring all the new techniques and the seemingly endless stream of [mind bending libraries](https://github.com/clojure/core.logic) that was released. Now, the Clojure ecosystem and community has matured and settled, and the headline-grabbing news are new build tools and proposed [web-frameworks](https://www.kickstarter.com/projects/1346708779/arachne-rapid-web-development-for-clojure). Sorry, but I can't muster an ounce of interest for either. I actually caught myself thinking the other day that I much rather re-write a 10k line Clojure service in Haskell than convert it from Leiningen to Boot.
 
@@ -40,7 +40,7 @@ On a high level, I've only seen 2 mitigation strategies that really work;
 
 * A huge corpus of unit / integration / [quickcheck](https://github.com/clojure/test.check) tests (more than 50% of the total line count)
 
-Neither of them scale on some or all of the 3 axis; when the code grows, when the team grows or when time elapses. The horrible truth is that Clojure code rots quickly. The end result is bugs, bugs and more bugs. Most of them are really subtle as well, its a long tail of bugs that is only found in production after weeks of uptime. Its the kind of bugs that, when fixed, are accompanied with the developer saying "Ahh, yes, I didn't think about that scenario".
+Neither of them scale on some or all of the 3 axis; when the code grows, when the team grows or when time elapses. The horrible truth is that Clojure code rots quickly. The end result is bugs, bugs and more bugs. Most of them are really subtle as well, its a long tail of bugs that is only found in production after weeks of uptime. Its the kind of bugs that, when fixed, are accompanied by the developer saying "Ahh, yes, I didn't think about that scenario".
 
 The real tragedy here is that we Clojure developers think in types all the time when writing code, we just don't write them down (and let the computer validate them). I think that is a huge missed opportunity not to have the computer help us write better programs.
 

@@ -44,7 +44,7 @@ Next up is the [parser](https://github.com/martintrojer/scheme-clojure/blob/mast
 
 One big benefit of parsing a "simple" language like a Lisp is how clean and simple the parser becomes. The whole thing is about 50 lines of code, and very elegantly expressed in Clojure (if you ask me :-).
 
-Both the parser and interpreter relies heavily on Clojure's "destructing" feature to pick elements out of strings, lists etc. This is loosely related to pattern matching found in other languages (or in Clojure via [core.match](https://github.com/clojure/core.match) for instance). In my [F# implementation]({{< ref "2011-11-02-scheming-in-f.md" >}}) of the Scheme interpreter, it's indeed this destructing feature of it's pattern matching I rely most on. Here is an example of extracting the head and tail (which happens to be the operator and it's arguments!) of a combination returned by the parser;
+Both the parser and interpreter rely heavily on Clojure's "destructuring" feature to pick elements out of strings, lists, etc. This is loosely related to pattern matching found in other languages (or in Clojure via [core.match](https://github.com/clojure/core.match) for instance). In my [F# implementation]({{< ref "2011-11-02-scheming-in-f.md" >}}) of the Scheme interpreter, it's indeed this destructuring feature of its pattern matching I rely most on. Here is an example of extracting the head and tail (which happens to be the operator and it's arguments!) of a combination returned by the parser;
 
 ```clojure
 (let [[fst & rst] (parse "(+ 1 1)")]

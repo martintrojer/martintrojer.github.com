@@ -9,7 +9,7 @@ tags:
 title: Datomic Do's and Don'ts
 ---
 
-I recently tried to use Datomic in anger in a project, here are some things I learned.
+I recently tried to use Datomic in anger in a project. Here are some things I learned.
 
 <!--more-->
 
@@ -17,19 +17,19 @@ I recently tried to use Datomic in anger in a project, here are some things I le
 
 #### Keep metrics on your query times
 
-Datomic lacks query planning. Queries that look harmless can be real hogs. The solution is usually blindly swapping lines in your query until you get an order of magnitude speedup.
+Datomic lacks query planning. Queries that look harmless can be real performance hogs. The solution is usually blindly swapping lines in your query until you get an order-of-magnitude speedup.
 
 #### Always use memcached with Datomic
 
-When new peers connect, a fair bit of data needs to be transferred to them. If you don't use memcached this data needs to be queried from the store and will slow down the 'peer connect time' (among other things).
+When new peers connect, a fair bit of data needs to be transferred to them. If you don't use memcached, this data needs to be queried from the store and will slow down the 'peer connect time' (among other things).
 
-#### Give your peers nodes plenty of heap
+#### Give your peer nodes plenty of heap
 
-To fully benefit from Datomic you want to have plenty of heap for the peers to cache data.
+To fully benefit from Datomic, you want to have plenty of heap for the peers to cache data.
 
-#### Datomic was designed with AWS/Dynamo in mind, use it
+#### Datomic was designed with AWS/DynamoDB in mind; use it
 
-It will perform best with this backend, its also the most used (and thus most polished).
+It will perform best with this backend; it's also the most used (and thus most polished).
 
 #### Do your `project.clj` chores
 

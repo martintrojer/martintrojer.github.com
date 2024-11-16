@@ -9,7 +9,7 @@ tags:
 title: 'Working with core.async: Exceptions in go blocks'
 ---
 
-Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks -- all your exceptions are gone! Since the body of a go block is run on a thread pool, it's not much we can do with an exception, thus core.async will just eat them and close the channel. That's what happened in the second snippet [in this post]({{< ref "2014-03-09-working-with-coreasync-chaining-go-blocks.md" >}}). The `nil` result is because the channel we read from is closed.
+Dealing with exceptions in go blocks/threads is different from normal Clojure core. This gotcha is very common when moving your code into core.async go blocks -- all your exceptions are gone! Since the body of a go block is run on a thread pool, there's not much we can do with an exception, thus core.async will just eat them and close the channel. That's what happened in the second snippet [in this post]({{< ref "2014-03-09-working-with-coreasync-chaining-go-blocks.md" >}}). The `nil` result occurs because the channel we read from is closed.
 
 <!--more-->
 
@@ -40,4 +40,4 @@ I find myself wanting to know the cause of problem at the consumer side of a cha
               (log/error "error getting data"))))
 ```
 
-If you're interested in how some Go examples convert to core.async check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).
+If you're interested in how some Go examples convert to core.async, check out [this repo](https://github.com/martintrojer/go-tutorials-core-async).

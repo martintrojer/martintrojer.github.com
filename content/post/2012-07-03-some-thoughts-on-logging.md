@@ -8,18 +8,18 @@ tags:
 title: Some thoughts on logging
 ---
 
-Have you ever tried to log from multi threaded program? Have you tried to make sense of the log output which multiple subsystems were logging to? Have you tried to do average latency calculations based on that log file?
+Have you ever tried to log from a multi-threaded program? Have you tried to make sense of log output when multiple subsystems were logging to it? Have you tried to do average latency calculations based on that log file?
 
-If you reading this blog, I am guessing you answered yes to a couple of the questions above.
+If you're reading this blog, I'm guessing you answered yes to a couple of the questions above.
 
-There are multiple problems here; multiple producers (race conditions), out-of-order logs, conflated subsystem in the same logs etc. You gotta put a lot of effort into you log post-processor to make any sense at all of the data, decorating it with various metadata to make it at all possible.
+There are multiple problems here: multiple producers (race conditions), out-of-order logs, conflated subsystems in the same logs, etc. You have to put a lot of effort into your log post-processor to make any sense of the data, decorating it with various metadata to make it possible at all.
 
-In this post I point out a few ways you can use Clojure (both the language and it's general ethos) to overcome these problems. The solutions here are primarily tailored to "pipeline systems" where you want to find time consuming bottle-necks and produce latency reports etc. For simplicity, this is in-process logging, where all the parts (threads) can share a log resource and tick timer etc.
+In this post, I point out a few ways you can use Clojure (both the language and its general ethos) to overcome these problems. The solutions here are primarily tailored to "pipeline systems" where you want to find time-consuming bottlenecks and produce latency reports, etc. For simplicity, this is in-process logging, where all the parts (threads) can share a log resource and tick timer, etc.
 
 TL;DR [the complete code snippet](https://gist.github.com/3041849).
 
 ### Agents
-First off, the race conditions; if the log is simply a file, or a in-memory data structure, you have to somehow serialise the "emit" calls. Conventional wisdom would have you put the emit call in a critical section, but this is a) ugly b) can introduce deadlocks c) can effect the system under stress. We want to post a log entry using a lock free, asynchronous mechanism, that's why we have agents in Clojure;
+First off, the race conditions; if the log is simply a file, or a in-memory data structure, you have to somehow serialize the "emit" calls. Conventional wisdom would have you put the emit call in a critical section, but this is a) ugly b) can introduce deadlocks c) can effect the system under stress. We want to post a log entry using a lock free, asynchronous mechanism, that's why we have agents in Clojure;
 
 ```clojure
 (def log (agent []))
@@ -126,9 +126,9 @@ The helper functions also becomes much cleaner this way;<br />
 Please note that these functions take a (de-referenced) log rather than using @log directly. This helps testing, but is also very important for more complicated (looping) functions which should work on a stable snapshot of the log events.
 
 ### Conclusion
-The flat log file, with simple events described as Clojure maps worked out really well, and it's certainly more idiomatic. The log is easier to serialise, we only need parts of it in memory for meaningful analysis, we can treat it as a continuos stream. The analysis functions that we write can leverage the power of Clojure's library directly and compose beautifully. Also, we are not forcing any structure (or schema) on the log events (more than any analysis functions expect) which make it very flexible and future proof. The only price we are paying is additional (redundant) metadata to that can be more cheaply expressed in a tree data structure.
+The flat log file with simple events described as Clojure maps worked out really well, and it's certainly more idiomatic. The log is easier to serialize; we only need parts of it in memory for meaningful analysis, and we can treat it as a continuous stream. The analysis functions that we write can leverage the power of Clojure's library directly and compose beautifully. Also, we are not forcing any structure (or schema) on the log events (more than any analysis functions expect), which makes it very flexible and future-proof. The only price we are paying is additional (redundant) metadata that can be more cheaply expressed in a tree data structure.
 
-Here's a complete [listing of a event logger](https://gist.github.com/3041849), using metadata, with statistical reporting.
+Here's a complete [listing of an event logger](https://gist.github.com/3041849) using metadata, with statistical reporting.
 
 ### More reading
 * [Mark McGranaghan Clojure/conj 2011 -- Logs as data](http://blip.tv/clojure/mark-mcgranaghan-logs-as-data-5953857)

@@ -8,18 +8,18 @@ tags:
 - devops
 title: Moving my devboxes to Docker
 ---
-I've been quite vocal about my opinions on development environments and automating the creation of them [on this blog]({{< ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [elsewhere](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud). Boiling it down to the 2 points I feel most strongly about it would be;
+I've been quite vocal about my opinions on development environments and automating the creation of them [on this blog]({{< ref "2014-12-04-developing-clojure-in-the-cloud.md" >}}) and [elsewhere](https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud). Boiling it down to the two points I feel most strongly about:
 
 1. Always develop in a production-like environment
 2. Automate the creation of these environments
 
 <!--more-->
 
-By production-like I mean developing in the same OS distribution and version as production, using the same database versions, the same message broker, as similar settings as possible, etc. Automation allows these environments to be disposable speeding up teams working on the project and also enables 'developing in the cloud' as described in my previous post (see above). Development environments shouldn't be a precious resource that you spend hours setting up (following outdated Wiki pages).
+By "production-like," I mean developing in the same OS distribution and version as production, using the same database versions, the same message broker, and similar settings as possible. Automation allows these environments to be disposable, speeding up teams working on the project and also enabling 'developing in the cloud' as described in my previous post (see above). Development environments shouldn't be precious resources that you spend hours setting up (following outdated Wiki pages).
 
-Up-to now production-like meant (for me atleast) VMs. However, the uprising of Docker has now lead me to believe that future deployments I'd encounter will involve containers. I have personally moved all of my 'hobby projects' over the Docker.
+Up to now, production-like meant (for me at least) VMs. However, the rise of Docker has now led me to believe that future deployments I'll encounter will involve containers. I have personally moved all of my 'hobby projects' over to Docker.
 
-Is it possible to do your work inside containers similar to they way you can do in VMs? The answer is yes, and you will be able to enjoy the benefits Docker brings while adhering to my 2 laws of devboxes. I've created 2 basic container setups to cater for my devbox needs;
+Is it possible to do your work inside containers similar to the way you can do in VMs? The answer is yes, and you will be able to enjoy the benefits Docker brings while adhering to my two laws of devboxes. I've created two basic container setups to cater to my devbox needs:
 
 ## The hybrid devbox
 

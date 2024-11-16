@@ -11,32 +11,32 @@ tags:
 title: Distributed Actors in Clojure
 ---
 
-Here's another post on a topic that have been discussed since the [dawn-of-time](https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ), is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich's post (above) still holds true today.
+Here's another post on a topic that has been discussed since the [dawn-of-time](https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ): is there a nice and idiomatic way to write Erlang/Actor-style distributed programs in Clojure? There have certainly been a few attempts, but Rich's post (above) still holds true today.
 
-First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;
+First, some clarification: I am not primarily thinking about number-crunching, map/reduce-style stuff, where Clojure has a pretty good story:
 
 * [clojure-hadoop](https://github.com/stuartsierra/clojure-hadoop)
-* [swamiji](https://github.com/amitrathore/swarmiji)
-* [cacalog](https://github.com/nathanmarz/cascalog)
+* [swarmiji](https://github.com/amitrathore/swarmiji)
+* [cascalog](https://github.com/nathanmarz/cascalog)
 * [zookeeper-clj](https://github.com/liebke/zookeeper-clj)
 * [storm](https://github.com/nathanmarz/storm)
-* etc...
+* etc.
 
 ### Akka and the Erlang legacy
-I am trying to write programs that solve problems in the areas where [Erlang](http://www.erlang.org/) typically excels such as
+I am trying to write programs that solve problems in the areas where [Erlang](http://www.erlang.org/) typically excels, such as:
 
 * Event-driven, asynchronous, non-blocking programming model
-* Scalability (location transparency etc)
+* Scalability (location transparency, etc.)
 * Fault tolerance (supervisors, "let it crash")
 
-The closest we've got on the JVM is [Akka](http://akka.io/), which claims to have all features (and more) listed above. Akka is the "[killer app](http://typesafe.com/stack)" for Clojure's sister-language Scala, and is very feature rich and performant. Levering it's power in a safe and idiomatic way is certainly appealing.
+The closest we've got on the JVM is [Akka](http://akka.io/), which claims to have all features (and more) listed above. Akka is the "[killer app](http://typesafe.com/stack)" for Clojure's sister language Scala, and is very feature-rich and performant. Leveraging its power in a safe and idiomatic way is certainly appealing.
 
-However, [interfacing to Akka from Clojure is not nice](http://blog.darevay.com/2011/06/clojure-and-akka-a-match-made-in/), and certainly not idiomatic. Some work is clearly needed in order to [improve Akka/Clojure interrop](https://gist.github.com/2716711#file_commented_vision.clj). The bigger question is if it's worth pursuing? Even if the interrop is made as pain-free as possible, how badly will it clash with Clojure's underlaying design and philosophy? For instance; Akka comes with a [STM](http://doc.akka.io/docs/akka/1.3.1/scala/stm.html), how nasty will that be when used in conjunction with Clojure's own?
+However, [interfacing with Akka from Clojure is not nice](http://blog.darevay.com/2011/06/clojure-and-akka-a-match-made-in/), and certainly not idiomatic. Some work is clearly needed to [improve Akka/Clojure interop](https://gist.github.com/2716711#file_commented_vision.clj). The bigger question is if it's worth pursuing. Even if the interop is made as pain-free as possible, how badly will it clash with Clojure's underlying design and philosophy? For instance, Akka comes with a [STM](http://doc.akka.io/docs/akka/1.3.1/scala/stm.html); how nasty will that be when used in conjunction with Clojure's own?
 
-**Update** 2 Akka/Clojure libraries has emerged since this article was written, which solves some of the problems I was facing; [akka-clojure](https://github.com/jasongustafson/akka-clojure) and [okku](https://github.com/gaverhae/okku). Perfomance compared to Scala/Akka is yet to be determined.
+**Update:** Two Akka/Clojure libraries have emerged since this article was written, which solve some of the problems I was facing: [akka-clojure](https://github.com/jasongustafson/akka-clojure) and [okku](https://github.com/gaverhae/okku). Performance compared to Scala/Akka is yet to be determined.
 
 ### Wishful thinking
-Ideally, Clojure should support distributed actors in it's core, that looks, behaves and interrops nicely with it's other concurrency primitives. It's pretty easy to create a ideal-world straw-man for how this might look from a code/syntax perspective; [Termite](http://code.google.com/p/termite/) is a good place to start. Here is a cleaned-up version of the [hello-world examples in the gist above](https://gist.github.com/2716711).
+Ideally, Clojure should support distributed actors in it's core, that looks, behaves and interops nicely with it's other concurrency primitives. It's pretty easy to create a ideal-world straw-man for how this might look from a code/syntax perspective; [Termite](http://code.google.com/p/termite/) is a good place to start. Here is a cleaned-up version of the [hello-world examples in the gist above](https://gist.github.com/2716711).
 
 ```clojure
 ;; An (imaginary) actor macro takes an initial state and callback fns.

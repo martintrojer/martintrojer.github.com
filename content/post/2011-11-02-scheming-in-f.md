@@ -9,7 +9,7 @@ tags:
 title: Scheming in F#
 ---
 
-Given the fact that I worship at the [SICP](https://web.mit.edu/6.001/6.037/sicp.pdf) altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a [Scheme](http://en.wikipedia.org/wiki/Scheme_(programming_language)) interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just "big enough" for to force me to drill into what the language have to offer.
+Given the fact that I worship at the [SICP](https://web.mit.edu/6.001/6.037/sicp.pdf) altar, it should come as no surprise that I follow the recipe outlined in chapter 4 of said book; implementing a [Scheme](http://en.wikipedia.org/wiki/Scheme_(programming_language)) interpreter in every language I am trying to learn. Over the years it has turned out to be a very useful exercise, since the problem is just "big enough" to force me to drill into what the languages have to offer.
 
 I'll post the source of the interpreters on [github](https://github.com/martintrojer/) in this and future posts and highlight some of my findings in more detail in the posts. I am not going to write and explain too much about the languages themselves, there are plenty of books and tutorials for that purpose, just highlights :)
 

@@ -14,7 +14,7 @@ The traditional steps of a "parser" are roughly lexical analysis (tokenizer), sy
 
 You can think of the main bulk of a parser being a loop containing a switch of the tokens types. It looks for some predefined patterns (syntax) in the token list. Some are valid and some are not (syntax error). This sounds like a perfect "match" :-) for pattern matching! And indeed it is.
 
-Let's say we have a simple DSL made up of a list of fields. Each field has a type and a name;
+Let's say we have a simple DSL made up of a list of fields. Each field has a type and a name:
 
 ```
 int32   version
@@ -88,7 +88,7 @@ let rec (|FieldOptions|) = function
    | toks -> Set.empty, toks
 ```
 
-The "(|" brace is called a banana clip and is used for active patterns. In this case we have defined a partial active pattern "ValidFieldOption" which only matches on 2 types of tokens. The "FieldOptions" pattern is recursive and builds up an returns a set of valid options. It easts one token at a time and if that token satisfies the ValidFieldOption pattern it's added to the set (and the pattern calls itself with the rest of the tokens for another round of matching).
+The "(|" brace is called a banana clip and is used for active patterns. In this case we have defined a partial active pattern "ValidFieldOption" which only matches on 2 types of tokens. The "FieldOptions" pattern is recursive and builds up and returns a set of valid options. It eats one token at a time and if that token satisfies the ValidFieldOption pattern it's added to the set (and the pattern calls itself with the rest of the tokens for another round of matching).
 
 Our main switch can thus be simplified;
 
@@ -156,4 +156,4 @@ let extractField = function
 ```
 
 ### Conclusion
-Pattern matching is very powerful and useful in many circumstances. F#'s addition of active patterns makes it even better. It is easier to break the patterns apart and avoid duplication, thus making the code easier to read and maintain. Pattern matching is available in some other languages (ML, Erlang, Haskell etc) and we will look at Scala and Clojure in future posts. Clojure solves pattern matching the "Lisp way", by using macros, and this can be extended do something like Active Patterns as well.
+Pattern matching is very powerful and useful in many circumstances. F#'s addition of active patterns makes it even better. It is easier to break the patterns apart and avoid duplication, thus making the code easier to read and maintain. Pattern matching is available in some other languages (ML, Erlang, Haskell etc.) and we will look at Scala and Clojure in future posts. Clojure solves pattern matching the "Lisp way", by using macros, and this can be extended to do something like Active Patterns as well.

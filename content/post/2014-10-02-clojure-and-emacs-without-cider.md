@@ -9,11 +9,11 @@ tags:
 title: Clojure and Emacs without Cider
 ---
 
-I've been hacking Clojure for many years now, and I've been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will 'make your day'.
+I've been hacking Clojure for many years now, and I've been happy to rekindle my love for Emacs. The Clojure/Emacs toolchain has come a long way during this time: swank-clojure, nREPL, nrepl.el, and now Cider. The feature list is ever-growing, and every time you look, there are some new awesome shortcuts that will 'make your day'.
 
 <!--more-->
 
-However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feel concerned that Cider is 're-inventing' an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out [Cursive Clojure](https://cursiveclojure.com), its great.
+However, the last couple of months have been rough for the Cider project. I've experienced lots of instability, crashes, and hanged UIs. Cider has become very complex and is starting to feel bloated. I went from Visual Studio to the simpler & snappier Emacs for a reason, and there is a part of me that feels concerned that Cider is 're-inventing' an IDE inside Emacs. If you want a full Clojure/IDE experience with all the bells and whistles, check out [Cursive Clojure](https://cursiveclojure.com); it's great.
 
 In this post I'll describe a simpler Emacs/Clojure setup that I've been using for the last couple of weeks. It's much closer to 'vanilla Emacs' and thus have much fewer features. On the flip side, it's very fast and super stable.
 
@@ -145,4 +145,4 @@ You will also need to add `--langmap=Lisp:+.clj.cljs` into `~/.ctags`; [see here
 
 Then use `C-c p R` to rebuild your TAGS file (this works when you're in projectile mode). After that just can either do `M-.` to jump to definition (and `C-u M-.` for next match), remember that `M-*` takes you back. One great thing about tags is that you don't have to be 'jacked in' to use them! That goes for both navigation and auto-complete.
 
-That's it really, nice and simple! If you have any additions to make this setup even better I'd love to hear about them.
+That's it really - nice and simple! If you have any additions to make this setup even better, I'd love to hear about them.

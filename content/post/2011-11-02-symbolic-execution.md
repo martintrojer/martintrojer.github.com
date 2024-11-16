@@ -26,13 +26,13 @@ Unlike other code analysis tools, symbolic execution executes the code under tes
 Symbolic execution involves "executing" a program in an abstracted manner. Let's examine the process using the following code fragment:
 
 ```c
-int* func(int x; int y) {
-  int* p=0;
-  int s=x*y;
-  if (s!=0)
-    p=malloc(s);
-  else if(y==0)
-    p=malloc(x);
+int* func(int x, int y) {
+  int* p = 0;
+  int s = x * y;
+  if (s != 0)
+    p = malloc(s);
+  else if (y == 0)
+    p = malloc(x);
   return p;
 }
 ```
@@ -90,7 +90,7 @@ Now that we understand path conditions, let's explore how they help solve the ac
 
 ```c
 //func as defined above
-int* func(int x; int y);
+int* func(int x, int y);
 
 //main calls func
 int main() {

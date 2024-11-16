@@ -21,10 +21,10 @@ Some of the readers of my [Beyond Clojure](/categories/beyond-clojure/) blog ser
 
 To summarize the key differences between contracts and types;
 
-* Contracts operates at run-time and do a 'there-exists' proof on sample data.
-* Types operates at compile-time and do a 'for-all' proof on all possible data.
+* Contracts operate at run-time and do a 'there-exists' proof on sample data.
+* Types operate at compile-time and do a 'for-all' proof on all possible data.
 
-You need to feed data through a contract for it be of any value, it can't do anything at compile time (except generating more contracts). Types on the other hand are only checked at compile time, and in most cases don't even exist at runtime. Think of contracts as auditing data as it passes through the system and types are proving ahead of time that data can't be invalid (you might object here, see input valdation below).
+You need to feed data through a contract for it to be of any value, it can't do anything at compile time (except generating more contracts). Types on the other hand are only checked at compile time, and in most cases don't even exist at runtime. Think of contracts as auditing data as it passes through the system and types are proving ahead of time that data can't be invalid (you might object here, see input valdation below).
 
 Contracts always have a negative impact on the performance of your code. Types have AT WORST no performance impact, and in most cases positive impact on performance, since the compiler can generate more efficient code.
 
@@ -32,7 +32,7 @@ Even though contracts are just a there-exists check, they give you higher confid
 
 ### Property based testing
 
-The need for exhaustive tests is why contracts and property based testing (PBT) is such a good combination, since PBT will generate thousands of test cases (that you don't have to write down nor have come up with in the first place). Spec and Schema allow you to automatically generate [test.check](https://github.com/clojure/test.check) generators directly from the contract definitions. This is analogous to how Haskell / [QuickCheck](https://hackage.haskell.org/package/QuickCheck) uses its types and type-classes to automatically generate test cases. This is very powerful, but there are plenty of cases IMHO where PBT is not practical and you're better off with hand-written unit tests. Any non-pure function is problematic, since you're immediately into the world of mocking. If you look at a typical web app, there are lots of non-pure functions around. For instance, all database-interaction 'model' functions plus all the functions (like the handlers) that use those models. Typically, these are the functions (models and handlers) that I really care about testing in a web app. None of them are a great fit for PBT.
+The need for exhaustive tests is why contracts and property based testing (PBT) is such a good combination, since PBT will generate thousands of test cases (that you don't have to write down or come up with). Spec and Schema allow you to automatically generate [test.check](https://github.com/clojure/test.check) generators directly from the contract definitions. This is analogous to how Haskell / [QuickCheck](https://hackage.haskell.org/package/QuickCheck) uses its types and type-classes to automatically generate test cases. This is very powerful, but there are plenty of cases IMHO where PBT is not practical and you're better off with hand-written unit tests. Any non-pure function is problematic, since you're immediately into the world of mocking. If you look at a typical web app, there are lots of non-pure functions around. For instance, all database-interaction 'model' functions plus all the functions (like the handlers) that use those models. Typically, these are the functions (models and handlers) that I really care about testing in a web app. None of them are a great fit for PBT.
 
 The alternative to hand-written unit tests in these cases are complicated PBT generators, which is far beyond what clojure.spec can auto-generate from a definition. In my experience hand-written examples are easier to read and maintain than fancy PBT generators.
 
