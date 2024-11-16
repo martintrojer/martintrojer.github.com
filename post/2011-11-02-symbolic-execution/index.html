@@ -58,25 +58,25 @@
 <p>Unlike other code analysis tools, symbolic execution executes the code under test in a controlled environment or virtual machine. The key distinction from normal execution is that certain inputs are treated as symbolic, meaning they can be &ldquo;anything.&rdquo; For code that depends on symbolic input, the symbolic executor constructs boolean expressions (known as path constraints) to explore previously uncharted paths.</p>
 <h3 id="symbolic-execution">Symbolic Execution</h3>
 <p>Symbolic execution involves &ldquo;executing&rdquo; a program in an abstracted manner. Let&rsquo;s examine the process using the following code fragment:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x; <span style="color:#66d9ef">int</span> y) {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> s<span style="color:#f92672">=</span>x<span style="color:#f92672">*</span>y;
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (s<span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">=</span><span style="color:#a6e22e">malloc</span>(s);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span>(y<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
-</span></span><span style="display:flex;"><span>    p<span style="color:#f92672">=</span><span style="color:#a6e22e">malloc</span>(x);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> p <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> y;
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (s <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(s);
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (y <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    p <span style="color:#f92672">=</span> <span style="color:#a6e22e">malloc</span>(x);
 </span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> p;
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Suppose our goal is to ensure that <code>func</code> always returns a valid (non-null) pointer.</p>
 <h3 id="control-flow-graph">Control Flow Graph</h3>
 <p>The first step in symbolic execution is to generate a Control Flow Graph (CFG), which provides an abstract representation of the code in the form of a directed graph. In the CFG, each node represents a &ldquo;basic block&rdquo; terminated by a conditional statement (in this case, an if statement). Each edge corresponds to a boolean &ldquo;truth value&rdquo; for the condition.</p>
-<figure><img src="/assets/images/symbolic/cfg.png"/>
+<figure><img src="/assets/images/symbolic/cfg.png">
 </figure>
 
 <p>Generating the CFG helps visualize the paths of execution. It&rsquo;s worth noting that CFGs are not specific to symbolic execution; compilers also generate CFGs during code compilation as they lend themselves well to optimization techniques.</p>
 <h3 id="analysing-the-cfg-with-symbolic-values">Analysing the CFG with symbolic values</h3>
 <p>With symbolic execution, our objective is to identify feasible paths that lead to undesirable outcomes or &ldquo;bad things.&rdquo; In this scenario, we aim to find the path(s) that result in returning <code>p</code> without it being allocated first. To understand how the value of <code>p</code> changes, we assign a symbolic value to <code>p</code> at each node in the CFG. In other words, we&rsquo;re interested in the symbolic value of <code>p</code>; we don&rsquo;t care about the specific memory location it points to. Our focus is solely on whether <code>p</code> is null or non-null.</p>
-<figure><img src="/assets/images/symbolic/cfg-annotated.png"/>
+<figure><img src="/assets/images/symbolic/cfg-annotated.png">
 </figure>
 
 <p>By annotating the CFG accordingly, we can easily identify a path that leads to returning p without prior initialization. This simple example demonstrates two fundamental techniques in practice:</p>
@@ -95,7 +95,7 @@
 <h3 id="scalability-and-inter-procedural-analysis">Scalability and Inter-Procedural analysis</h3>
 <p>The scalability problem is compounded by the fact that we can&rsquo;t limit the analysis to paths within a single function for any non-trivial analysis. For example, in the previous code snippet, it doesn&rsquo;t matter if func returns a null pointer if all callers of func properly check for this possibility. To conduct a meaningful analysis, we must follow the path until the pointer is actually used. This necessitates analyzing paths that span multiple functions, which is known as inter-procedural analysis.</p>
 <p>Performing inter-procedural analysis enhances accuracy, but it exponentially increases the number of paths to analyze. A real-life CFG, taking inter-procedural analysis into account, is likely to be more complex:</p>
-<figure><img src="/assets/images/symbolic/cfg-real.png"/>
+<figure><img src="/assets/images/symbolic/cfg-real.png">
 </figure>
 
 <p>An exhaustive enumeration of paths through such a CFG would never complete. Consequently, researchers and practitioners in this field focus on techniques to prune the CFG and identify a small set of &ldquo;interesting&rdquo; paths. The path explosion problem can be mitigated using heuristics derived from graph theory or by inferring additional information from the execution context.</p>
@@ -103,14 +103,14 @@
 <p>Analyzing long paths introduces a complication: the path conditions along those paths may be unsatisfiable. Let&rsquo;s explore this concept in more detail, as it leads us to another fundamental idea underlying symbolic execution.</p>
 <h3 id="path-condition">Path Condition</h3>
 <p>Let&rsquo;s revisit the previous example and discuss path conditions. We&rsquo;ll rewrite the CFG, incorporating the truth values of the encountered conditions along the given paths. The path condition represents the boolean equation that synthesizes the truth values of the encountered conditional expressions at each node.</p>
-<figure><img src="/assets/images/symbolic/cfg-annotated2.png"/>
+<figure><img src="/assets/images/symbolic/cfg-annotated2.png">
 </figure>
 
 <p>For the path of interest (leading to a null p), the corresponding expression is <code>x * y == 0 &amp;&amp; y != 0</code>. Thus, we can associate a set of boolean equations with each edge along a given path. In this example, we can conclude that <code>x * y == 0 &amp;&amp; y != 0</code> implies <code>p == 0</code>.</p>
 <h3 id="inter-procedural-analysis-and-path-condition">Inter-Procedural analysis and Path condition</h3>
 <p>Now that we understand path conditions, let&rsquo;s explore how they help solve the accuracy problem. We need to determine whether a path that appears feasible within the narrow context of a single function is valid in the larger context of the entire program, which involves interprocedural analysis. For instance, we might discover that all paths containing a call to func have an ASSERT statement before the call, checking if x is not equal to 0.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//func as defined above
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x; <span style="color:#66d9ef">int</span> y);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">func</span>(<span style="color:#66d9ef">int</span> x, <span style="color:#66d9ef">int</span> y);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">//main calls func
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {

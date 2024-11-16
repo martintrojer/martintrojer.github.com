@@ -48,10 +48,10 @@
         	       
 
 			<div>
-				<p>I&rsquo;ve been using various <a href="http://go-lang.org/">Go</a> examples / tutorials to take a deeper look into <a href="https://github.com/clojure/core.async">core.async</a>. The <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a> pattern is a very interesting and powerful, it&rsquo;s good move for Clojure to &ldquo;throw in&rdquo; with Go and push this style of programming.</p>
-<p>core.sync works at s-expression level, where some other JVM solutions (<a href="http://www.malhar.net/sriram/kilim/">Kilim</a>, <a href="https://github.com/puniverse/pulsar">Pulsar</a>) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">David has written about this</a>.</p>
+				<p>I&rsquo;ve been using various <a href="http://go-lang.org/">Go</a> examples and tutorials to take a deeper look into <a href="https://github.com/clojure/core.async">core.async</a>. The <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a> pattern is very interesting and powerful; it&rsquo;s a good move for Clojure to &ldquo;throw in&rdquo; with Go and push this style of programming.</p>
+<p>core.async works at the s-expression level, where some other JVM solutions (<a href="http://www.malhar.net/sriram/kilim/">Kilim</a>, <a href="https://github.com/puniverse/pulsar">Pulsar</a>) do the same at the byte-code level. The main benefit of doing these transforms at the s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">David has written about this</a>.</p>
 <h3 id="the-go-macro">The go macro</h3>
-<p>Now, one limitation of the go macro is that it can&rsquo;t &ldquo;look into&rdquo; other functions / closures. This difference stands out quite clearly when reading Go code where you can put &ldquo;go&rdquo; in-front of function calls.</p>
+<p>Now, one limitation of the go macro is that it can&rsquo;t &ldquo;look into&rdquo; other functions or closures. This difference stands out quite clearly when reading Go code where you can put &ldquo;go&rdquo; in front of function calls.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>put-all! [vs ch]
 </span></span><span style="display:flex;"><span>  (doseq [v vs] (<span style="color:#a6e22e">&gt;!</span> ch v)))
 </span></span><span style="display:flex;"><span>
@@ -74,7 +74,7 @@
 </span></span><span style="display:flex;"><span>  [(<span style="color:#a6e22e">&lt;!!</span> ch) (<span style="color:#a6e22e">&lt;!!</span> ch)])
 </span></span></code></pre></div><p>I.e. it&rsquo;s possible to simulate putting go around a function call by inlining it&rsquo;s body &ndash; if it&rsquo;s tail recursive (or not recursive at all).</p>
 <h3 id="non-tail-recursive-functions">Non-tail recursive functions</h3>
-<p>Now for a more <a href="http://tour.golang.org/#68">involved example</a>, we want to walk a binary search tree and put the values on a channel. When all results have been put on the channel we want to close it.</p>
+<p>Now for a more <a href="http://tour.golang.org/#68">involved example</a>, we want to walk a binary search tree and put the values on a channel. When all results have been put on the channel, we want to close it.</p>
 <p>Here&rsquo;s a simple version of the walker (using the thread blocking <code>&gt;!!</code> call).</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>walk [tree ch]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">letfn</span> [(<span style="color:#a6e22e">walker</span> [t]
@@ -145,7 +145,7 @@
 <p>The complete solution can be found <a href="https://github.com/martintrojer/go-tutorials-core-async/blob/master/src/tut005.clj">here</a>, note that the <code>(thread ...)</code> embrace in the <code>same</code> function has been removed.</p>
 <h3 id="postscript">Postscript</h3>
 <p><a href="https://github.com/martintrojer/go-tutorials-core-async/">Some more Go tutorials converted to core.async</a></p>
-<p>A final word of advice, when converting Go examples to core.async remember no to do <code>Thread/sleep</code> in your go blocks! In go, the sleep function is integrated in the go routine scheduling, this is not the case in core.async. See <a href="https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/">here</a> for a deeper explanation why.</p>
+<p>A final word of advice: when converting Go examples to core.async, remember not to do <code>Thread/sleep</code> in your go blocks! In Go, the sleep function is integrated into the go routine scheduling; this is not the case in core.async. See <a href="https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/">here</a> for a deeper explanation of why.</p>
 
 			</div>
 		</article>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>sat on Martin Trojer</title>
+    <title>Sat on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/sat/</link>
-    <description>Recent content in sat on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Sat on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 10 Nov 2011 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/sat/index.xml" rel="self" type="application/rss+xml" />
@@ -13,14 +13,14 @@
       <link>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</link>
       <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</guid>
-      <description>This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&#xA;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.</description>
+      <description>&lt;p&gt;This article serves as a follow-up to my previous post on symbolic execution, which can be found &lt;a href=&#34;https://martintrojer.github.io/post/2011-11-02-symbolic-execution/&#34;&gt;here&lt;/a&gt;. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on &lt;a href=&#34;https://github.com/martintrojer/symbolic-execution&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;One limitation of symbolic execution, as well as dynamic code analysis in general, is that the code under analysis needs to be buildable and linkable. Consequently, it is more challenging to analyze subsystems or code snippets compared to using a &lt;a href=&#34;http://en.wikipedia.org/wiki/Lint_(software)&#34;&gt;lint tool&lt;/a&gt;. Another complication arises from the fact that the symbolic executor&amp;rsquo;s virtual machine must also comprehend and model the system calls used by the code. This makes the tool OS-dependent, as it requires emulating all calls that &amp;ldquo;escape&amp;rdquo; the executor. Cadar, Dunbar, and Engler explain how this can be achieved for Linux by analyzing GNU coreutils in [1].&lt;/p&gt;</description>
     </item>
     <item>
       <title>Symbolic Execution</title>
       <link>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</link>
       <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</guid>
-      <description>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.</description>
+      <description>&lt;p&gt;A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.&amp;rdquo; Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

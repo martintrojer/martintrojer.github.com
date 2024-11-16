@@ -46,7 +46,7 @@
         	       
 
 			<div>
-				<p>Dealing with exceptions in go blocks/threads is different from normal clojure core. This gotcha is very common when moving your code into core.async go blocks &ndash; all your exceptions are gone! Since the body of a go block is run on a thread pool, it&rsquo;s not much we can do with an exception, thus core.async will just eat them and close the channel. That&rsquo;s what happened in the second snippet <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/">in this post</a>. The <code>nil</code> result is because the channel we read from is closed.</p>
+				<p>Dealing with exceptions in go blocks/threads is different from normal Clojure core. This gotcha is very common when moving your code into core.async go blocks &ndash; all your exceptions are gone! Since the body of a go block is run on a thread pool, there&rsquo;s not much we can do with an exception, thus core.async will just eat them and close the channel. That&rsquo;s what happened in the second snippet <a href="https://martintrojer.github.io/post/2014-03-09-working-with-coreasync-chaining-go-blocks/">in this post</a>. The <code>nil</code> result occurs because the channel we read from is closed.</p>
 <p>I find myself wanting to know the cause of problem at the consumer side of a channel. That means the go block needs to catch the exception, put it (the exception) on the channel before it dies. <a href="http://swannodette.github.io/2013/08/31/asynchronous-error-handling/">David Nolen has written about this pattern</a>, and I&rsquo;ve been using the proposed <code>&lt;?</code> quite happily.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>throw-err [e]
 </span></span><span style="display:flex;"><span>  (when (instance? Throwable e) (<span style="color:#a6e22e">throw</span> e))
@@ -70,7 +70,7 @@
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">;; Handle exceptions for all &#39;&lt;? calls&#39;</span>
 </span></span><span style="display:flex;"><span>            (<span style="color:#a6e22e">catch</span> Exception e
 </span></span><span style="display:flex;"><span>              (<span style="color:#a6e22e">log/error</span> <span style="color:#e6db74">&#34;error getting data&#34;</span>))))
-</span></span></code></pre></div><p>If you&rsquo;re interested in how some Go examples convert to core.async check out <a href="https://github.com/martintrojer/go-tutorials-core-async">this repo</a>.</p>
+</span></span></code></pre></div><p>If you&rsquo;re interested in how some Go examples convert to core.async, check out <a href="https://github.com/martintrojer/go-tutorials-core-async">this repo</a>.</p>
 			</div>
 		</article>
 	</main>

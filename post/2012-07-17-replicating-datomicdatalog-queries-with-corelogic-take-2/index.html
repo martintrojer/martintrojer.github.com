@@ -49,7 +49,7 @@
 
 			<div>
 				<p>This is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">previous post</a> on datalog-equivalent queries in core.logic.</p>
-<p>Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First let&rsquo;s consider this datomic query;</p>
+<p>Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the relationships/facts API in core.logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First, let&rsquo;s consider this Datomic query:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
 </span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]
 </span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
@@ -57,10 +57,10 @@
 </span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
 </span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
-</span></span></code></pre></div><p>In core.logic we start by defining the relationships between our 2 datasets;</p>
+</span></span></code></pre></div><p>In core.logic we start by defining the relationships between our 2 datasets:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">defrel</span> last-first-email p1 p2 p3)
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">defrel</span> email-height p1 p2)
-</span></span></code></pre></div><p>This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels;</p>
+</span></span></code></pre></div><p>This mirrors the layout of the data above. The actual datapoints are defined as facts, and once we have those we can do a core.logic run* using goals with the same name as our defrels:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>)
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">fact</span> email-height <span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>)
@@ -71,8 +71,8 @@
 </span></span><span style="display:flex;"><span>             (<span style="color:#a6e22e">email-height</span> email height)
 </span></span><span style="display:flex;"><span>             (== q [fst height])))
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;Jane&#34; 73] [&#34;John&#34; 71])</span>
-</span></span></code></pre></div><p>The join is accomplished by using the same lvar (email) is both defrel goals.</p>
-<p>Now consider a slightly more complicated query;</p>
+</span></span></code></pre></div><p>The join is accomplished by using the same lvar (email) in both defrel goals.</p>
+<p>Now consider a slightly more complicated query:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span><span style="color:#75715e">;; simple in-memory join, two database bindings</span>
 </span></span><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
 </span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> $db1 $db2
@@ -89,7 +89,7 @@
 </span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">101</span> <span style="color:#e6db74">:email</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
 </span></span><span style="display:flex;"><span>    [<span style="color:#ae81ff">101</span> <span style="color:#e6db74">:height</span> <span style="color:#ae81ff">71</span>]])
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
-</span></span></code></pre></div><p>Applying the same technique (with some more defrels) we get;</p>
+</span></span></code></pre></div><p>Applying the same technique (with some more defrels) we get:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">do</span>
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id-first p1 p2)
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defrel</span> id-email p1 p2)
@@ -111,7 +111,7 @@
 </span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">id2-height</span> id2 height)
 </span></span><span style="display:flex;"><span>               (== q [fst height]))))
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;John&#34; 71] [&#34;Jane&#34; 73])</span>
-</span></span></code></pre></div><p>Hmm, this looks suspiciously like a victim-of-a-macro(tm), maybe something like this;</p>
+</span></span></code></pre></div><p>Hmm, this looks suspiciously like a victim of a macro. Maybe something like this:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defmacro </span>defquery [relname find rels]
 </span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">let </span>[idx-syms (<span style="color:#a6e22e">-&gt;&gt;</span> (<span style="color:#a6e22e">repeatedly</span> gensym) (map <span style="color:#f92672">#</span>(with-meta % {<span style="color:#e6db74">:index</span> <span style="color:#e6db74">:t</span>})))
 </span></span><span style="display:flex;"><span>        relname (<span style="color:#66d9ef">fn </span>[r] (symbol (str relname <span style="color:#e6db74">&#34;-&#34;</span> (<span style="color:#a6e22e">-&gt;&gt;</span> r (map name) (<span style="color:#a6e22e">interpose</span> <span style="color:#e6db74">&#34;-&#34;</span>) (reduce str)))))
@@ -125,7 +125,7 @@
 </span></span><span style="display:flex;"><span>               (<span style="color:#a6e22e">fresh</span> [<span style="color:#f92672">~@</span>(set (mapcat lvars rels))]
 </span></span><span style="display:flex;"><span>                      <span style="color:#f92672">~@</span>joins
 </span></span><span style="display:flex;"><span>                      (== q# [<span style="color:#f92672">~@</span>(<span style="color:#a6e22e">lvars</span> find)])))))))
-</span></span></code></pre></div><p>The two examples above can now be written like so;</p>
+</span></span></code></pre></div><p>The two examples above can now be written like so:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">do</span>
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defquery</span> join [<span style="color:#e6db74">:first</span> <span style="color:#e6db74">:height</span>] [[<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>]])
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">fact</span> join-last-first-email <span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>)
@@ -148,7 +148,7 @@
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">join2-run</span>))
 </span></span><span style="display:flex;"><span><span style="color:#75715e">;; ([&#34;John&#34; 71] [&#34;Jane&#34; 73])</span>
 </span></span></code></pre></div><p>An important point here is that we have separated the definition of the relationships, definition (loading) of the facts, and the actual running of the query.</p>
-<p>So how does this perform for larger datasets compared to the unification / clojure.set/join described in the previous post? If we look at the time for running the query it&rsquo;s ~33% faster and about 12x slower than the optimal datomic/datalog query.</p>
+<p>So how does this perform for larger datasets compared to the unification/clojure.set/join described in the previous post? If we look at the time for running the query, it&rsquo;s ~33% faster and about 12 times slower than the optimal Datomic/Datalog query.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>join-test2 [xs ys]
 </span></span><span style="display:flex;"><span>  <span style="color:#75715e">;; setup the relations</span>
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">defquery</span> join [<span style="color:#e6db74">:first</span> <span style="color:#e6db74">:height</span>] [[<span style="color:#e6db74">:last</span> <span style="color:#e6db74">:first</span> <span style="color:#e6db74">:email</span>] [<span style="color:#e6db74">:email</span> <span style="color:#e6db74">:height</span>]])

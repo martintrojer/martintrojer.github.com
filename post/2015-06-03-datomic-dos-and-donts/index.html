@@ -46,16 +46,16 @@
         	       
 
 			<div>
-				<p>I recently tried to use Datomic in anger in a project, here are some things I learned.</p>
+				<p>I recently tried to use Datomic in anger in a project. Here are some things I learned.</p>
 <h1 id="do">Do</h1>
 <h4 id="keep-metrics-on-your-query-times">Keep metrics on your query times</h4>
-<p>Datomic lacks query planning. Queries that look harmless can be real hogs. The solution is usually blindly swapping lines in your query until you get an order of magnitude speedup.</p>
+<p>Datomic lacks query planning. Queries that look harmless can be real performance hogs. The solution is usually blindly swapping lines in your query until you get an order-of-magnitude speedup.</p>
 <h4 id="always-use-memcached-with-datomic">Always use memcached with Datomic</h4>
-<p>When new peers connect, a fair bit of data needs to be transferred to them. If you don&rsquo;t use memcached this data needs to be queried from the store and will slow down the &lsquo;peer connect time&rsquo; (among other things).</p>
-<h4 id="give-your-peers-nodes-plenty-of-heap">Give your peers nodes plenty of heap</h4>
-<p>To fully benefit from Datomic you want to have plenty of heap for the peers to cache data.</p>
-<h4 id="datomic-was-designed-with-awsdynamo-in-mind-use-it">Datomic was designed with AWS/Dynamo in mind, use it</h4>
-<p>It will perform best with this backend, its also the most used (and thus most polished).</p>
+<p>When new peers connect, a fair bit of data needs to be transferred to them. If you don&rsquo;t use memcached, this data needs to be queried from the store and will slow down the &lsquo;peer connect time&rsquo; (among other things).</p>
+<h4 id="give-your-peer-nodes-plenty-of-heap">Give your peer nodes plenty of heap</h4>
+<p>To fully benefit from Datomic, you want to have plenty of heap for the peers to cache data.</p>
+<h4 id="datomic-was-designed-with-awsdynamodb-in-mind-use-it">Datomic was designed with AWS/DynamoDB in mind; use it</h4>
+<p>It will perform best with this backend; it&rsquo;s also the most used (and thus most polished).</p>
 <h4 id="do-your-projectclj-chores">Do your <code>project.clj</code> chores</h4>
 <p>Datomic brings in lots of maven dependencies. Make sure you don&rsquo;t suffer from clashes, spend time solving the &lsquo;<code>:exclusions</code> puzzle&rsquo;.</p>
 <h4 id="prefer-dropping-databases-to-excising-data">Prefer dropping databases to excising data</h4>

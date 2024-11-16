@@ -46,10 +46,10 @@
         	       
 
 			<div>
-				<p>This post is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/">previous post on NQueens and core.logic</a>, in which I tried to find the solutions using &ldquo;pure&rdquo; logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.</p>
-<p>After some excellent feedback and hints from Mr <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/ref=sr_1_2?ie=UTF8&amp;qid=1341989805&amp;sr=8-2">good old Bratko</a>.</p>
-<p>First, let&rsquo;s fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given 2 prerequisites; the fresh variable must be bound to a finite (number) space and we much use <em>project</em> to bind the values. This means we can get rid of subo altogether.</p>
-<p>Project is mentioned in passing in the Reasoned Schemer book, it says &ldquo;project is syntactically like fresh, but it binds different values to the lexical variables. project binds walk*ed values, whereas fresh binds variables using var&rdquo;. What that means in this case is that we can perform arithmetic operations of the projected variables. Here&rsquo;s our new safeo;</p>
+				<p>This post is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/">previous post on N Queens and core.logic</a>, in which I tried to find solutions using &ldquo;pure&rdquo; logic (without arithmetic goals) and basic miniKanren/Reasoned Schemer building blocks.</p>
+<p>After excellent feedback and hints from <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/">good old Bratko</a>.</p>
+<p>First, let&rsquo;s fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given two prerequisites: the fresh variable must be bound to a finite (number) space, and we must use <em>project</em> to bind the values. This means we can get rid of subo altogether.</p>
+<p>Project is mentioned in passing in the Reasoned Schemer book. It says &ldquo;project is syntactically like fresh, but it binds different values to the lexical variables. project binds walk*ed values, whereas fresh binds variables using var&rdquo;. What that means in this case is that we can perform arithmetic operations on the projected variables. Here&rsquo;s our new safeo:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>safeo [[x1 y1] [x2 y2]]
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">all</span>
 </span></span><span style="display:flex;"><span>   (<span style="color:#a6e22e">!=</span> x1 x2)
@@ -125,8 +125,8 @@
 </span></span><span style="display:flex;"><span>    (== q (map vector (<span style="color:#a6e22e">repeatedly</span> lvar) (range n)))
 </span></span><span style="display:flex;"><span>    (<span style="color:#a6e22e">nqueenso</span> q n)))
 </span></span></code></pre></div><p>As you can see, with looping we are generating drastically less associations for core.logic to consider, that&rsquo;s good for performance.</p>
-<p>Now it&rsquo;s ~70x faster than the original solution in the previous post. For a 8-queens run, this is ~50x slower than the hand-rolled functional backtracking solution in <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">the very first posting</a>. That&rsquo;s still pretty good for a generic prolog machinery with all the extra expression power that it packs.</p>
-<p>Next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!</p>
+<p>Now it&rsquo;s approximately 70 times faster than the original solution in the previous post. For an 8-queens run, this is about 50 times slower than the hand-rolled functional backtracking solution in <a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">the very first posting</a>. That&rsquo;s still pretty good for a generic Prolog machinery with all the extra expressive power that it provides.</p>
+<p>The next part in this series will use cKanren functionality that is being worked on at the moment in core.logic. That might be even faster!</p>
 
 			</div>
 		</article>

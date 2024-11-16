@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>emacs on Martin Trojer</title>
+    <title>Emacs on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/emacs/</link>
-    <description>Recent content in emacs on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Emacs on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 18 Mar 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
@@ -13,21 +13,21 @@
       <link>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</link>
       <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</guid>
-      <description>&lt;p&gt;By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
+      <description>&lt;p&gt;By reading the title of this post, you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Clojure and Emacs without Cider redux</title>
       <link>https://martintrojer.github.io/post/2015-02-14-clojure-and-emacs-without-cider-redux/</link>
       <pubDate>Sat, 14 Feb 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-02-14-clojure-and-emacs-without-cider-redux/</guid>
-      <description>&lt;p&gt;Its been a couple of months since I&amp;rsquo;ve stopped using &lt;a href=&#34;https://github.com/clojure-emacs/cider&#34;&gt;Cider&lt;/a&gt; for Clojure development in Emacs. I find a simple &amp;lsquo;inferior lisp&amp;rsquo; setup faster and more reliable. For a good summary of why one would consider not using Cider, see &lt;a href=&#34;https://gist.github.com/levand/b1012bb7bdb5fcc6486f&#34;&gt;Luke VanderHart&amp;rsquo;s excellent summary&lt;/a&gt;.&lt;/p&gt;</description>
+      <description>&lt;p&gt;It&amp;rsquo;s been a couple of months since I&amp;rsquo;ve stopped using &lt;a href=&#34;https://github.com/clojure-emacs/cider&#34;&gt;Cider&lt;/a&gt; for Clojure development in Emacs. I find a simple &amp;lsquo;inferior lisp&amp;rsquo; setup faster and more reliable. For a good summary of why one would consider not using Cider, see &lt;a href=&#34;https://gist.github.com/levand/b1012bb7bdb5fcc6486f&#34;&gt;Luke VanderHart&amp;rsquo;s excellent summary&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Clojure and Emacs without Cider</title>
       <link>https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/</link>
       <pubDate>Thu, 02 Oct 2014 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2014-10-02-clojure-and-emacs-without-cider/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve been hacking Clojure for many years now, and I&amp;rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs tool-chain has come a long way during this time, swank-clojure, nREPL, nrepl.el and now Cider. The feature list is ever growing, and every-time you look there are some new awesome shortcut that will &amp;lsquo;make your day&amp;rsquo;.&lt;/p&gt;</description>
+      <description>&lt;p&gt;I&amp;rsquo;ve been hacking Clojure for many years now, and I&amp;rsquo;ve been happy to rekindle my love for Emacs. The Clojure/Emacs toolchain has come a long way during this time: swank-clojure, nREPL, nrepl.el, and now Cider. The feature list is ever-growing, and every time you look, there are some new awesome shortcuts that will &amp;lsquo;make your day&amp;rsquo;.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>gnu on Martin Trojer</title>
+    <title>Gnu on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/gnu/</link>
-    <description>Recent content in gnu on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Gnu on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 18 Mar 2015 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/gnu/index.xml" rel="self" type="application/rss+xml" />
@@ -13,21 +13,21 @@
       <link>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</link>
       <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2015-03-18-software-archaeology-hunting-bugs-in-emacs/</guid>
-      <description>&lt;p&gt;By reading the title of this post you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
+      <description>&lt;p&gt;By reading the title of this post, you might think this entry is about using some clever Emacs skills to find bugs in old software. But no, it&amp;rsquo;s actually about hunting down bugs in Emacs itself (which incidentally happens to be very old software).&lt;/p&gt;</description>
     </item>
     <item>
       <title>Embedding a new runtime into your legacy C/C&#43;&#43; app</title>
       <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
       <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
-      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+      <description>&lt;p&gt;Let&amp;rsquo;s say you have a big legacy C++ app. Then you&amp;rsquo;re undoubtedly covered by &lt;a href=&#34;http://en.wikipedia.org/wiki/Greenspun&#39;s_tenth_rule&#34;&gt;Greenspun&amp;rsquo;s tenth rule&lt;/a&gt;. Let&amp;rsquo;s also say that your home-grown, buggy, and slow DSL/scripting language has been pushed to its limit and cannot be tweaked any further. What do you do? How can you replace it?&lt;/p&gt;&#xA;&lt;p&gt;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular. There are famous examples from gaming where &lt;a href=&#34;http://en.wikipedia.org/wiki/Game_Oriented_Assembly_Lisp&#34;&gt;Lisps&lt;/a&gt; and &lt;a href=&#34;http://www.wowwiki.com/Lua&#34;&gt;Lua&lt;/a&gt; are widely used.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
       <link>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</link>
       <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</guid>
-      <description>GNU and Richard Stallman was a real catalyst for the open source movement and it&amp;rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&amp;rsquo;s head with the copy-left licenses.</description>
+      <description>&lt;p&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/GNU_Project&#34;&gt;GNU&lt;/a&gt; and &lt;a href=&#34;http://en.wikipedia.org/wiki/Richard_stallman&#34;&gt;Richard Stallman&lt;/a&gt; were a real catalyst for the open source movement and its crown jewel: the Linux kernel. Not only did Mr. Torvalds&amp;rsquo; early Linux releases had nearly 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to release it under the GNU Public License (GPL). GNU and Stallman are forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on their head with the copyleft licenses. The &lt;a href=&#34;http://www.fsf.org/&#34;&gt;Free Software Foundation&lt;/a&gt;, the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

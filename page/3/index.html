@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.121.1">
+	<meta name="generator" content="Hugo 0.138.0">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,9 +46,10 @@
 	<a href="/tags/clojure">clojure</a>
 	
 	<div>
-		Stuart Sierra has done a great job with clojure.tools.namespace and the reloaded leiningen template. If you haven&rsquo;t heard about this before please have a look at c.t.n readme and watch this presentation.
-I&rsquo;ve have retrofitted this pattern into two rather big clojure projects (20k and 5k lines) with several modules and here are some of my findings.
-Removing global state The first step is to find all resources that needs to be &ldquo;lifecycled&rdquo;.
+		<p><a href="https://twitter.com/stuartsierra">Stuart Sierra</a> has done a great job with <a href="https://github.com/clojure/tools.namespace">clojure.tools.namespace</a> and the <a href="https://github.com/stuartsierra/reloaded">reloaded</a> Leiningen template. If you haven&rsquo;t heard about this before, please have a look at c.t.n&rsquo;s readme and watch <a href="http://www.infoq.com/presentations/Clojure-Large-scale-patterns-techniques">this presentation</a>.</p>
+<p>I have retrofitted this pattern into two rather large Clojure projects (20,000 and 5,000 lines) with several modules, and here are some of my findings.</p>
+<h2 id="removing-global-state">Removing global state</h2>
+<p>The first step is to find all resources that need to be &ldquo;lifecycled.&rdquo; Typical examples are Jetty servers, database/message bus clients, etc. It&rsquo;s common that these resources are in a <code>(defonce server (atom ...))</code> form. I tend to grep for <code>defonce</code> and <code>atom</code> to find these items.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-09-07-retrofitting-the-reloaded-pattern-into-clojure-projects/">Read more...</a>
 		
@@ -67,8 +68,8 @@ Removing global state The first step is to find all resources that needs to be &
 	<a href="/tags/go">go</a>
 	
 	<div>
-		I&rsquo;ve been using various Go examples / tutorials to take a deeper look into core.async. The CSP pattern is a very interesting and powerful, it&rsquo;s good move for Clojure to &ldquo;throw in&rdquo; with Go and push this style of programming.
-core.sync works at s-expression level, where some other JVM solutions (Kilim, Pulsar) do the same on byte code level. The main benefit of doing these transforms on s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell.
+		<p>I&rsquo;ve been using various <a href="http://go-lang.org/">Go</a> examples and tutorials to take a deeper look into <a href="https://github.com/clojure/core.async">core.async</a>. The <a href="http://en.wikipedia.org/wiki/Communicating_sequential_processes">CSP</a> pattern is very interesting and powerful; it&rsquo;s a good move for Clojure to &ldquo;throw in&rdquo; with Go and push this style of programming.</p>
+<p>core.async works at the s-expression level, where some other JVM solutions (<a href="http://www.malhar.net/sriram/kilim/">Kilim</a>, <a href="https://github.com/puniverse/pulsar">Pulsar</a>) do the same at the byte-code level. The main benefit of doing these transforms at the s-expression level is that they are applicable to ClojureScript, where CSP can be a very neat way out of callback hell. <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">David has written about this</a>.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-07-17-non-tailrecursive-functions-in-coreasync/">Read more...</a>
 		
@@ -87,8 +88,8 @@ core.sync works at s-expression level, where some other JVM solutions (Kilim, Pu
 	<a href="/tags/go">go</a>
 	
 	<div>
-		Some time ago I wrote about Asynchronous workflows in Clojure. With the recent release and excitement of core.async, I though it a good time to revisit that post.
-While there are already some good example and comparison-with-go posts out there, I&rsquo;d like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It&rsquo;s important to understand the implications of blocking IO and it&rsquo;s effects on &lsquo;async code&rsquo;, in this case core.
+		<p>Some time ago I wrote about <a href="https://martintrojer.github.io/post/2011-12-22-asynchronous-workflows-in-clojure/">Asynchronous workflows in Clojure</a>. With the recent release and excitement of <a href="https://github.com/clojure/core.async">core.async</a>, I thought it a good time to revisit that post.</p>
+<p>While there are already some good examples and comparison-with-<a href="http://golang.org">go</a> posts out there, I&rsquo;d like to focus on an area often misunderstood, namely async frameworks and blocking APIs (most commonly blocking IO). It&rsquo;s important to understand the implications of blocking IO and its effects on &lsquo;async code&rsquo;, in this case core.async.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-07-07-coreasync-and-blocking-io/">Read more...</a>
 		
@@ -124,12 +125,18 @@ While there are already some good example and comparison-with-go posts out there
 	<a href="/tags/frins">frins</a>
 	
 	<div>
-		I am proud to announce a new Scala project called &ldquo;Frins&rdquo;.
-Frins is a practical unit-of-measure calculator DSL for Scala.
-Key features;
-Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Full source code available on github.
-To wet your appetite head straight over to the example calculations.
-How Frins came about About a year ago I created Frinj.
+		<p>I am proud to announce a new Scala project called &ldquo;Frins.&rdquo;</p>
+<p>Frins is a practical unit-of-measure calculator DSL for Scala.</p>
+<p>Key features:</p>
+<ul>
+<li>Tracks units of measure through all calculations, allowing you to mix units of measure transparently</li>
+<li>Comes with a <strong>huge</strong> database of units and conversion factors</li>
+<li>Inspired by the <a href="http://futureboy.us/frinkdocs/">Frink project</a></li>
+</ul>
+<p>Full source code is available on <a href="https://github.com/martintrojer/frins">GitHub</a>.</p>
+<p>To whet your appetite, head straight over to the <a href="https://github.com/martintrojer/frins/blob/master/src/main/scala/frins/ExampleCalculations.scala">example calculations</a>.</p>
+<h3 id="how-frins-came-about">How Frins Came About</h3>
+<p>About a year ago, I created <a href="https://github.com/martintrojer/frinj">Frinj</a>. With Frinj, I tried to marry some of the joys of one of my favorite programming languages (Frink) with the Clojure REPL. I was quite pleased with the results, and the response was encouraging.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/">Read more...</a>
 		
@@ -161,8 +168,8 @@ How Frins came about About a year ago I created Frinj.
 	<a href="/tags/lisp">lisp</a>
 	
 	<div>
-		In this post I present some of my experiences writing a Scheme interpreter in Scala (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.
-Overall, the Scala solution is very similar to the F# one. Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of a Hindley-Milner type inference.
+		<p>In this post, I present some of my experiences writing a <a href="https://github.com/martintrojer/scheme-scala">Scheme interpreter in Scala</a> (as an external DSL) and compare it with my recent similar experiences in Clojure and F#.</p>
+<p>Overall, the Scala solution is very similar to the <a href="https://github.com/martintrojer/scheme-fsharp">F# one</a>. Not very surprising, since the problem lends itself well to case classes / discriminated union types and pattern matching. One difference is more type declarations in Scala, due to the lack of Hindley-Milner type inference. Scala uses a &ldquo;flow-based&rdquo; type inferrer, which is less powerful than ML but apparently works better for OO subclasses, etc. I will look into this in a future blog post.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-06-06-scheme-in-scala/">Read more...</a>
 		
@@ -181,10 +188,21 @@ Overall, the Scala solution is very similar to the F# one. Not very surprising, 
 	<a href="/tags/fsharp">fsharp</a>
 	
 	<div>
-		Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.
-Most languages comes with a REPL (or &lsquo;interactive&rsquo; prompt), where you can play with these features at your leisure. Dynamically typed languages are a bit more convenient in the REPL, but not by as much as you might think. Also, F# type providers closes the gap even further.
-Here&rsquo;s a typical, hit-a-JSON-endpoint-and-look-at-the-data session in Clojure;
-$ lein repl user=&gt; (def res (slurp &#34;http://www.
+		<p>Functional programming is great; higher-order functions, closures, immutable data-structures, lazy sequences etc.</p>
+<p>Most languages comes with a REPL (or &lsquo;interactive&rsquo; prompt), where you can play with these features at your leisure. Dynamically typed languages are a bit more convenient in the REPL, but not by as much as you might think. Also, F# type providers closes the gap even further.</p>
+<p>Here&rsquo;s a typical, hit-a-JSON-endpoint-and-look-at-the-data session in Clojure;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>$ lein repl
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#66d9ef">def </span>res (slurp <span style="color:#e6db74">&#34;http://www.bbc.co.uk/tv/programmes/genres/drama/scifiandfantasy/schedules/upcoming.json&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#a6e22e">require</span> <span style="color:#e6db74">&#39;clojure.data.json</span> <span style="color:#e6db74">&#39;clojure.walk</span>)
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#66d9ef">def </span>json (<span style="color:#a6e22e">-&gt;&gt;</span> res clojure.data.json/read-str
+</span></span><span style="display:flex;"><span>                      clojure.walk/keywordize-keys))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user=&gt; (<span style="color:#a6e22e">-&gt;&gt;</span> json <span style="color:#e6db74">:broadcasts</span> (filter <span style="color:#f92672">#</span>(&gt;= (<span style="color:#e6db74">:duration</span> %) <span style="color:#ae81ff">6300</span>))
+</span></span><span style="display:flex;"><span>            (map <span style="color:#e6db74">:programme</span>) (map (<span style="color:#a6e22e">juxt</span> <span style="color:#e6db74">:title</span> <span style="color:#e6db74">:pid</span>)))
+</span></span><span style="display:flex;"><span>([<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>] [<span style="color:#e6db74">&#34;Lady in the Water&#34;</span> <span style="color:#e6db74">&#34;b00l5wdn&#34;</span>])
+</span></span></code></pre></div><p>Nice, clean and very powerful, virtually zero ceremony. Doing the same in Scala, is just a little bit more awkward;</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-06-04-comparing-fp-repl-sessions/">Read more...</a>
 		
@@ -205,7 +223,10 @@ $ lein repl user=&gt; (def res (slurp &#34;http://www.
 	<a href="/tags/sicp">sicp</a>
 	
 	<div>
-		This epic journey (yeah right) began at Uni with discovering the mighty SICP, still the best book on programming I&rsquo;ve read (and let&rsquo;s face it, the best I will ever read). After that profound experience I kept an eye on the Lisp/FP world and wrote some toys in Scheme, ELisp, OCaml every now and then. One thing that dawned on me was that none of these languages had much practical use, they weren&rsquo;t very applicable to real-world software problems.
+		<figure class="floatright"><img src="/assets/images/scalame/martin.png">
+</figure>
+
+<p>This epic journey (yeah right) began at university with discovering the mighty <a href="http://mitpress.mit.edu/sicp/">SICP</a>, still the best book on programming I&rsquo;ve read (and let&rsquo;s face it, the best I will ever read). After that profound experience, I kept an eye on the Lisp/FP world and wrote some toys in <a href="http://plt-scheme.org/">Scheme</a>, <a href="http://en.wikipedia.org/wiki/Emacs_Lisp">ELisp</a>, and <a href="http://ocaml.org/">OCaml</a> every now and then. One thing that dawned on me was that none of these languages had much practical use; they weren&rsquo;t very applicable to real-world software problems. While very clever and mind-expanding, they seemed mainly an academic exercise. There were zero jobs out there using these languages. Heck, hardly any of my peers had heard of or cared about them.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-06-01-scala-and-me/">Read more...</a>
 		
@@ -226,8 +247,11 @@ $ lein repl user=&gt; (def res (slurp &#34;http://www.
 	<a href="/tags/rpi">rpi</a>
 	
 	<div>
-		I recently switched to the Samsung ARM Chromebook for all my laptop needs. The pitch it&rsquo;s quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it&rsquo;s quite limited RAM size, just 2GB. But with a decent swap file, I&rsquo;m running multiple JVMs (with Datomic, Elasicsearch, CLJS compiler etc without any hickups).
-Out of the box it runs ChromeOS, which I have to say is pretty stellar for browsing and consuming content on the web.
+		<figure><img src="/assets/images/chromebook/cb.jpg">
+</figure>
+
+<p>I recently switched to the <a href="http://www.samsung.com/uk/consumer/pc-peripherals/chrome-devices/chrome-devices/XE303C12-A01UK">Samsung ARM Chromebook</a> for all my laptop needs. The pitch is quite appealing: £200, dual-core ARM Cortex-A15s, good keyboard, totally fanless (CPU is passively cooled), good battery life, and 1kg weight. The one downside is its quite limited RAM size, just 2GB. But with a decent swap file, I&rsquo;m running multiple JVMs (with Datomic, Elasticsearch, <a href="https://github.com/clojure/clojurescript">CLJS</a> compiler, etc.) without any hiccups.</p>
+<p>Out of the box, it runs <a href="http://en.wikipedia.org/wiki/Google_Chrome_OS">ChromeOS</a>, which I have to say is pretty stellar for browsing and consuming content on the web. It is also possible to run any Linux distribution you wish on this machine; Google has an <a href="http://www.chromium.org/chromium-os/chromiumos-design-docs/developer-mode">outspoken strategy</a> to enable it.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/">Read more...</a>
 		

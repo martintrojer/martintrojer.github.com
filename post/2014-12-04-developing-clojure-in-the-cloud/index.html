@@ -48,7 +48,7 @@
         	       
 
 			<div>
-				<p>Recently I gave a talk at the <a href="https://skillsmatter.com/conferences/1956-clojure-exchange-2014">Clojure eXchange 2014</a> titled &lsquo;Developing Clojure in the Cloud&rsquo;. I described a way of creating and using (Clojure) development environments inside VMs, I&rsquo;ve been developing like this for the last year (spanning 2 projects).</p>
+				<p>Recently, I gave a talk at the <a href="https://skillsmatter.com/conferences/1956-clojure-exchange-2014">Clojure eXchange 2014</a> titled &lsquo;Developing Clojure in the Cloud&rsquo;. I described a way of creating and using (Clojure) development environments inside VMs. I&rsquo;ve been developing like this for the last year (spanning 2 projects).</p>
 <p><a href="/assets/images/devcloud/developing-clojure-in-the-cloud.pdf">Download the slides here</a></p>
 <p><a href="https://skillsmatter.com/skillscasts/6056-developing-clojure-in-the-cloud">Video recording here</a></p>
 <p>The basic idea is to move your entire development environment into a VM and thus creating a controlled environment for all your dependencies (OS distribution, Java version, database version etc). You also provision this VM with your dotfiles and run your text editor inside it. In both projects I&rsquo;ve been able to use the same provisioning scripts (in both cases puppet) to build my devboxes as was used to build the production environments. It&rsquo;s been a bit of revelation for myself to be able to practically &lsquo;develop in prod&rsquo;, and during this time I&rsquo;ve never once uttered the dreaded words &lsquo;But it works on my machine!&rsquo;.</p>
@@ -79,9 +79,9 @@
 </span></span><span style="display:flex;"><span>$ docker run -d dockerfile/elasticsearch
 </span></span></code></pre></div><p>It is definitely better than lengthy wikis entries, but unless you know that containers will be used in production (and you control the containers) you are again exposing yourself environmental differences.</p>
 <p>One of the reasons I&rsquo;ve been holding back from pushing Docker to clients is that deployment options have been been spartan, but that is rapidly changing. Amazon just announced the <a href="http://aws.amazon.com/ecs/">EC2 container service</a> and that takes care of many of my reservations.</p>
-<p>Some reservations that do remain is that how to actually construct the more complicated containers (for databases etc) that you rely on. Dockerfiles are just not powerful enough, while <a href="http://ianmiell.github.io/shutit/">alternatives</a> are being built I feel that these guys are reinventing Chef/puppet. How to handle secuirty updates is another problem area.</p>
+<p>Some reservations that do remain are how to actually construct the more complicated containers (for databases etc.) that you rely on. Dockerfiles are just not powerful enough; while <a href="http://ianmiell.github.io/shutit/">alternatives</a> are being built, I feel that these developers are reinventing Chef/Puppet. How to handle security updates is another problem area.</p>
 <p>There is also a split in the Docker family currently unfolding; CoreOS just announced their Docker alternative <a href="https://coreos.com/blog/rocket/">Rocket</a>. It will be interesting to see where it will end up.</p>
-<p>Finally, when talking about non-VM deployment options. One thing that has me really exited is unikernels or library OSes. <a href="http://osv.io/">OSv</a> and <a href="http://www.openmirage.org/">MirageOS</a> looks incredibly promising.</p>
+<p>Finally, when talking about non-VM deployment options, one thing that has me really excited is unikernels or library OSes. <a href="http://osv.io/">OSv</a> and <a href="http://www.openmirage.org/">MirageOS</a> look incredibly promising.</p>
 			</div>
 		</article>
 	</main>

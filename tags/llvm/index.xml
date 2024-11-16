@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>llvm on Martin Trojer</title>
+    <title>Llvm on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/llvm/</link>
-    <description>Recent content in llvm on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Llvm on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 10 Nov 2011 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/llvm/index.xml" rel="self" type="application/rss+xml" />
@@ -13,28 +13,28 @@
       <link>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</link>
       <pubDate>Thu, 10 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-10-applied-symbolic-execution-with-kleellvm/</guid>
-      <description>This article serves as a follow-up to my previous post on symbolic execution, which can be found here. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&#xA;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on GitHub.</description>
+      <description>&lt;p&gt;This article serves as a follow-up to my previous post on symbolic execution, which can be found &lt;a href=&#34;https://martintrojer.github.io/post/2011-11-02-symbolic-execution/&#34;&gt;here&lt;/a&gt;. In this article, we will delve deeper into the details of KLEE and LLVM, discussing a potential practical application for a symbolic executor. We will also address some limitations and drawbacks associated with this approach.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re interested in the changes we made for KLEE and LLVM, you can find them on &lt;a href=&#34;https://github.com/martintrojer/symbolic-execution&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;One limitation of symbolic execution, as well as dynamic code analysis in general, is that the code under analysis needs to be buildable and linkable. Consequently, it is more challenging to analyze subsystems or code snippets compared to using a &lt;a href=&#34;http://en.wikipedia.org/wiki/Lint_(software)&#34;&gt;lint tool&lt;/a&gt;. Another complication arises from the fact that the symbolic executor&amp;rsquo;s virtual machine must also comprehend and model the system calls used by the code. This makes the tool OS-dependent, as it requires emulating all calls that &amp;ldquo;escape&amp;rdquo; the executor. Cadar, Dunbar, and Engler explain how this can be achieved for Linux by analyzing GNU coreutils in [1].&lt;/p&gt;</description>
     </item>
     <item>
       <title>Is LLVM the beginning of the end for GNU (as we know it)?</title>
       <link>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</link>
       <pubDate>Tue, 08 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-08-is-llvm-the-beginning-of-the-end-for-gnu-as-we-know-it/</guid>
-      <description>GNU and Richard Stallman was a real catalyst for the open source movement and it&amp;rsquo;s crown jewel; the Linux kernel. Not only did Mr Torvalds early Linux releases have near 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to use release it under the GNU Public License; GPL. GNU and Stallman is forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on it&amp;rsquo;s head with the copy-left licenses.</description>
+      <description>&lt;p&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/GNU_Project&#34;&gt;GNU&lt;/a&gt; and &lt;a href=&#34;http://en.wikipedia.org/wiki/Richard_stallman&#34;&gt;Richard Stallman&lt;/a&gt; were a real catalyst for the open source movement and its crown jewel: the Linux kernel. Not only did Mr. Torvalds&amp;rsquo; early Linux releases had nearly 100% GNU &amp;ldquo;user-land&amp;rdquo;, he also decided to release it under the GNU Public License (GPL). GNU and Stallman are forever linked with the birth and popularization of open source, and innovated both technically and legally by turning copyright laws on their head with the copyleft licenses. The &lt;a href=&#34;http://www.fsf.org/&#34;&gt;Free Software Foundation&lt;/a&gt;, the custodians of the GPL, is a constant source of spicy statements about the state of the software industry.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Why F# needs Mono (and really should be a JVM language)</title>
       <link>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</link>
       <pubDate>Thu, 03 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/</guid>
-      <description>When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in reflector for technical proof). If you&amp;rsquo;re writing a new Windows application (and it&amp;rsquo;s not a high performant game), chances are you are reading WPF books right now.&#xA;One of the promises of .NET when it was released was &amp;ldquo;the great language independent&amp;rdquo; runtime, making all these languages interoperate in joyful blizz.</description>
+      <description>&lt;p&gt;When people think about .NET development, they think of C#. Sure there are other languages (VB, ASP.NET etc) but .NET and C# are very tightly linked (just drop an .NET assembly in &lt;a href=&#34;http://www.reflector.net/&#34;&gt;reflector&lt;/a&gt; for technical proof). If you&amp;rsquo;re writing a new Windows application (and it&amp;rsquo;s not a high performant game), chances are you are reading &lt;a href=&#34;http://en.wikipedia.org/wiki/Windows_Presentation_Foundation&#34;&gt;WPF&lt;/a&gt; books right now.&lt;/p&gt;&#xA;&lt;p&gt;One of the promises of .NET when it was released was &amp;ldquo;the great language independent&amp;rdquo; runtime, making all these languages interoperate in joyful bliss. Technically this still holds, but in practice it&amp;rsquo;s all about C#.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Symbolic Execution</title>
       <link>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</link>
       <pubDate>Wed, 02 Nov 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2011-11-02-symbolic-execution/</guid>
-      <description>A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.</description>
+      <description>&lt;p&gt;A while back, I had the opportunity to collaborate with my colleague, Philippe Gabriel, on a research project focused on automating defect finding and enhancing overall test coverage. Our primary concern at the time was null pointer dereferences, which had the potential to cause system-wide crashes. In our quest, we explored various strategies and tools, both free and commercial. However, what truly captured our interest was a fascinating area of research called &amp;ldquo;Symbolic execution.&amp;rdquo; Imagine having a tool that could automatically identify critical bugs in your source code with minimal or no false positives, while also generating input stimuli to trigger those bugs.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

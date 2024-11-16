@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>arm on Martin Trojer</title>
+    <title>Arm on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/arm/</link>
-    <description>Recent content in arm on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Arm on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 06 Apr 2013 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/arm/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</link>
       <pubDate>Sat, 06 Apr 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-04-06-clojure-on-the-samsung-arm-chromebook/</guid>
-      <description>I recently switched to the Samsung ARM Chromebook for all my laptop needs. The pitch it&amp;rsquo;s quite appealing, 200 quid, dual core ARM CortexA15s, good keyboard, totally fan-less (CPU is passively cooled), good battery life, 1kg weight. The one downside is it&amp;rsquo;s quite limited RAM size, just 2GB. But with a decent swap file, I&amp;rsquo;m running multiple JVMs (with Datomic, Elasicsearch, CLJS compiler etc without any hickups).&#xA;Out of the box it runs ChromeOS, which I have to say is pretty stellar for browsing and consuming content on the web.</description>
+      <description>&lt;figure&gt;&lt;img src=&#34;https://martintrojer.github.io/assets/images/chromebook/cb.jpg&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;I recently switched to the &lt;a href=&#34;http://www.samsung.com/uk/consumer/pc-peripherals/chrome-devices/chrome-devices/XE303C12-A01UK&#34;&gt;Samsung ARM Chromebook&lt;/a&gt; for all my laptop needs. The pitch is quite appealing: £200, dual-core ARM Cortex-A15s, good keyboard, totally fanless (CPU is passively cooled), good battery life, and 1kg weight. The one downside is its quite limited RAM size, just 2GB. But with a decent swap file, I&amp;rsquo;m running multiple JVMs (with Datomic, Elasticsearch, &lt;a href=&#34;https://github.com/clojure/clojurescript&#34;&gt;CLJS&lt;/a&gt; compiler, etc.) without any hiccups.&lt;/p&gt;&#xA;&lt;p&gt;Out of the box, it runs &lt;a href=&#34;http://en.wikipedia.org/wiki/Google_Chrome_OS&#34;&gt;ChromeOS&lt;/a&gt;, which I have to say is pretty stellar for browsing and consuming content on the web. It is also possible to run any Linux distribution you wish on this machine; Google has an &lt;a href=&#34;http://www.chromium.org/chromium-os/chromiumos-design-docs/developer-mode&#34;&gt;outspoken strategy&lt;/a&gt; to enable it.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

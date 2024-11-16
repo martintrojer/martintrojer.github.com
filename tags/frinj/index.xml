@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>frinj on Martin Trojer</title>
+    <title>Frinj on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/frinj/</link>
-    <description>Recent content in frinj on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Frinj on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 25 Jun 2013 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/frinj/index.xml" rel="self" type="application/rss+xml" />
@@ -13,21 +13,21 @@
       <link>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</link>
       <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</guid>
-      <description>I am proud to announce a new Scala project called &amp;ldquo;Frins&amp;rdquo;.&#xA;Frins is a practical unit-of-measure calculator DSL for Scala.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Full source code available on github.&#xA;To wet your appetite head straight over to the example calculations.&#xA;How Frins came about About a year ago I created Frinj.</description>
+      <description>&lt;p&gt;I am proud to announce a new Scala project called &amp;ldquo;Frins.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;Frins is a practical unit-of-measure calculator DSL for Scala.&lt;/p&gt;&#xA;&lt;p&gt;Key features:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Tracks units of measure through all calculations, allowing you to mix units of measure transparently&lt;/li&gt;&#xA;&lt;li&gt;Comes with a &lt;strong&gt;huge&lt;/strong&gt; database of units and conversion factors&lt;/li&gt;&#xA;&lt;li&gt;Inspired by the &lt;a href=&#34;http://futureboy.us/frinkdocs/&#34;&gt;Frink project&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Full source code is available on &lt;a href=&#34;https://github.com/martintrojer/frins&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;To whet your appetite, head straight over to the &lt;a href=&#34;https://github.com/martintrojer/frins/blob/master/src/main/scala/frins/ExampleCalculations.scala&#34;&gt;example calculations&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h3 id=&#34;how-frins-came-about&#34;&gt;How Frins Came About&lt;/h3&gt;&#xA;&lt;p&gt;About a year ago, I created &lt;a href=&#34;https://github.com/martintrojer/frinj&#34;&gt;Frinj&lt;/a&gt;. With Frinj, I tried to marry some of the joys of one of my favorite programming languages (Frink) with the Clojure REPL. I was quite pleased with the results, and the response was encouraging.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Adding Live Unit Feeds to Frinj</title>
       <link>https://martintrojer.github.io/post/2012-03-14-adding-live-unit-feeds-to-frinj/</link>
       <pubDate>Wed, 14 Mar 2012 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2012-03-14-adding-live-unit-feeds-to-frinj/</guid>
-      <description>A couple of weeks has passed since I&amp;rsquo;ve pushed Frinj to github and blogged/tweeted about it. The response have been pretty awesome, one highlight being when @stuarthalloway showed me a frinj+datomic example gist on the #datomic IRC channel. In short, the Clojure community is #badass.&#xA;Frinj comes with a big database of units and conversion factors, and while as many conversion factors are &amp;ldquo;eternal&amp;rdquo;, others aren&amp;rsquo;t. Exchange rates for instance has to be kept up to date to be relevant.</description>
+      <description>&lt;p&gt;A couple of weeks have passed since I pushed &lt;a href=&#34;https://github.com/martintrojer/frinj&#34;&gt;Frinj to github&lt;/a&gt; and blogged/tweeted about it. The response has been pretty awesome, one highlight being when &lt;a href=&#34;https://twitter.com/#!/stuarthalloway&#34;&gt;@stuarthalloway&lt;/a&gt; showed me a &lt;a href=&#34;https://gist.github.com/1980351&#34;&gt;frinj+datomic example gist&lt;/a&gt; on the #datomic IRC channel. In short, the Clojure community is #badass.&lt;/p&gt;&#xA;&lt;p&gt;Frinj comes with a big database of units and conversion factors, and while many conversion factors are &amp;ldquo;eternal&amp;rdquo;, others aren&amp;rsquo;t. Exchange rates, for instance, have to be kept up to date to be relevant. The Frinj unit database was designed to be updatable, both for usability when doing various calculations and for rates that constantly change. This is the reason the frinj.calc namespace exposes the (frinj-init!) function to reset the unit database to a known baseline (in case you write over some factors, etc.). Clojure&amp;rsquo;s support for atomically updating state is ideal for this purpose; the calculator&amp;rsquo;s state is &lt;a href=&#34;https://github.com/martintrojer/frinj/blob/master/src/frinj/core.clj#L17&#34;&gt;kept in a number of refs&lt;/a&gt; and, thanks to the STM, always kept consistent.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Announcing Frinj, a practical unit of measure calculator DSL for Clojure</title>
       <link>https://martintrojer.github.io/post/2012-03-03-announcing-frinj-a-practical-unit-of-measure-calculator-dsl-for-clojure/</link>
       <pubDate>Sat, 03 Mar 2012 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2012-03-03-announcing-frinj-a-practical-unit-of-measure-calculator-dsl-for-clojure/</guid>
-      <description>I am proud to announce a new Clojure project called &amp;ldquo;Frinj&amp;rdquo;.&#xA;Frinj is a practical unit-of-measure calculator DSL for Clojure.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Tries to combine Frink&amp;rsquo;s fluent calculation style with idiomatic Clojure Full source code available on github.&#xA;To wet your apatite head straight over to the sample calculations page to see what Frinj can do!</description>
+      <description>&lt;p&gt;I am proud to announce a new Clojure project called &amp;ldquo;Frinj&amp;rdquo;.&lt;/p&gt;&#xA;&lt;p&gt;Frinj is a practical unit-of-measure calculator DSL for Clojure.&lt;/p&gt;&#xA;&lt;p&gt;Key features:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Tracks units of measure through all calculations allowing you to mix units of measure transparently&lt;/li&gt;&#xA;&lt;li&gt;Comes with a huge database of units and conversion factors&lt;/li&gt;&#xA;&lt;li&gt;Inspired by the &lt;a href=&#34;http://futureboy.us/frinkdocs/&#34;&gt;Frink project&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Tries to combine Frink&amp;rsquo;s fluent calculation style with idiomatic Clojure&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Full source code available on &lt;a href=&#34;https://github.com/martintrojer/frinj&#34;&gt;github&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;To whet your appetite, head straight over to the &lt;a href=&#34;https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj&#34;&gt;sample calculations&lt;/a&gt; page to see what Frinj can do!&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

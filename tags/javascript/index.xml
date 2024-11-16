@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>javascript on Martin Trojer</title>
+    <title>Javascript on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/javascript/</link>
-    <description>Recent content in javascript on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Javascript on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 27 Jan 2013 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
@@ -13,14 +13,14 @@
       <link>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</link>
       <pubDate>Sun, 27 Jan 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/</guid>
-      <description>Let&amp;rsquo;s say you have a big / legacy C++ app, then you&amp;rsquo;re undoubtedly covered by Greenspun&amp;rsquo;s tenth rule. Let&amp;rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?&#xA;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.</description>
+      <description>&lt;p&gt;Let&amp;rsquo;s say you have a big legacy C++ app. Then you&amp;rsquo;re undoubtedly covered by &lt;a href=&#34;http://en.wikipedia.org/wiki/Greenspun&#39;s_tenth_rule&#34;&gt;Greenspun&amp;rsquo;s tenth rule&lt;/a&gt;. Let&amp;rsquo;s also say that your home-grown, buggy, and slow DSL/scripting language has been pushed to its limit and cannot be tweaked any further. What do you do? How can you replace it?&lt;/p&gt;&#xA;&lt;p&gt;As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular. There are famous examples from gaming where &lt;a href=&#34;http://en.wikipedia.org/wiki/Game_Oriented_Assembly_Lisp&#34;&gt;Lisps&lt;/a&gt; and &lt;a href=&#34;http://www.wowwiki.com/Lua&#34;&gt;Lua&lt;/a&gt; are widely used.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Some thoughts on Clojure performance</title>
       <link>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</link>
       <pubDate>Sat, 18 Feb 2012 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/</guid>
-      <description>Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).&#xA;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.</description>
+      <description>&lt;p&gt;&lt;em&gt;Edit&lt;/em&gt;: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &amp;ldquo;Why is Clojure so slow?&amp;rdquo;). I wrote this before &lt;a href=&#34;http://www.youtube.com/watch?v=I5iNUtrYQSM&#34;&gt;Rich Hickey&amp;rsquo;s Clojure/Conj 2011 keynote&lt;/a&gt; was published, in which he talks about most of my concerns (and outlines possible solutions).&lt;/p&gt;&#xA;&lt;p&gt;Clojure is great in many ways, but one thing it can&amp;rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed at which Clojure programs execute. This is a well-known issue in the Clojure community and has been discussed on the &lt;a href=&#34;http://groups.google.com/group/clojure&#34;&gt;mailing list&lt;/a&gt; and &lt;a href=&#34;http://stackoverflow.com/questions/2531616/why-is-the-clojure-hello-world-program-so-slow-compared-to-java-and-python&#34;&gt;Stack Overflow&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

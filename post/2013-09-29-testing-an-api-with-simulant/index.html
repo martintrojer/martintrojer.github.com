@@ -46,10 +46,10 @@
 			<div>
 				<p>tl;dr I present a new <a href="https://github.com/martintrojer/simulant-bootstrap">Simulant example project</a>, testing a simple web API.</p>
 <blockquote>
-<p>All programs are simulation tested, atleast once.
+<p>All programs are simulation tested, at least once.
 &mdash; Stu Halloway</p>
 </blockquote>
-<p>Simulating testing is an interesting field that has a lot going for it. While most web site/api developers write many tests at the unit level (an old Rails habit) testing and understanding a whole system is often not done. Most systems we build nowadays consists of many (mega/micro) services/databases glued together. Getting a deeper understanding on how a system actually works and being able to simulate production like scenarios is very useful.</p>
+<p>Simulation testing is an interesting field that has a lot going for it. While most website/API developers write many tests at the unit level (an old Rails habit), testing and understanding a whole system is often not done. Most systems we build nowadays consist of many (mega/micro) services/databases glued together. Getting a deeper understanding of how a system actually works and being able to simulate production-like scenarios is very useful.</p>
 <p>While you can (quite easily) write some code that stress test your system, libraries like <a href="https://github.com/Datomic/simulant">simulant</a>/<a href="http://www.datomic.com">datomic</a> gives you much more. By recording all tests/configurations/results in a database and separating the concerns of running the simulation and asserting the results new opportunities arise.</p>
 <p>The basic workflow is to create a schema for your test scenarios, code that populate that schema with tests given to configuration parameters (also in the db), then running the simulation on multiple threads/processes/machines, and finally running queries against the results and finding potential issues. If you work against a persistent database, you are building up a corpus of test data, that you can later go and mine for additional information that you didn&rsquo;t think of when you ran them. Lets say a new issue presents itself in production, now you can go back an check how a potential fix would behave in previous test runs.</p>
 <h2 id="testing-a-site">Testing a site</h2>
@@ -64,7 +64,7 @@
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">route/not-found</span> (<span style="color:#a6e22e">generate-response</span> <span style="color:#e6db74">:not-found</span>)))
 </span></span></code></pre></div><p>You can put, get and delete data, and get a list of all live Ids.</p>
 <h2 id="hand-rolled-simulations">Hand-rolled simulations</h2>
-<p>Your first attempt to &lsquo;simulate&rsquo; usage (or stress test) this api would probably be to just write some functions. Let&rsquo;s start there and then see how we can convert those functions into a simulant simulation.</p>
+<p>Your first attempt to &lsquo;simulate&rsquo; usage (or stress test) this API would probably be to just write some functions. Let&rsquo;s start there and then see how we can convert those functions into a simulant simulation.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">def </span>url <span style="color:#e6db74">&#34;http://localhost:3000/data&#34;</span>)
 </span></span><span style="display:flex;"><span>
@@ -235,9 +235,9 @@
 </span></span><span style="display:flex;"><span>    (assert (= payload (<span style="color:#a6e22e">posted-payloads</span> id)))))
 </span></span></code></pre></div><p>Please note that this query extracts the payloads from all simulations (in case you&rsquo;ve run more than one). Once again, have a look at the example project for how to restrict your queries to a single sim.</p>
 <h2 id="conclusion-and-some-perf-considerations">Conclusion and some perf considerations</h2>
-<p>This is pretty cool right? So is simulant the silver bullet for all system testing? Well no, it is certainly capable of replacing many system test frameworks, but for extreme use-cases some of the inherent limitations of datomic will become a problem. One of these limitations are write throughput. Datomic only have one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like <a href="http://gatling-tool.org/">Gatling</a> you might be out of luck.</p>
-<p>However, it is not necessarily is huge problem, I see tools like simulant and gatling complementing each other, they solve different problems. Simulant is more about simulating real usage, run in &lsquo;moderate&rsquo; pace collecting all kinds of system information, and later analyzing it.</p>
-<p>Having said this, Datomic certainly have a bunch of options to improve its write throughput by using different database backends (like in-memory, dynamodb) &ndash; some more expensive than others. One quite clever way is to run the simulation with against a in-memory database and then (as a batch job) dump all the data into another db-backed datomic instance.</p>
+<p>This is pretty cool, right? So is simulant the silver bullet for all system testing? Well no, it is certainly capable of replacing many system test frameworks, but for extreme use cases some of the inherent limitations of datomic will become a problem. One of these limitations is write throughput. Datomic only has one write path (one transactor) and if you are thinking about replacing a hardcore stress testing environment using something like <a href="http://gatling-tool.org/">Gatling</a> you might be out of luck.</p>
+<p>However, it is not necessarily a huge problem. I see tools like simulant and gatling complementing each other, as they solve different problems. Simulant is more about simulating real usage, running at a &lsquo;moderate&rsquo; pace collecting all kinds of system information, and later analyzing it.</p>
+<p>Having said this, Datomic certainly has a bunch of options to improve its write throughput by using different database backends (like in-memory, DynamoDB) &ndash; some more expensive than others. One quite clever way is to run the simulation against an in-memory database and then (as a batch job) dump all the data into another DB-backed datomic instance.</p>
 
 			</div>
 		</article>

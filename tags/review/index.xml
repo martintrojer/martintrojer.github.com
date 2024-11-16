@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>review on Martin Trojer</title>
+    <title>Review on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/review/</link>
-    <description>Recent content in review on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Review on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 06 Apr 2014 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/review/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2014-04-06-book-review-clojure-cookbook/</link>
       <pubDate>Sun, 06 Apr 2014 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2014-04-06-book-review-clojure-cookbook/</guid>
-      <description>The Clojure Cookbook is part of the O&amp;rsquo;Reilly cookbook series. I&amp;rsquo;d describe this format as a &amp;lsquo;curated wiki in print&amp;rsquo;. The wiki analogy is especially true for this volume since its contents was contributed by some 60 different developers. It&amp;rsquo;s packed with small bite-sized recipes for solving common problems in Clojure. This is useful for developers in the entire spectrum from beginner to expert.&#xA;The content is organized into 11 chapters each containing a number of recipes.</description>
+      <description>&lt;figure class=&#34;floatright&#34;&gt;&lt;img src=&#34;https://martintrojer.github.io/assets/images/cookbook/cover.png&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;The Clojure Cookbook is part of the O&amp;rsquo;Reilly cookbook series. I&amp;rsquo;d describe this format as a &amp;lsquo;curated wiki in print&amp;rsquo;. The wiki analogy is especially true for this volume since its contents were contributed by some 60 different developers. It&amp;rsquo;s packed with small, bite-sized recipes for solving common problems in Clojure. This is useful for developers across the entire spectrum from beginner to expert.&lt;/p&gt;&#xA;&lt;p&gt;The content is organized into 11 chapters, each containing a number of recipes. The chapter layout is clear and serves its purpose when looking for content. The book covers a lot of ground, from working with primitives and basic data structures to dealing with databases, writing web apps, and running Hadoop jobs. Each recipe comes with code and/or REPL examples, so it&amp;rsquo;s very easy and enlightening to &amp;lsquo;play along&amp;rsquo;. In contrast to other books with code snippets, the authors have made all recipes self-contained (no other projects/files need to be created and run for the examples to work), which makes it very easy to dive in at any point in the book.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

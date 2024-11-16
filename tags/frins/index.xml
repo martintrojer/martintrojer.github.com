@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>frins on Martin Trojer</title>
+    <title>Frins on Martin Trojer</title>
     <link>https://martintrojer.github.io/tags/frins/</link>
-    <description>Recent content in frins on Martin Trojer</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Frins on Martin Trojer</description>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 25 Jun 2013 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://martintrojer.github.io/tags/frins/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</link>
       <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/post/2013-06-25-announcing-frins-a-practical-unit-of-measure-calculator-dsl-for-scala/</guid>
-      <description>I am proud to announce a new Scala project called &amp;ldquo;Frins&amp;rdquo;.&#xA;Frins is a practical unit-of-measure calculator DSL for Scala.&#xA;Key features;&#xA;Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Full source code available on github.&#xA;To wet your appetite head straight over to the example calculations.&#xA;How Frins came about About a year ago I created Frinj.</description>
+      <description>&lt;p&gt;I am proud to announce a new Scala project called &amp;ldquo;Frins.&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;Frins is a practical unit-of-measure calculator DSL for Scala.&lt;/p&gt;&#xA;&lt;p&gt;Key features:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Tracks units of measure through all calculations, allowing you to mix units of measure transparently&lt;/li&gt;&#xA;&lt;li&gt;Comes with a &lt;strong&gt;huge&lt;/strong&gt; database of units and conversion factors&lt;/li&gt;&#xA;&lt;li&gt;Inspired by the &lt;a href=&#34;http://futureboy.us/frinkdocs/&#34;&gt;Frink project&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Full source code is available on &lt;a href=&#34;https://github.com/martintrojer/frins&#34;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;To whet your appetite, head straight over to the &lt;a href=&#34;https://github.com/martintrojer/frins/blob/master/src/main/scala/frins/ExampleCalculations.scala&#34;&gt;example calculations&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;h3 id=&#34;how-frins-came-about&#34;&gt;How Frins Came About&lt;/h3&gt;&#xA;&lt;p&gt;About a year ago, I created &lt;a href=&#34;https://github.com/martintrojer/frinj&#34;&gt;Frinj&lt;/a&gt;. With Frinj, I tried to marry some of the joys of one of my favorite programming languages (Frink) with the Clojure REPL. I was quite pleased with the results, and the response was encouraging.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

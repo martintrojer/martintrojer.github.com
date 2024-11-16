@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.121.1">
+	<meta name="generator" content="Hugo 0.138.0">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -48,8 +48,9 @@
 	<a href="/tags/core.logic">core.logic</a>
 	
 	<div>
-		This post is a follow-up to my previous post on NQueens and core.logic, in which I tried to find the solutions using &ldquo;pure&rdquo; logic (without arithmetic goals) and basic minKanren / Reasoner Schemer building blocks.
-After some excellent feedback and hints from Mr David Nolen (big thanks), I here present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to good old Bratko.
+		<p>This post is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/">previous post on N Queens and core.logic</a>, in which I tried to find solutions using &ldquo;pure&rdquo; logic (without arithmetic goals) and basic miniKanren/Reasoned Schemer building blocks.</p>
+<p>After excellent feedback and hints from <a href="https://twitter.com/swannodette">David Nolen</a> (big thanks), I present a greatly simplified (and faster) way of using core.logic to find all solutions. Credit also goes to <a href="http://www.amazon.co.uk/Programming-Artificial-Intelligence-International-Computer/dp/0321417461/">good old Bratko</a>.</p>
+<p>First, let&rsquo;s fix the safeo function (and def-subo macro). In miniKanren, you can use arithmetic goals given two prerequisites: the fresh variable must be bound to a finite (number) space, and we must use <em>project</em> to bind the values. This means we can get rid of subo altogether.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-11-n-queens-with-corelogic-take-2/">Read more...</a>
 		
@@ -66,8 +67,8 @@ After some excellent feedback and hints from Mr David Nolen (big thanks), I here
 	<a href="/tags/core.logic">core.logic</a>
 	
 	<div>
-		I&rsquo;ve been &ldquo;hammock-reading&rdquo; the excellent Reasoned Schemer book the last couple of months, on my quest trying to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.
-My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&rsquo;t a good fit, n-queens. What you really need for this, in logical programming world, for this problem is something called contraint logic programming (CLP) which is implemented (for example) in cKanren.
+		<p>I&rsquo;ve been &ldquo;hammock-reading&rdquo; the excellent <a href="http://mitpress.mit.edu/catalog/item/default.asp?ttype=2&amp;tid=10663">Reasoned Schemer</a> book these last couple of months, on my quest to develop a gut feel for when logic programming, as defined by miniKanren/core.logic, is applicable.</p>
+<p>My first attempt is to apply it to a problem where (as it turns out) miniKanren isn&rsquo;t a good fit: <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">n-queens</a>. What you really need for this problem in the logical programming world is something called constraint logic programming (CLP), which is implemented (for example) in <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren</a>. The good people at core.logic are working on integrating CLP and cKanren in core.logic <a href="https://github.com/clojure/core.logic/">in version 0.8</a>, so I intend to revisit this problem as that work progresses.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-07-n-queens-with-corelogic-take-1/">Read more...</a>
 		
@@ -82,9 +83,9 @@ My first attempt is to apply it to a problem where (as it turns out) miniKanren 
 	<a href="/tags/clojure">clojure</a>
 	
 	<div>
-		Have you ever tried to log from multi threaded program? Have you tried to make sense of the log output which multiple subsystems were logging to? Have you tried to do average latency calculations based on that log file?
-If you reading this blog, I am guessing you answered yes to a couple of the questions above.
-There are multiple problems here; multiple producers (race conditions), out-of-order logs, conflated subsystem in the same logs etc.
+		<p>Have you ever tried to log from a multi-threaded program? Have you tried to make sense of log output when multiple subsystems were logging to it? Have you tried to do average latency calculations based on that log file?</p>
+<p>If you&rsquo;re reading this blog, I&rsquo;m guessing you answered yes to a couple of the questions above.</p>
+<p>There are multiple problems here: multiple producers (race conditions), out-of-order logs, conflated subsystems in the same logs, etc. You have to put a lot of effort into your log post-processor to make any sense of the data, decorating it with various metadata to make it possible at all.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-03-some-thoughts-on-logging/">Read more...</a>
 		
@@ -105,9 +106,18 @@ There are multiple problems here; multiple producers (race conditions), out-of-o
 	<a href="/tags/jvm">jvm</a>
 	
 	<div>
-		Here&rsquo;s another post on a topic that have been discussed since the dawn-of-time, is there is nice and idiomatic way to write Erlang/Actor style distributed programs in Clojure? There has certainly been a few attempts, but Rich&rsquo;s post (above) still holds true today.
-First some clarification; I am not primarily thinking about number-crunching, map/reduce-y stuff, where Clojure has a pretty good story;
-clojure-hadoop swamiji cacalog zookeeper-clj storm etc&hellip; Akka and the Erlang legacy I am trying to write programs that solve problems in the areas where Erlang typically excels such as
+		<p>Here&rsquo;s another post on a topic that has been discussed since the <a href="https://groups.google.com/d/msg/clojure/Kisk_-9dFjE/_2WxSxyd1SoJ">dawn-of-time</a>: is there a nice and idiomatic way to write Erlang/Actor-style distributed programs in Clojure? There have certainly been a few attempts, but Rich&rsquo;s post (above) still holds true today.</p>
+<p>First, some clarification: I am not primarily thinking about number-crunching, map/reduce-style stuff, where Clojure has a pretty good story:</p>
+<ul>
+<li><a href="https://github.com/stuartsierra/clojure-hadoop">clojure-hadoop</a></li>
+<li><a href="https://github.com/amitrathore/swarmiji">swarmiji</a></li>
+<li><a href="https://github.com/nathanmarz/cascalog">cascalog</a></li>
+<li><a href="https://github.com/liebke/zookeeper-clj">zookeeper-clj</a></li>
+<li><a href="https://github.com/nathanmarz/storm">storm</a></li>
+<li>etc.</li>
+</ul>
+<h3 id="akka-and-the-erlang-legacy">Akka and the Erlang legacy</h3>
+<p>I am trying to write programs that solve problems in the areas where <a href="http://www.erlang.org/">Erlang</a> typically excels, such as:</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-05-17-distributed-actors-in-clojure/">Read more...</a>
 		
@@ -122,7 +132,7 @@ clojure-hadoop swamiji cacalog zookeeper-clj storm etc&hellip; Akka and the Erla
 	<a href="/tags/software">software</a>
 	
 	<div>
-		Software is different from most other things humans build, hence companies creating/selling/licensing software must be different from other &lsquo;production&rsquo; companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software?
+		<p>Software is <a href="https://martintrojer.github.io/post/2011-10-30-what-is-software/">different from most other things humans build</a>, hence companies creating/selling/licensing software must be different from other &lsquo;production&rsquo; companies as well? Some definitely are but the vast majority are still trying to apply old civil engineering practices to software development. Why are they wasting so much time and money on upfront sizing, planning and tracking when all empirical evidence tells us it maps so badly to the actual process of developing software? Why haven&rsquo;t most software companies learnt the hard lessons and started to operate like <a href="http://www.valvesoftware.com/company/Valve_Handbook_LowRes.pdf">Valve</a>?</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-04-10-what-is-a-software-company/">Read more...</a>
 		
@@ -139,8 +149,6 @@ clojure-hadoop swamiji cacalog zookeeper-clj storm etc&hellip; Akka and the Erla
 	<div>
 		
 		
-			<a href="https://martintrojer.github.io/post/2012-03-25-enumerate-n-queens-solutions/">Read more...</a>
-		
 	</div>
 </article>
 
@@ -154,8 +162,8 @@ clojure-hadoop swamiji cacalog zookeeper-clj storm etc&hellip; Akka and the Erla
 	<a href="/tags/frinj">frinj</a>
 	
 	<div>
-		A couple of weeks has passed since I&rsquo;ve pushed Frinj to github and blogged/tweeted about it. The response have been pretty awesome, one highlight being when @stuarthalloway showed me a frinj+datomic example gist on the #datomic IRC channel. In short, the Clojure community is #badass.
-Frinj comes with a big database of units and conversion factors, and while as many conversion factors are &ldquo;eternal&rdquo;, others aren&rsquo;t. Exchange rates for instance has to be kept up to date to be relevant.
+		<p>A couple of weeks have passed since I pushed <a href="https://github.com/martintrojer/frinj">Frinj to github</a> and blogged/tweeted about it. The response has been pretty awesome, one highlight being when <a href="https://twitter.com/#!/stuarthalloway">@stuarthalloway</a> showed me a <a href="https://gist.github.com/1980351">frinj+datomic example gist</a> on the #datomic IRC channel. In short, the Clojure community is #badass.</p>
+<p>Frinj comes with a big database of units and conversion factors, and while many conversion factors are &ldquo;eternal&rdquo;, others aren&rsquo;t. Exchange rates, for instance, have to be kept up to date to be relevant. The Frinj unit database was designed to be updatable, both for usability when doing various calculations and for rates that constantly change. This is the reason the frinj.calc namespace exposes the (frinj-init!) function to reset the unit database to a known baseline (in case you write over some factors, etc.). Clojure&rsquo;s support for atomically updating state is ideal for this purpose; the calculator&rsquo;s state is <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/core.clj#L17">kept in a number of refs</a> and, thanks to the STM, always kept consistent.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-03-14-adding-live-unit-feeds-to-frinj/">Read more...</a>
 		
@@ -172,11 +180,17 @@ Frinj comes with a big database of units and conversion factors, and while as m
 	<a href="/tags/frinj">frinj</a>
 	
 	<div>
-		I am proud to announce a new Clojure project called &ldquo;Frinj&rdquo;.
-Frinj is a practical unit-of-measure calculator DSL for Clojure.
-Key features;
-Tracks units of measure through all calculations allowing you to mix units of measure transparently Comes with a huge database of units and conversion factors Inspired by the Frink project Tries to combine Frink&rsquo;s fluent calculation style with idiomatic Clojure Full source code available on github.
-To wet your apatite head straight over to the sample calculations page to see what Frinj can do!
+		<p>I am proud to announce a new Clojure project called &ldquo;Frinj&rdquo;.</p>
+<p>Frinj is a practical unit-of-measure calculator DSL for Clojure.</p>
+<p>Key features:</p>
+<ul>
+<li>Tracks units of measure through all calculations allowing you to mix units of measure transparently</li>
+<li>Comes with a huge database of units and conversion factors</li>
+<li>Inspired by the <a href="http://futureboy.us/frinkdocs/">Frink project</a></li>
+<li>Tries to combine Frink&rsquo;s fluent calculation style with idiomatic Clojure</li>
+</ul>
+<p>Full source code available on <a href="https://github.com/martintrojer/frinj">github</a>.</p>
+<p>To whet your appetite, head straight over to the <a href="https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj">sample calculations</a> page to see what Frinj can do!</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-03-03-announcing-frinj-a-practical-unit-of-measure-calculator-dsl-for-clojure/">Read more...</a>
 		
@@ -192,8 +206,6 @@ To wet your apatite head straight over to the sample calculations page to see wh
 	
 	<div>
 		
-		
-			<a href="https://martintrojer.github.io/post/2012-02-21-ascii-mandelbrot-set/">Read more...</a>
 		
 	</div>
 </article>
@@ -220,8 +232,8 @@ To wet your apatite head straight over to the sample calculations page to see wh
 	<a href="/tags/scala">scala</a>
 	
 	<div>
-		Edit: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &ldquo;Why is Clojure so slow?&rdquo;). I wrote this before Rich Hickey&rsquo;s Clojure/Conj 2011 keynote was published, in which he talks about most of my concerns (and outlines possible solutions).
-Clojure is great in many ways, but one thing it can&rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed in which Clojure programs execute.
+		<p><em>Edit</em>: This post recently re-surfaced on hacker news and caused a bit of a stir, mainly because of a slightly sensational/misleading title (was &ldquo;Why is Clojure so slow?&rdquo;). I wrote this before <a href="http://www.youtube.com/watch?v=I5iNUtrYQSM">Rich Hickey&rsquo;s Clojure/Conj 2011 keynote</a> was published, in which he talks about most of my concerns (and outlines possible solutions).</p>
+<p>Clojure is great in many ways, but one thing it can&rsquo;t be accused of is being particularly fast. What I mean by fast here is the speed at which Clojure programs execute. This is a well-known issue in the Clojure community and has been discussed on the <a href="http://groups.google.com/group/clojure">mailing list</a> and <a href="http://stackoverflow.com/questions/2531616/why-is-the-clojure-hello-world-program-so-slow-compared-to-java-and-python">Stack Overflow</a>.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-02-18-some-thoughts-on-clojure-performance/">Read more...</a>
 		

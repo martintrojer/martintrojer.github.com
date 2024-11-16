@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-	<meta name="generator" content="Hugo 0.121.1">
+	<meta name="generator" content="Hugo 0.138.0">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,8 +46,8 @@
 	<a href="/tags/clojure">clojure</a>
 	
 	<div>
-		TL;DR Pipejine - a lightweight Clojure library for multi-threaded producer/consumer pipelines supporting arbitrary DAG topologies.
-Recently a colleague and I faced a problem where we needed to optimize the total running time of a complicated calculation. This calculation involved several asynchronous steps getting data from other systems (like elasticsearch and other home-grown services) and a bit of number crunching and tallying up the results at the end. Here is and simplified example of the system.
+		<p>TL;DR: <a href="https://github.com/martintrojer/pipejine">Pipejine</a> - a lightweight Clojure library for multi-threaded producer/consumer pipelines supporting arbitrary DAG topologies.</p>
+<p>Recently, a <a href="https://twitter.com/jonpither">colleague</a> and I faced a problem where we needed to optimize the total running time of a complicated calculation. This calculation involved several asynchronous steps getting data from other systems (like Elasticsearch and other home-grown services), along with some number crunching and tallying up the results at the end. Here is a simplified example of the system:</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-03-16-flexible-multi-consumerproducer-pipelines/">Read more...</a>
 		
@@ -78,8 +78,8 @@ Recently a colleague and I faced a problem where we needed to optimize the total
 	<a href="/tags/mono">mono</a>
 	
 	<div>
-		Let&rsquo;s say you have a big / legacy C++ app, then you&rsquo;re undoubtedly covered by Greenspun&rsquo;s tenth rule. Let&rsquo;s also say that your home-grown, buggy and slow DSL / scripting language has been pushed to the limit and can not be tweaked any further. What do you do, how can you replace it?
-As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular.
+		<p>Let&rsquo;s say you have a big legacy C++ app. Then you&rsquo;re undoubtedly covered by <a href="http://en.wikipedia.org/wiki/Greenspun's_tenth_rule">Greenspun&rsquo;s tenth rule</a>. Let&rsquo;s also say that your home-grown, buggy, and slow DSL/scripting language has been pushed to its limit and cannot be tweaked any further. What do you do? How can you replace it?</p>
+<p>As you might expect, this is quite a common problem, and embedding scripting languages into a big C/C++ monolith is popular. There are famous examples from gaming where <a href="http://en.wikipedia.org/wiki/Game_Oriented_Assembly_Lisp">Lisps</a> and <a href="http://www.wowwiki.com/Lua">Lua</a> are widely used.</p>
 		
 			<a href="https://martintrojer.github.io/post/2013-01-27-embedding-a-new-runtime-into-your-legacy-cc-app/">Read more...</a>
 		
@@ -98,8 +98,6 @@ As you might expect, this is quite a common problem, and embedding scripting lan
 	<div>
 		
 		
-			<a href="https://martintrojer.github.io/post/2012-11-24-the-m-word/">Read more...</a>
-		
 	</div>
 </article>
 
@@ -115,8 +113,8 @@ As you might expect, this is quite a common problem, and embedding scripting lan
 	<a href="/tags/fsharp">fsharp</a>
 	
 	<div>
-		It&rsquo;s been a year since I last wrote about F# and Mono - what&rsquo;s happened since then?
-F# 3.0 has recently been released, bundled in with the new all-grey, ALL-CAPS Visual Studio 2012. The biggest new feature is type providers, bringing some of the benefits of dynamic languages into type safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up pretty soon so more developers (including me) can enjoy the benefits.
+		<p>It&rsquo;s been a year since <a href="https://martintrojer.github.io/post/2011-11-03-why-f-needs-mono-and-really-should-be-a-jvm-language/">I last wrote about F# and Mono</a> - what&rsquo;s happened since then?</p>
+<p>F# 3.0 has recently been released, bundled with the new <a href="http://www.theregister.co.uk/2012/08/28/visual_studio_2012_review/">all-grey</a>, <a href="http://blogs.msdn.com/b/visualstudio/archive/2012/06/05/a-design-with-all-caps.aspx">ALL-CAPS</a> Visual Studio 2012. The biggest new feature is <a href="http://msdn.microsoft.com/en-us/library/hh156509.aspx">type providers</a>, bringing some of the benefits of dynamic languages into the type-safe world. Innovations like type providers deserve more industry attention. I really hope these ideas will spread and hopefully languages like Scala will pick them up so more developers (including me) can enjoy the benefits.</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-10-24-the-future-of-net-lies-in-mono-the-future-of-f-lies-in-monodevelop/">Read more...</a>
 		
@@ -135,8 +133,6 @@ F# 3.0 has recently been released, bundled in with the new all-grey, ALL-CAPS Vi
 	<div>
 		
 		
-			<a href="https://martintrojer.github.io/post/2012-09-27-some-corelogic-graph-code/">Read more...</a>
-		
 	</div>
 </article>
 
@@ -152,9 +148,17 @@ F# 3.0 has recently been released, bundled in with the new all-grey, ALL-CAPS Vi
 	<a href="/tags/datomic">datomic</a>
 	
 	<div>
-		I&rsquo;ve written about datalog and Datomic a bit recently. To conclude here&rsquo;s another post comparing execution speed with the contrib.datalog library, by Jeffrey Straszheim. Clojure1.4 ready source can be found here.
-The example I&rsquo;m using in my benchmark is a simple join between two relations, in datomic/datalog it would look like this;
-(q &#39;[:find ?first ?height :in $a $b :where [$a ?last ?first ?email] [$b ?email ?height]] [[&#34;Doe&#34; &#34;John&#34; &#34;jdoe@example.com&#34;] [&#34;Doe&#34; &#34;Jane&#34; &#34;jane@example.
+		<p>I&rsquo;ve <a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">written about Datalog</a> and <a href="http://www.datomic.com">Datomic</a> recently. To conclude, here&rsquo;s another post comparing execution speed with the contrib.datalog library by Jeffrey Straszheim. Clojure 1.4-ready source can be found <a href="https://github.com/martintrojer/datalog">here</a>.</p>
+<p>The example I&rsquo;m using in my benchmark is a simple join between two relations. In Datomic/Datalog, it would look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> $a $b
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:where</span> [$a ?last ?first ?email] [$b ?email ?height]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>In contrib.datalog, the same query requires more ceremony. You can write it like this:</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-08-28-some-more-datalog/">Read more...</a>
 		
@@ -171,8 +175,9 @@ The example I&rsquo;m using in my benchmark is a simple join between two relatio
 	<a href="/tags/core.logic">core.logic</a>
 	
 	<div>
-		Mr David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event I&rsquo;m writing up some core.logic/cKanren stuff I&rsquo;ve been looking at recently.
-Enter the Queens If you&rsquo;ve followed this blog, you&rsquo;ve perhaps seen my previous posts on solving N-Queens in core.logic (part1 and part2). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously there are many (new) ways to solve this problem, here&rsquo;s a core.
+		<p>Mr. David Nolen recently published core.logic 0.8.alpha2, with added cKanren (c for constraints) support. To celebrate this glorious event, I&rsquo;m writing up some core.logic/cKanren stuff I&rsquo;ve been looking at recently.</p>
+<h3 id="enter-the-queens">Enter the Queens</h3>
+<p>If you&rsquo;ve followed this blog, you&rsquo;ve perhaps seen my previous posts on solving N-Queens in core.logic (<a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">part 1</a> and <a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">part 2</a>). How will this look and perform using the new shiny cKanren extensions in core.logic 0.8? Obviously, there are many (new) ways to solve this problem. Here&rsquo;s a core.logic-styled version of the solution described in the <a href="http://www.schemeworkshop.org/2011/papers/Alvis2011.pdf">cKanren paper</a> (please read paragraph 4.2 for an in-depth explanation):</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-08-12-ckanren-time/">Read more...</a>
 		
@@ -187,9 +192,12 @@ Enter the Queens If you&rsquo;ve followed this blog, you&rsquo;ve perhaps seen m
 	<a href="/tags/clojure">clojure</a>
 	
 	<div>
-		Here I present a couple of examples of the functional design pattern &ldquo;untying the recursive knot&rdquo;. I&rsquo;ve found this useful in a couple of occasions, for instance when breaking apart mutually recursive functions. Material inspired by Jon Harrop&rsquo;s excellent Visual F# to Technical Computing.
-First, let&rsquo;s look at a simple factorial implementation using direct recursion;
-(defn fact [n] (if (= n 0) 1 (* n (fact (dec n))))) We can break the direct recursive dependency by replacing the recursive calls with calls to a function argument;
+		<p>Here I present a couple of examples of the functional design pattern &ldquo;untying the recursive knot.&rdquo; I&rsquo;ve found this useful on several occasions, for instance, when breaking apart mutually recursive functions. This material was inspired by Jon Harrop&rsquo;s excellent <a href="http://www.ffconsultancy.com/products/fsharp_for_technical_computing/">Visual F# for Technical Computing</a>.</p>
+<p>First, let&rsquo;s look at a simple factorial implementation using direct recursion:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>fact [n]
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">if </span>(= n <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>      (* n (<span style="color:#a6e22e">fact</span> (dec n)))))
+</span></span></code></pre></div><p>We can break the direct recursive dependency by replacing the recursive calls with calls to a function argument:</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-23-untying-the-recursive-knot/">Read more...</a>
 		
@@ -208,9 +216,16 @@ First, let&rsquo;s look at a simple factorial implementation using direct recurs
 	<a href="/tags/core.logic">core.logic</a>
 	
 	<div>
-		This is a follow-up to my previous post on datalog-equivalent queries in core.logic.
-Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the the relationships / facts API in core logic, described here. First let&rsquo;s consider this datomic query;
-(q &#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&#34;Doe&#34; &#34;John&#34; &#34;jdoe@example.com&#34;] [&#34;Doe&#34; &#34;Jane&#34; &#34;jane@example.com&#34;]] [[&#34;jane@example.com&#34; 73] [&#34;jdoe@example.com&#34; 71]]) ;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt; In core.
+		<p>This is a follow-up to my <a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">previous post</a> on datalog-equivalent queries in core.logic.</p>
+<p>Here I present an alternate way to do the unification and join inside core.logic (without having to use clojure.set/join). It uses the relationships/facts API in core.logic, <a href="https://github.com/clojure/core.logic/wiki/Features">described here</a>. First, let&rsquo;s consider this Datomic query:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>In core.logic we start by defining the relationships between our 2 datasets:</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-17-replicating-datomicdatalog-queries-with-corelogic-take-2/">Read more...</a>
 		
@@ -229,8 +244,15 @@ Here I present an alternate way to do the unification and join inside core.logic
 	<a href="/tags/datomic">datomic</a>
 	
 	<div>
-		I&rsquo;ve been toying with Datomic recently, and I particularly like the power of it&rsquo;s query language (~Datalog). Mr Halloway showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, gist here. Here is an example from that page of a simple join;
-(q &#39;[:find ?first ?height :in [[?last ?first ?email]] [[?email ?height]]] [[&#34;Doe&#34; &#34;John&#34; &#34;jdoe@example.com&#34;] [&#34;Doe&#34; &#34;Jane&#34; &#34;jane@example.com&#34;]] [[&#34;jane@example.com&#34; 73] [&#34;jdoe@example.
+		<p>I&rsquo;ve been toying with <a href="http://datomic.com/">Datomic</a> recently, and I particularly like the power of its query language (~<a href="http://en.wikipedia.org/wiki/Datalog">Datalog</a>). Mr. <a href="https://twitter.com/stuarthalloway">Halloway</a> showed a couple of months ago how the query engine is generic enough to be run on standard Clojure collections, <a href="https://gist.github.com/2645453">gist here</a>. Here is an example from that page of a simple join;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#a6e22e">q</span> <span style="color:#f92672">&#39;</span>[<span style="color:#e6db74">:find</span> ?first ?height
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">:in</span> [[?last ?first ?email]] [[?email ?height]]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;John&#34;</span> <span style="color:#e6db74">&#34;jdoe@example.com&#34;</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;Doe&#34;</span> <span style="color:#e6db74">&#34;Jane&#34;</span> <span style="color:#e6db74">&#34;jane@example.com&#34;</span>]]
+</span></span><span style="display:flex;"><span>   [[<span style="color:#e6db74">&#34;jane@example.com&#34;</span> <span style="color:#ae81ff">73</span>]
+</span></span><span style="display:flex;"><span>    [<span style="color:#e6db74">&#34;jdoe@example.com&#34;</span> <span style="color:#ae81ff">71</span>]])
+</span></span><span style="display:flex;"><span><span style="color:#75715e">;; #&lt;HashSet [[&#34;Jane&#34; 73], [&#34;John&#34; 71]]&gt;</span>
+</span></span></code></pre></div><p>A question you might ask yourself is how can you use <a href="https://github.com/clojure/core.logic">core.logic</a> to do the same kind of queries? It turns out that it&rsquo;s pretty straightforward, and also very fast. Core.logic provides some convenient helper functions for <a href="https://github.com/clojure/core.logic#unification">unification</a> that we are going to use. Here&rsquo;s an example of how to get a binding map for some logical variables over a collection;</p>
 		
 			<a href="https://martintrojer.github.io/post/2012-07-16-replicating-datomicdatalog-queries-with-corelogic/">Read more...</a>
 		
