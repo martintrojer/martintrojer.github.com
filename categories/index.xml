@@ -1,47 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on Martin Trojer</title>
-    <link>https://martintrojer.github.io/categories/</link>
-    <description>Recent content in Categories on Martin Trojer</description>
+    <title>Categories on </title>
+    <link>//localhost:1313/categories/</link>
+    <description>Recent content in Categories on </description>
     <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 14 Jun 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://martintrojer.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Clojure</title>
-      <link>https://martintrojer.github.io/categories/clojure/</link>
-      <pubDate>Tue, 14 Jun 2016 00:00:00 +0000</pubDate>
-      <guid>https://martintrojer.github.io/categories/clojure/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Beyond-Clojure</title>
-      <link>https://martintrojer.github.io/categories/beyond-clojure/</link>
-      <pubDate>Tue, 03 May 2016 00:00:00 +0000</pubDate>
-      <guid>https://martintrojer.github.io/categories/beyond-clojure/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Software</title>
-      <link>https://martintrojer.github.io/categories/software/</link>
-      <pubDate>Wed, 18 Mar 2015 00:00:00 +0000</pubDate>
-      <guid>https://martintrojer.github.io/categories/software/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Fsharp</title>
-      <link>https://martintrojer.github.io/categories/fsharp/</link>
-      <pubDate>Sat, 08 Nov 2014 00:00:00 +0000</pubDate>
-      <guid>https://martintrojer.github.io/categories/fsharp/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Scala</title>
-      <link>https://martintrojer.github.io/categories/scala/</link>
-      <pubDate>Tue, 25 Jun 2013 00:00:00 +0000</pubDate>
-      <guid>https://martintrojer.github.io/categories/scala/</guid>
-      <description></description>
-    </item>
+    <language>en</language>
+    <atom:link href="//localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
