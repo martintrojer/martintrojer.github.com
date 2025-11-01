@@ -470,12 +470,12 @@ figcaption {
 }
 
 figure.floatright {
-  max-width: 30%;
+  max-width: 300px;
   width: auto\9*0.3; /* ie8 */
   height: auto;
   float: right;
-  margin-left: 1.5em;
-  margin-bottom: 1em;
+  margin: 0 0 1em 2em !important;
+  margin-top: 0 !important;
 }
 
 figure.floatleft {
