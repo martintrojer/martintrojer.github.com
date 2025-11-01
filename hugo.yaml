@@ -1,7 +1,7 @@
 baseURL: https://martintrojer.github.io/
 disablePathToLower: true
 languageCode: en-us
-title: Martin Trojer
+title: Martin_Trojer
 theme: smol
 params:
   subtitle: Programming Blog

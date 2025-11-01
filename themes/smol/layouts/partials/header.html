@@ -1,16 +1,23 @@
 <header>
-	{{ strings.Repeat ( .Site.Title | len | add 6 ) "=" }}<br>
-	== {{ .Site.Title }} ==
-	<div style="float: right;">{{ .Site.Params.subtitle }}</div><br>
-	{{ strings.Repeat ( .Site.Title | len | add 6 ) "=" }}
-	<p>
+	<div class="header-content">
+		<div class="header-title">
+			<span class="prompt-symbol">$</span> <span class="prompt-command">cat</span> <strong>{{ .Site.Title }}</strong>
+		</div>
+		{{ if .Site.Params.subtitle }}
+		<div class="header-subtitle">
+			<strong>
+			#{{ .Site.Params.subtitle }}
+			</strong>
+		</div>
+		{{ end }}
+	</div>
 	<nav>
-			<a href="/"><b>Start</b></a>.
-			{{ with .Site.Menus.main }}
-			{{ range . }}
-			<a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>.
-			{{ end }}
+		<a href="/"><b>Start</b></a>
+		{{ with .Site.Menus.main }}
+		{{ range . }}
+		<span class="nav-separator">/</span>
+		<a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>
+		{{ end }}
+		{{ end }}
 	</nav>
-	</p>
-	{{ end }}
 </header>
