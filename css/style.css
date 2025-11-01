@@ -1,39 +1,591 @@
-html {overflow-y: scroll}
-:root { --bgcolor: white; --fontcolor: #444; --linkcolor: #00e; --visitedcolor: #551a8b; --precolor: #fff; --prebgcolor: #000;}
-@media (prefers-color-scheme: dark) { :root { --bgcolor: black; --fontcolor: white; --linkcolor: #5bf; --visitedcolor: #ae5ee0; --precolor: #fff; --prebgcolor: #383838;}}
-body{max-width:800px;margin:40px auto;padding:0 10px;font:14px/1.5 monospace;color:var(--fontcolor); background: var(--bgcolor)}a:link{color: var(--linkcolor)}a:visited{color: var(--visitedcolor)}a:active{color: var(--visitedcolor)}h1,h2,h3{line-height:1.2}
-p > code{color: var(--precolor); background: var(--prebgcolor); padding:0px}
-code{color: var(--precolor); background: var(--prebgcolor); padding:0px}
-pre{color: var(--precolor); background: var(--prebgcolor); padding:16px; overflow-x: auto}
-article{padding:24px 0}
-.center {display: block;margin-left: auto;margin-right: auto;width: 100%;}
-figcaption {color: #888; font: 12px/1.5 monospace; text-align: center;}
-figure {margin: auto}
-img {display: block; max-width: 100%; height: auto; margin: auto}
-
-figure.floatright {
-	max-width: 30%;
-	width: auto\9*0.3; /* ie8 */
-	height: auto;
-	float: right;
+html {
+  overflow-y: scroll;
 }
 
-figure.floatleft {
-	max-width: 30%;
-	width: auto\9*0.3; /* ie8 */
-	height: auto;
-	float: left;
+/* ============================================
+   DARK MODE ONLY - Terminal Inspired Theme
+   ============================================ */
+
+:root {
+  /* Catppuccin Mocha Colors */
+  /* Base Colors */
+  --bgcolor: #1e1e2e;          /* base */
+  --bg-secondary: #181825;       /* mantle */
+  --bg-tertiary: #11111b;       /* crust */
+  
+  /* Surface Colors */
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  
+  /* Text Colors */
+  --fontcolor: #cdd6f4;         /* text */
+  --fontcolor-muted: #bac2de;   /* subtext1 */
+  --fontcolor-subtle: #a6adc8;  /* subtext0 */
+  
+  /* Overlay Colors */
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+  --overlay2: #9399b2;
+  
+  /* Links */
+  --linkcolor: #89b4fa;         /* blue */
+  --linkcolor-hover: #a5c9ff;
+  --visitedcolor: #cba6f7;      /* mauve */
+  
+  /* Code Colors */
+  --code-bg: #313244;           /* surface0 */
+  --code-border: #45475a;      /* surface1 */
+  --code-color: #cdd6f4;        /* text */
+  --code-inline-bg: #313244;    /* surface0 */
+  
+  /* Borders & Accents */
+  --border-color: #45475a;      /* surface1 */
+  --accent-color: #89b4fa;      /* blue */
+  --accent-secondary: #b4befe;   /* lavender */
+  
+  /* Tags */
+  --tag-bg: #313244;            /* surface0 */
+  --tag-color: #89b4fa;        /* blue */
+  
+  /* Additional Accent Colors */
+  --green: #a6e3a1;
+  --yellow: #f9e2af;
+  --red: #f38ba8;
+  --peach: #fab387;
+  --teal: #94e2d5;
+  
+  /* Transitions */
+  --transition-speed: 0.2s;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+body {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  color: var(--fontcolor);
+  background: var(--bgcolor);
+}
+
+/* Monospace for headers, navigation, and terminal elements */
+header, 
+nav, 
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6,
+.tag,
+time {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+/* Blockier monospace font for code blocks - using common system fonts */
+code,
+pre,
+.highlight pre,
+.highlight pre code {
+  font-family: Consolas, Monaco, "Menlo", "Courier New", Courier, "Liberation Mono", monospace;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--fontcolor);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2em;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.6em;
+}
+
+h3 {
+  font-size: 1.3em;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1em;
+  margin-bottom: 2em;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+.prompt-symbol {
+  color: var(--accent-color);
+}
+
+.prompt-command {
+  color: var(--fontcolor-muted);
+}
+
+.header-subtitle {
+  color: var(--fontcolor-muted);
+  font-size: 0.9em;
+}
+
+header nav {
+  margin-top: 1em;
+}
+
+header nav a {
+  transition: color var(--transition-speed) ease;
+}
+
+.nav-separator {
+  color: var(--fontcolor-muted);
+  margin: 0 0.3em;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a:link {
+  color: var(--linkcolor);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+a:visited {
+  color: var(--visitedcolor);
+}
+
+a:active {
+  color: var(--linkcolor-hover);
+}
+
+a:hover {
+  color: var(--linkcolor-hover);
+  border-bottom-color: var(--linkcolor-hover);
+}
+
+a:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================
+   CODE BLOCKS (Terminal Window Style)
+   ============================================ */
+
+/* Hugo syntax highlighting wrapper */
+.highlight {
+  margin: 1.5em 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.highlight pre,
+.highlight pre[style] {
+  background: var(--bg-secondary) !important;
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--code-border) !important;
+  border-left: 3px solid var(--accent-color) !important;
+  color: var(--code-color) !important;
+  padding: 1.2em !important;
+  overflow-x: auto !important;
+  border-radius: 4px;
+  margin: 0 !important;
+  font-size: 0.9em !important;
+  line-height: 1.6 !important;
+  -moz-tab-size: 4 !important;
+  -o-tab-size: 4 !important;
+  tab-size: 4 !important;
+}
+
+.highlight pre code {
+  background: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* Override Hugo's syntax highlighting with Catppuccin Mocha colors */
+/* Hugo uses inline styles, so we need to map the RGB/rgb values Hugo generates */
+
+/* Base text color */
+.highlight pre code {
+  color: var(--code-color) !important;
+}
+
+/* Remove all background colors from spans */
+.highlight pre code span,
+.highlight pre code span span {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Map Hugo/Chroma syntax highlighting RGB values to Catppuccin Mocha */
+/* These match the actual RGB values Hugo generates in inline styles */
+
+/* Comments - gray (#75715e = rgb(117, 113, 94)) */
+.highlight pre code span[style*="rgb(117, 113, 94)"],
+.highlight pre code span[style*="color: rgb(117, 113, 94)"],
+.highlight pre code span[style*="color:#75715e"] {
+  color: var(--overlay0) !important; /* #6c7086 */
+  font-style: italic;
+}
+
+/* Strings/Keywords - yellow (#e6db74 = rgb(230, 219, 116)) */
+.highlight pre code span[style*="rgb(230, 219, 116)"],
+.highlight pre code span[style*="color: rgb(230, 219, 116)"],
+.highlight pre code span[style*="color:#e6db74"] {
+  color: var(--yellow) !important; /* #f9e2af */
+}
+
+/* Functions/Variables - green (#a6e22e = rgb(166, 226, 46)) */
+.highlight pre code span[style*="rgb(166, 226, 46)"],
+.highlight pre code span[style*="color: rgb(166, 226, 46)"],
+.highlight pre code span[style*="color:#a6e22e"] {
+  color: var(--green) !important; /* #a6e3a1 */
+}
+
+/* Keywords/Operators - red/pink (#f92672 = rgb(249, 38, 114)) */
+.highlight pre code span[style*="rgb(249, 38, 114)"],
+.highlight pre code span[style*="color: rgb(249, 38, 114)"],
+.highlight pre code span[style*="color:#f92672"] {
+  color: var(--accent-secondary) !important; /* #b4befe - lavender for keywords */
+}
+
+/* Functions/Names - cyan (#66d9ef = rgb(102, 217, 239)) */
+.highlight pre code span[style*="rgb(102, 217, 239)"],
+.highlight pre code span[style*="color: rgb(102, 217, 239)"],
+.highlight pre code span[style*="color:#66d9ef"] {
+  color: var(--accent-color) !important; /* #89b4fa - blue */
+}
+
+/* Additional common Chroma color mappings */
+/* Purple keywords */
+.highlight pre code span[style*="rgb(174, 129, 255)"],
+.highlight pre code span[style*="color:#ae81ff"] {
+  color: var(--accent-secondary) !important; /* #b4befe - lavender */
+}
+
+/* Orange/Peach for numbers/constants */
+.highlight pre code span[style*="rgb(253, 151, 31)"],
+.highlight pre code span[style*="color:#fd971f"] {
+  color: var(--peach) !important; /* #fab387 */
+}
+
+/* Red for errors/deletions */
+.highlight pre code span[style*="rgb(233, 86, 120)"],
+.highlight pre code span[style*="color:#e95678"] {
+  color: var(--red) !important; /* #f38ba8 */
+}
+
+/* Base text color (white/light gray) - keep as is but ensure it uses our text color */
+.highlight pre code span[style*="rgb(248, 248, 242)"],
+.highlight pre code span[style*="color:#f8f8f2"] {
+  color: var(--code-color) !important;
+}
+
+/* Regular pre blocks (non-highlighted) */
+pre:not(.highlight pre) {
+  background: var(--bg-secondary);
+  border: 1px solid var(--code-border);
+  border-left: 3px solid var(--accent-color);
+  color: var(--code-color);
+  padding: 1.2em;
+  overflow-x: auto;
+  border-radius: 4px;
+  margin: 1.5em 0;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+pre:not(.highlight pre) code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* Inline Code */
+code {
+  color: var(--code-color);
+  background: var(--code-inline-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  border: 1px solid var(--code-border);
+}
+
+p > code {
+  color: var(--code-color);
+  background: var(--code-inline-bg);
+  padding: 0.2em 0.4em;
+  border: 1px solid var(--code-border);
+  border-radius: 3px;
 }
 
 /* Fixes iOS font sizing anomaly */
 code {
-    text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-table, th, td {
-  border: 1px solid;
+/* ============================================
+   ARTICLES & CONTENT
+   ============================================ */
+
+article {
+  padding: 2em 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+article:last-child {
+  border-bottom: none;
+}
+
+article h1 {
+  margin-top: 0;
+}
+
+/* Article Metadata */
+article time {
+  color: var(--fontcolor-muted);
+  font-size: 0.9em;
+  display: inline-block;
+  margin-right: 0.5em;
+}
+
+/* Tags */
+article a[href^="/tags/"] {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-color);
+  padding: 0.2em 0.6em;
+  margin: 0.2em 0.2em 0.2em 0;
+  border-radius: 12px;
+  border: 1px solid var(--code-border);
+  font-size: 0.85em;
+  text-decoration: none;
+  transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+article a[href^="/tags/"]:hover {
+  background: var(--code-border);
+  border-color: var(--tag-color);
+  color: var(--linkcolor-hover);
+  border-bottom: 1px solid transparent;
+}
+
+/* ============================================
+   LISTS
+   ============================================ */
+
+ul, ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+li {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table {
+  width: 100%;
+  margin: 1.5em 0;
   border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 0.6em;
+  text-align: left;
+}
+
+th {
+  background: var(--code-bg);
+  color: var(--fontcolor);
+  font-weight: 600;
+}
+
+/* ============================================
+   IMAGES & FIGURES
+   ============================================ */
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em auto;
+  border-radius: 4px;
+}
+
+figure {
+  margin: 1.5em auto;
+}
+
+figcaption {
+  color: var(--fontcolor-muted);
+  font: 0.85em/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  text-align: center;
+  margin-top: 0.5em;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+figure.floatright {
+  max-width: 30%;
+  width: auto\9*0.3; /* ie8 */
+  height: auto;
+  float: right;
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+figure.floatleft {
+  max-width: 30%;
+  width: auto\9*0.3; /* ie8 */
+  height: auto;
+  float: left;
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--border-color);
+  color: var(--fontcolor-muted);
+  font-size: 0.9em;
+}
+
+footer p {
+  margin: 0.5em 0;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+aside {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--border-color);
+}
+
+aside h3 {
+  color: var(--fontcolor-muted);
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1em;
+}
+
+aside ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+aside li {
+  margin: 0.5em 0;
+}
+
+aside a {
+  color: var(--fontcolor);
+  border-bottom: 1px solid transparent;
+}
+
+aside a:hover {
+  color: var(--linkcolor);
+  border-bottom-color: var(--linkcolor);
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+
+.pagination {
+  margin: 2em 0;
+  text-align: center;
+}
+
+.pagination a {
+  margin: 0 0.5em;
+  padding: 0.3em 0.8em;
+  background: var(--tag-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: none;
+  transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+
+.pagination a:hover {
+  background: var(--code-border);
+  border-color: var(--accent-color);
+  color: var(--linkcolor-hover);
+}
+
+.pagination span {
+  margin: 0 0.5em;
+  color: var(--fontcolor-muted);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  body {
+    max-width: 100%;
+    padding: 0 15px;
+    font-size: 15px;
+  }
+  
+  figure.floatright,
+  figure.floatleft {
+    float: none;
+    max-width: 100%;
+    margin: 1em 0;
+  }
 }

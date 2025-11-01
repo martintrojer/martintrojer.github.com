@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<style type=text/css>body{font-family:monospace;}</style>
 	<title>Working with core.async: Chaining go blocks</title>
 	
 	
@@ -14,24 +13,33 @@
 </head>
 <body>
 	<header>
-	===================<br>
-	== Martin Trojer ==
-	<div style="float: right;">Programming Blog</div><br>
-	===================
-	<p>
+	<div class="header-content">
+		<div class="header-title">
+			<span class="prompt-symbol">$</span> <span class="prompt-command">cat</span> <strong>Martin_Trojer</strong>
+		</div>
+		
+		<div class="header-subtitle">
+			<strong>
+			#Programming Blog
+			</strong>
+		</div>
+		
+	</div>
 	<nav>
-			<a href="/"><b>Start</b></a>.
-			
-			
-			<a href="/about/"><b>About</b></a>.
-			
-			<a href="/categories/"><b>Categories</b></a>.
-			
-			<a href="/tags/"><b>Tags</b></a>.
-			
+		<a href="/"><b>Start</b></a>
+		
+		
+		<span class="nav-separator">/</span>
+		<a href="/about/"><b>About</b></a>
+		
+		<span class="nav-separator">/</span>
+		<a href="/categories/"><b>Categories</b></a>
+		
+		<span class="nav-separator">/</span>
+		<a href="/tags/"><b>Tags</b></a>
+		
+		
 	</nav>
-	</p>
-	
 </header>
 
 	
@@ -120,11 +128,11 @@
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 196.309us
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 196.309us</span>
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">calculation2</span>(<span style="color:#a6e22e">c</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>) {
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// wait for some stuff
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// wait for some stuff</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Intn</span>(<span style="color:#ae81ff">1000</span>)
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getResult2</span>(<span style="color:#a6e22e">c</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">int</span>) {
@@ -138,8 +146,8 @@
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>
 </span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 4.421806ms
-</span></span></span></code></pre></div><p>The key difference is that the caller put the function in a go block, and then any subsequent function are free to operate on any channel <em>without</em> itself being wrapped in <code>go</code>.</p>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Elapsed time: 4.421806ms</span>
+</span></span></code></pre></div><p>The key difference is that the caller put the function in a go block, and then any subsequent function are free to operate on any channel <em>without</em> itself being wrapped in <code>go</code>.</p>
 <p>Also it performs better <code>getResult2</code> is an order of magnitude slower than <code>getResult</code>.</p>
 <h2 id="the-blessings-and-curses-of-macros">The blessings and curses of macros</h2>
 <p>If we have to wrap every function in a go block and if chaining go blocks is so slow, can we just inline that function in our outer go block somehow? Yes we can, we can turn that function into a macro.</p>
@@ -189,7 +197,7 @@
 
 
 	<footer>
-	<p>&copy; 2024 <a href="https://martintrojer.github.io/"><b>Martin Trojer</b></a>.
+	<p>&copy; 2025 <a href="https://martintrojer.github.io/"><b>Martin_Trojer</b></a>.
 	<a href="https://github.com/martintrojer"><b>Github</b></a>.
 	<a href="https://uk.linkedin.com/in/martintrojer"><b>LinkedIn</b></a>.
 	</p>
