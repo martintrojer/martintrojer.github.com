@@ -445,14 +445,47 @@ th {
 
 img {
   display: block;
-  max-width: 100%;
-  height: auto;
+  max-width: 600px !important;
+  width: auto !important;
+  height: auto !important;
   margin: 1.5em auto;
   border-radius: 4px;
 }
 
+/* Override for float images to keep them small */
+figure.floatright img,
+figure.floatleft img {
+  max-width: 200px !important;
+}
+
 figure {
   margin: 1.5em auto;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+figure img {
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Ensure images inside articles scale properly - constrain to reasonable size */
+/* This must be more specific than the figure img rule above */
+main article figure img,
+main article img,
+article figure img,
+article img {
+  max-width: 600px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Force all images in main content area to be smaller */
+main img {
+  max-width: 600px !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 figcaption {

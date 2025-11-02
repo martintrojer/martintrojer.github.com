@@ -125,7 +125,7 @@
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:distribution</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:chain-contribute</span>})
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:cat</span> <span style="color:#e6db74">:distribution</span> <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:chain-event</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:contribute</span>})
 </span></span><span style="display:flex;"><span>  (<span style="color:#a6e22e">emit-timed</span> {<span style="color:#e6db74">:id</span> id <span style="color:#e6db74">:op</span> <span style="color:#e6db74">:done</span> <span style="color:#e6db74">:parent-op</span> <span style="color:#e6db74">:add</span>})))
-</span></span></code></pre></div><p>The helper functions also becomes much cleaner this way;<!-- raw HTML omitted --></p>
+</span></span></code></pre></div><p>The helper functions also becomes much cleaner this way;</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-clojure" data-lang="clojure"><span style="display:flex;"><span>(<span style="color:#66d9ef">defn </span>get-ids
 </span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;Return a set of ids seen in the log&#34;</span>
 </span></span><span style="display:flex;"><span>  [log]
