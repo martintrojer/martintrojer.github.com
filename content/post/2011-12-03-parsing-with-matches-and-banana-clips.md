@@ -111,7 +111,7 @@ Our main switch can thus be simplified;
    failwith "syntax error"
 ```
 
-One interesting thing to note here is that in the same line as the active pattern is triggered, we also match (on the sub pattern) of the result list from FieldOptions. I.e. in the first case the "TAtomic(t) :: TString.." is another pattern that is matched on FieldOption's returned list!<br />
+One interesting thing to note here is that in the same line as the active pattern is triggered, we also match (on the sub pattern) of the result list from FieldOptions. I.e. in the first case the "TAtomic(t) :: TString.." is another pattern that is matched on FieldOption's returned list!
 
 Let's try to simplify the duplication for the two field types;
 

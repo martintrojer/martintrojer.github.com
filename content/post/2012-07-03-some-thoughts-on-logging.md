@@ -105,7 +105,7 @@ Let's get back to a simple flat log and more metadata in the events. We use the 
   (emit-timed {:id id :op :done :parent-op :add})))
 ```
 
-The helper functions also becomes much cleaner this way;<br />
+The helper functions also becomes much cleaner this way;
 
 ```clojure
 (defn get-ids

@@ -110,7 +110,7 @@ However, Clojure does not! The clojure compiler require an explicit form to conv
     (recur (+ n acc) (dec n))))
 ```
 
-Awesome, problem solved, what's all this fuss about TCO then?<br />
+Awesome, problem solved, what's all this fuss about TCO then?
 
 ### TCO
 Let's say we have two functions a and b calling each other recursively;

@@ -48,7 +48,7 @@ _Edit_: By using the "-verbose:gc" flag when running the clojure test above, I n
 
 Daniel mentions a few ideas to improve the situation, and some of those ideas sounds pretty good to me;
 * Having a separate jar for development (when you want all the docstring etc in the REPL) and a slim one with all that stuff removed to "runtime" jar (not to be confused with the existing clojure-slim jar file)
-* Serialising the clojure.core initialisation so it can be dumped into memory from disk when starting up</li>
+* Serialising the clojure.core initialisation so it can be dumped into memory from disk when starting up
 
 ### ClojureScript to the rescue
 ClojureScript and Google's blistering fast [javascript engine V8](http://code.google.com/p/v8/) is another way to go. When using the ClojureScript compiler on a hello word example with advanced optimisation, we end up with some 100kb of Javascript. The V8 engine runs this is in 0.140s, which is 2.5x faster than the "bare" Java version and 9x faster than the Clojure/JVM version! The [Google Closure](http://code.google.com/closure/) compiler certainly helps here by removing lots of unused code, and the resulting Javascript file is indeed free from all docstrings etc.

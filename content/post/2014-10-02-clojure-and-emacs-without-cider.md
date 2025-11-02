@@ -137,7 +137,6 @@ Edit text like normal, `C-c C-e` to eval sexpr under point and `C-c C-k` to eval
 
 Running tests are done manually in the REPL buffer. I typically do `(run-tests)` or `(test-vars [...])`. I strongly recommend having [humane test output](https://github.com/pjstadig/humane-test-output) enabled.
 
-<div id="navigate"></div>
 ## Code navigation and auto-complete
 Make sure you have [Exuberant ctags](http://ctags.sourceforge.net) installed on your system; `apt-get install exuberant-ctags` or `brew install ctags`.
 
