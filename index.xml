@@ -13,7 +13,7 @@
       <link>https://martintrojer.github.io/about/</link>
       <pubDate>Sat, 01 Oct 2011 00:00:00 +0000</pubDate>
       <guid>https://martintrojer.github.io/about/</guid>
-      <description>&lt;figure class=&#34;floatright&#34;&gt;&lt;img src=&#34;https://martintrojer.github.io/assets/images/martin_sketch.png&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;I am Martin Trojer, a software contractor based in the UK, specializing in software development using functional programming languages such as Haskell, Purescript, Elm, and Clojure.&lt;/p&gt;&#xA;&lt;p&gt;On this blog, I cover a range of programming topics that have captured my interest, including technical discussions and reflections on the software industry. I aim to provide code examples and other resources that are publicly accessible, serving as both a reference for the future and a helpful aid for readers.&lt;/p&gt;</description>
+      <description>&lt;figure class=&#34;floatright&#34;&gt;&lt;img src=&#34;https://martintrojer.github.io/assets/images/martin_sketch.png&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;p&gt;I am Martin Trojer, a software contractor based in the UK, specializing in software development using functional programming languages such as Rust, Haskell and Clojure.&lt;/p&gt;&#xA;&lt;p&gt;On this blog, I cover a range of programming topics that have captured my interest, including technical discussions and reflections on the software industry. I aim to provide code examples and other resources that are publicly accessible, serving as both a reference for the future and a helpful aid for readers.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Some thoughts on clojure.spec</title>

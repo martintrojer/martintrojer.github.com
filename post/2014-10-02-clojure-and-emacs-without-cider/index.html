@@ -168,7 +168,8 @@
 <p>I also have a growing number of snippets for REPL convenience, see <a href="https://github.com/martintrojer/dotfiles/tree/master/.emacs.d/snippets">here</a>.</p>
 <p>Edit text like normal, <code>C-c C-e</code> to eval sexpr under point and <code>C-c C-k</code> to eval a file (see above).</p>
 <p>Running tests are done manually in the REPL buffer. I typically do <code>(run-tests)</code> or <code>(test-vars [...])</code>. I strongly recommend having <a href="https://github.com/pjstadig/humane-test-output">humane test output</a> enabled.</p>
-<!-- raw HTML omitted -->
+<h2 id="code-navigation-and-auto-complete">Code navigation and auto-complete</h2>
+<p>Make sure you have <a href="http://ctags.sourceforge.net">Exuberant ctags</a> installed on your system; <code>apt-get install exuberant-ctags</code> or <code>brew install ctags</code>.</p>
 <p>You will also need to add <code>--langmap=Lisp:+.clj.cljs</code> into <code>~/.ctags</code>; <a href="https://github.com/martintrojer/dotfiles/blob/master/.ctags">see here</a>.</p>
 <p>Then use <code>C-c p R</code> to rebuild your TAGS file (this works when you&rsquo;re in projectile mode). After that just can either do <code>M-.</code> to jump to definition (and <code>C-u M-.</code> for next match), remember that <code>M-*</code> takes you back. One great thing about tags is that you don&rsquo;t have to be &lsquo;jacked in&rsquo; to use them! That goes for both navigation and auto-complete.</p>
 <p>That&rsquo;s it really - nice and simple! If you have any additions to make this setup even better, I&rsquo;d love to hear about them.</p>
