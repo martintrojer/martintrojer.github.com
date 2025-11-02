@@ -470,8 +470,8 @@ figcaption {
 }
 
 figure.floatright {
-  max-width: 300px;
-  width: auto\9*0.3; /* ie8 */
+  max-width: 200px;
+  width: auto\9*0.2; /* ie8 */
   height: auto;
   float: right;
   margin: 0 0 1em 2em !important;
@@ -584,8 +584,8 @@ aside a:hover {
   
   figure.floatright,
   figure.floatleft {
-    float: none;
-    max-width: 100%;
-    margin: 1em 0;
+    float: right;
+    max-width: 150px;
+    margin: 0 0 1em 1em !important;
   }
 }
