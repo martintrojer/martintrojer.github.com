@@ -1,0 +1,38 @@
+---
+categories:
+- clojure
+date: "2012-03-03T00:00:00Z"
+description: ""
+tags:
+- clojure
+- frinj
+title: Announcing Frinj, a practical unit of measure calculator DSL for Clojure
+---
+
+I am proud to announce a new Clojure project called "Frinj".
+
+Frinj is a practical unit-of-measure calculator DSL for Clojure.
+
+Key features:
+
+* Tracks units of measure through all calculations allowing you to mix units of measure transparently
+* Comes with a huge database of units and conversion factors
+* Inspired by the [Frink project](http://futureboy.us/frinkdocs/)
+* Tries to combine Frink's fluent calculation style with idiomatic Clojure
+
+Full source code available on [github](https://github.com/martintrojer/frinj).
+
+To whet your appetite, head straight over to the [sample calculations](https://github.com/martintrojer/frinj/blob/master/src/frinj/examples.clj) page to see what Frinj can do!
+
+Also check out the [live ClojureScript page](/frinj-demo/index.html).
+
+I also want to explain that despite its name, Frinj was never intended to be a clone of Frink, and thus does not support the entire Frink language. But since it's a Clojure DSL, it doesn't have to!
+
+There were a couple of reasons I decided to create Frinj:
+
+* I wanted the power of Frink but with Clojure idioms
+* I love Frink, and wanted to learn more about it
+* Frink isn't open source
+* I wanted to have some fun
+
+So please take it for a spin, it's damn fun!
