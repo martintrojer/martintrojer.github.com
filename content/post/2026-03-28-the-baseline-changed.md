@@ -10,7 +10,7 @@ categories:
   - software
 ---
 
-Think back to when you got your first computer and started writing code. That sense of wonder when "Hello World" appeared on your screen. The dizzying feeling that you could make this strange machine do what you told it to. This feeling is useful again. It's much better to mess around with these new tools and get your hands dirty building stuff than to sit there having opinions about them.
+Think back to when you got your first computer and started writing code. That sense of wonder when "Hello World" appeared on your screen. The dizzying feeling that you could make this strange machine do what you told it to. This feeling is useful again. It's much better to mess around with these new AI tools and get your hands dirty building stuff than to sit there having opinions about them.
 
 If you approach these tools like that, a lot of the online AI developer discourse starts to look beside the point. The mistake people make with AI tools is treating them as a debate topic. Hype, backlash, benchmarks, model tribalism. None of that is the main thing. The main thing is that the baseline changed.
 
