@@ -14,3 +14,4 @@ hugo.linux
 
 .DS_Store
 _site
+.codex
