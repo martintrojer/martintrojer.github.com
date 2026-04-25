@@ -12,13 +12,13 @@ categories:
 
 In many software companies the percentage of AI generated code is going up fast. The code churn is accelerating because of both developer-led features and fully automated AI cleanups and codemods. Many developers feel much more productive and their number of landed changes has gone up a lot. The shipped code seems to work ok, and if not the AI agent can often root cause and fix bugs quickly.
 
-AI makes it much easier to outpace shared understanding of the codebase. What is happening now in many large codebases is that teams keep shipping while quietly losing the plot.
+AI makes it much easier to outpace shared understanding of the codebase. What's happening now in many large codebases is that teams keep shipping while quietly losing the plot.
 
-Working code is not the same as understood code. A system can appear to behave. Tests can pass. None of that means the team has a real shared understanding of what the code is doing, why it was written that way, or what will break when it changes.
+Working code isn't the same as understood code. A system can appear to behave. Tests can pass. None of that means the team has a real shared understanding of what the code is doing, why it was written that way, or what will break when it changes.
 
-And new code is not the same as trusted code. Generated code can look clean, sensible and well-structured. It can even survive review. That still does not mean people really trust it. Trust comes from scrutiny, repetition, and seeing how the thing behaves when reality gets involved.
+And new code isn't the same as trusted code. Generated code can look clean, sensible and well-structured. It can even survive review. That still doesn't mean people really trust it. Trust comes from scrutiny, repetition, and seeing how the thing behaves when reality gets involved.
 
-And trusted code is not the same as used code. Used code has survived contact with reality. It has been lived with. That kind of code carries operational memory in a way that fresh output does not.
+And trusted code isn't the same as used code. Used code has survived contact with reality. It has been lived with. That kind of code carries operational memory in a way that fresh output doesn't.
 
 What concretely is this new cognitive debt that we are sleepwalking into?
 

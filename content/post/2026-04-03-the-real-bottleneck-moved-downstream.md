@@ -18,7 +18,7 @@ Quickly followed by:
 
 > OMG, we (software developers) are all cooked
 
-If you keep going down that path, the next insight is the interesting one. Yes, the cost of plausible code generation has collapsed. But the cost of delivering high quality, well tested and compliant software has not. Big companies still need software to clear a bunch of quality and legal bars, and none of that has really changed.
+If you keep going down that path, the next insight is the interesting one though. Yes, the cost of plausible code generation has collapsed. But the cost of delivering high quality, well tested and compliant software has not. Big companies still need software to clear a bunch of quality and legal bars, and none of that has really changed.
 
 There is an important distinction here: output vs throughput. One engineer can now generate five changes in the time the org can safely review, test, approve and absorb one.
 
@@ -34,9 +34,9 @@ So now that code generation is cheaper, what are the downstream bottlenecks?
 - Accountability
   - operational ownership
 
-All of those are now under more pressure. The wall of diffs that any reviewer in a large software company is facing is real. The tension is pretty obvious: code producers feel newly powerful and start building more stuff, while the rest of the organisation pushes back or just tries to keep up.
+All of those are now under more pressure. The wall of diffs that any reviewer in a large software company is facing is real. The tension is pretty obvious: code producers feel newly powerful and start building more stuff, while the rest of the org pushes back or just tries to keep up.
 
-Highly regulated industries like finance live in a complicated legal landscape, with stricter rules around auditability, compliance and sign-off. The missing artifact is often not code but defensible evidence.
+Highly regulated industries like finance live in a complicated legal landscape, with stricter rules around auditability, compliance and sign-off. The missing artifact is often not code, it's defensible evidence.
 
 The bottleneck moved downstream. That needs to be understood and managed. A lot of firms will mistake partial review automation for solving the problem, when really they have only sped up one checkpoint in a much longer trust pipeline.
 
