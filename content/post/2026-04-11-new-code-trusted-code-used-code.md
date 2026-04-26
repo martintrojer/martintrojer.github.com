@@ -1,5 +1,5 @@
 ---
-title: Regulation changes the game, not the pressure
+title: New code, trusted code, used code
 date: "2026-04-11T00:00:00Z"
 description: ""
 tags:

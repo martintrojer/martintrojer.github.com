@@ -22,7 +22,7 @@ It looks a bit different when you are not a single hacker with a pile of HTML to
 
 In a personal hoard the bar is "it works." In a bank the bar is higher. Did this thing survive review. Did it pass audit. Did it actually run in production for a year without anyone getting paged at three in the morning. A snippet that worked once on a laptop is mildly interesting. A snippet that went through change control and is still running two years later is gold.
 
-This is just the [trusted code](/post/2026-04-11-regulation-changes-the-game-not-the-pressure/) idea showing up again. A hoard of clever-but-untested examples is worth less than a smaller hoard of examples that already earned trust. In regulated environments the second kind is what you want to feed to an agent, because it quietly carries "and this is the version that survived contact with the controls." That is a lot of context to hand the model for free.
+This is just the [trusted code](/post/2026-04-11-new-code-trusted-code-used-code/) idea showing up again. A hoard of clever-but-untested examples is worth less than a smaller hoard of examples that already earned trust. In regulated environments the second kind is what you want to feed to an agent, because it quietly carries "and this is the version that survived contact with the controls." That is a lot of context to hand the model for free.
 
 **Second**, it changes who the hoard belongs to.
 
