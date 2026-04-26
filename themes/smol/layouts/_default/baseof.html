@@ -11,6 +11,18 @@
 	<link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">
 	<link rel="apple-touch-icon" sizes="180x180" href="{{ "apple-touch-icon.png" | relURL }}">
+	<script>
+		// Apply saved theme before first paint to avoid FOUC.
+		// No saved value => follow system (handled in CSS via prefers-color-scheme).
+		(function () {
+			try {
+				var t = localStorage.getItem('theme');
+				if (t === 'light' || t === 'dark') {
+					document.documentElement.setAttribute('data-theme', t);
+				}
+			} catch (e) { /* localStorage unavailable; fall back to system */ }
+		})();
+	</script>
 	<link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
 	{{ range .Site.Params.customCSS -}}
 		<link rel="stylesheet" href="{{ . | relURL }}?rnd={{ now.Unix }}">
