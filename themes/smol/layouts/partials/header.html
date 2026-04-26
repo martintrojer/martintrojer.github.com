@@ -1,7 +1,9 @@
 <header>
 	<div class="header-content">
 		<div class="header-title">
-			<span class="prompt-symbol">$</span> <span class="prompt-command">cat</span> <strong>{{ .Site.Title }}</strong>
+			<a href="{{ "/" | relURL }}" class="header-title-link">
+				<span class="prompt-symbol">$</span> <span class="prompt-command">cat</span> <strong>{{ .Site.Title }}</strong>
+			</a>
 		</div>
 		{{ if .Site.Params.subtitle }}
 		<div class="header-subtitle">
@@ -12,12 +14,81 @@
 		{{ end }}
 	</div>
 	<nav>
-		<a href="/"><b>Start</b></a>
-		{{ with .Site.Menus.main }}
-		{{ range . }}
-		<span class="nav-separator">/</span>
-		<a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>
-		{{ end }}
-		{{ end }}
+		<button
+			id="nav-menu-toggle"
+			class="nav-menu-toggle"
+			type="button"
+			aria-label="Open navigation menu"
+			aria-expanded="false"
+			aria-controls="nav-links">
+			<span class="nav-menu-toggle-icon" aria-hidden="true">
+				<span></span><span></span><span></span>
+			</span>
+		</button>
+		<span id="nav-links" class="nav-links"><a href="/"><b>Start</b></a>{{- with .Site.Menus.main -}}{{- range . -}}<span class="nav-separator">/</span><a href="{{ .URL | relURL }}"><b>{{ .Name }}</b></a>{{- end -}}{{- end -}}</span>
+		<button
+			id="theme-toggle"
+			class="theme-toggle"
+			type="button"
+			role="switch"
+			aria-label="Toggle color theme"
+			aria-checked="false"
+			title="--theme=light">
+			<span class="theme-toggle-track" aria-hidden="true">
+				<span class="theme-toggle-icon theme-toggle-icon--light">1</span>
+				<span class="theme-toggle-slash">/</span>
+				<span class="theme-toggle-icon theme-toggle-icon--dark">0</span>
+			</span>
+		</button>
 	</nav>
 </header>
+<script>
+	(function () {
+		var menuBtn = document.getElementById('nav-menu-toggle');
+		var links = document.getElementById('nav-links');
+		if (menuBtn && links) {
+			menuBtn.addEventListener('click', function () {
+				var open = links.classList.toggle('is-open');
+				menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+				menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+			});
+		}
+	})();
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		var mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+
+		function currentTheme() {
+			var explicit = document.documentElement.getAttribute('data-theme');
+			if (explicit) return explicit;
+			return (mql && mql.matches) ? 'dark' : 'light';
+		}
+
+		function syncAria() {
+			var t = currentTheme();
+			btn.setAttribute('aria-checked', t === 'dark' ? 'true' : 'false');
+			btn.setAttribute('title', '--theme=' + t);
+		}
+		syncAria();
+
+		btn.addEventListener('click', function () {
+			var next = currentTheme() === 'dark' ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', next);
+			try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+			syncAria();
+		});
+
+		// If the user hasn't made a choice, keep tracking system changes live.
+		if (mql && mql.addEventListener) {
+			mql.addEventListener('change', function () {
+				try {
+					if (!localStorage.getItem('theme')) {
+						document.documentElement.removeAttribute('data-theme');
+					}
+				} catch (e) { /* ignore */ }
+				syncAria();
+			});
+		}
+	})();
+</script>
