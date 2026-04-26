@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sway School — A tree-first tutorial for beginners</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --rosewater:#f5e0dc; --mauve:#cba6f7; --red:#f38ba8;
+    --blue:#89b4fa; --lavender:#b4befe; --green:#a6e3a1;
+    --yellow:#f9e2af; --peach:#fab387;
+    --text:#cdd6f4; --subtext:#a6adc8; --overlay:#6c7086;
+    --surface0:#313244; --surface1:#45475a;
+    --base:#1e1e2e; --mantle:#181825; --crust:#11111b;
+  }
+  *,*::before,*::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--base);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
+    background: var(--mantle);
+    border-right: 1px solid var(--surface0);
+    font-size: 0.9rem;
+  }
+  nav.toc h2 {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--subtext);
+  }
+  nav.toc ol { list-style: none; padding: 0; margin: 0 0 1rem; }
+  nav.toc li { margin: 0.2rem 0; }
+  nav.toc a {
+    color: var(--text);
+    text-decoration: none;
+    display: block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    border-left: 2px solid transparent;
+  }
+  nav.toc a:hover { background: var(--surface0); border-left-color: var(--blue); }
+  main { padding: 2rem 3rem; max-width: 900px; }
+  h1 {
+    color: var(--mauve);
+    font-size: 2.2rem;
+    margin-top: 0;
+    border-bottom: 2px solid var(--surface0);
+    padding-bottom: 0.5rem;
+  }
+  h2 {
+    color: var(--blue);
+    margin-top: 2.5rem;
+    border-bottom: 1px solid var(--surface0);
+    padding-bottom: 0.3rem;
+  }
+  h3 { color: var(--lavender); margin-top: 1.8rem; }
+  h4 { color: var(--peach); margin-top: 1.2rem; margin-bottom: 0.4rem; }
+  p, li { color: var(--text); }
+  a { color: var(--blue); }
+  strong { color: var(--peach); }
+  em { color: var(--rosewater); }
+  code, kbd, pre {
+    font-family: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  }
+  code {
+    background: var(--surface0);
+    color: var(--green);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  kbd {
+    background: var(--surface1);
+    color: var(--yellow);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--overlay);
+    font-size: 0.85em;
+    box-shadow: 0 1px 0 var(--crust);
+  }
+  pre {
+    background: var(--mantle);
+    color: var(--text);
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 3px solid var(--blue);
+    font-size: 0.88em;
+    line-height: 1.5;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  blockquote {
+    border-left: 4px solid var(--mauve);
+    background: var(--mantle);
+    margin: 1rem 0;
+    padding: 0.6rem 1rem;
+    color: var(--rosewater);
+    border-radius: 0 6px 6px 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+    background: var(--mantle);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--surface0);
+  }
+  th { background: var(--surface0); color: var(--lavender); }
+  tr:last-child td { border-bottom: none; }
+
+  /* Callouts */
+  .callout {
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1.2rem 0;
+    border-left: 4px solid;
+  }
+  .callout-warn { background: #3a2a1c; border-left-color: var(--peach); }
+  .callout-tip  { background: #1c2a3a; border-left-color: var(--blue); }
+  .callout-aha  { background: #2a1c3a; border-left-color: var(--mauve); }
+  .callout strong:first-child { display: block; margin-bottom: 0.3rem; }
+
+  /* Quiz */
+  .quiz {
+    background: var(--mantle);
+    border: 1px solid var(--surface0);
+    border-left: 4px solid var(--green);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .quiz h4 {
+    margin-top: 0;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .quiz h4::before { content: "🧠"; }
+  .quiz .question { font-weight: 500; margin: 0.5rem 0 0.75rem; }
+  .quiz .options { list-style: none; padding: 0; margin: 0 0 0.75rem; }
+  .quiz .options li { margin: 0.3rem 0; }
+  .quiz .options label {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid transparent;
+  }
+  .quiz .options label:hover { background: var(--surface0); }
+  .quiz .options input { margin-top: 0.3rem; accent-color: var(--blue); }
+  .quiz .options label.correct {
+    background: #1e3a2a;
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .quiz .options label.wrong {
+    background: #3a1e2a;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .quiz .feedback {
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    background: var(--surface0);
+    color: var(--text);
+    display: none;
+    border-left: 3px solid var(--blue);
+  }
+  .quiz .feedback.show { display: block; }
+  .quiz .feedback.right { border-left-color: var(--green); color: var(--green); }
+  .quiz .feedback.nope  { border-left-color: var(--red);   color: var(--red); }
+  .quiz button.check {
+    background: var(--blue);
+    color: var(--crust);
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+  .quiz button.check:hover { background: var(--lavender); }
+  .quiz button.reset {
+    background: transparent;
+    color: var(--subtext);
+    border: 1px solid var(--overlay);
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  /* Progress */
+  .progress-bar {
+    position: sticky;
+    top: 0;
+    background: var(--crust);
+    padding: 0.4rem 1rem;
+    border-bottom: 1px solid var(--surface0);
+    z-index: 10;
+    font-size: 0.85rem;
+    color: var(--subtext);
+    grid-column: 1 / -1;
+  }
+  .progress-bar .bar {
+    height: 4px;
+    background: var(--surface0);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.3rem;
+  }
+  .progress-bar .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--mauve));
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  /* ASCII diagrams */
+  .ascii {
+    background: var(--crust);
+    color: var(--lavender);
+    padding: 1rem;
+    border-radius: 6px;
+    white-space: pre;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85em;
+    line-height: 1.4;
+    overflow-x: auto;
+    margin: 1rem 0;
+  }
+
+  /* Lesson markers */
+  .lesson-id {
+    display: inline-block;
+    background: var(--surface0);
+    color: var(--mauve);
+    padding: 0.15rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7em;
+    font-weight: 600;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  /* Print-friendly */
+  @media print {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc, .progress-bar { display: none; }
+    main { padding: 1rem; }
+    .quiz button { display: none; }
+  }
+
+  /* Mobile */
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--surface0);
+    }
+    main { padding: 1.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="progress-bar">
+  <div>Quiz progress: <span id="progress-text">0 / 0 answered</span></div>
+  <div class="bar"><div class="bar-fill" id="progress-fill"></div></div>
+</div>
+<nav class="toc">
+  <h2>Lessons</h2>
+  <ol>
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#l1">L1 · A window is a rectangle</a></li>
+    <li><a href="#l2">L2 · Two windows share space</a></li>
+    <li><a href="#l3">L3 · Sway remembers</a></li>
+    <li><a href="#l4">L4 · Focus</a></li>
+    <li><a href="#l5">L5 · New windows next to focus</a></li>
+    <li><a href="#l6">L6 · Choose direction first</a></li>
+    <li><a href="#l7">L7 · Arrangements stick</a></li>
+    <li><a href="#l8">L8 · Containers (the tree)</a></li>
+    <li><a href="#l8-5">L8.5 · splith / splitv naming</a></li>
+    <li><a href="#l8-75">L8.75 · The insertion rule</a></li>
+    <li><a href="#l9">L9 · Focus parent</a></li>
+    <li><a href="#l10">L10 · Mutating the tree</a></li>
+    <li><a href="#l11">L11 · Moving windows</a></li>
+    <li><a href="#l12">L12 · Floating</a></li>
+    <li><a href="#l13">L13 · Scratchpad</a></li>
+    <li><a href="#sticky">Bonus · Sticky</a></li>
+    <li><a href="#matrix">Reading the matrix</a></li>
+    <li><a href="#cheat">Cheat sheet</a></li>
+  </ol>
+</nav>
+<main>
+
+<h1>Sway School</h1>
+<p><em>A tree-first tutorial for sway beginners. Assumes the keybindings from this dotfiles config (<code>$mod = Super</code>).</em></p>
+
+<section id="intro">
+<h2>Introduction</h2>
+<p>Sway is a tiling Wayland compositor. The default reaction to it is "I don't get how layouts work." This tutorial fixes that — not by listing keys, but by teaching you the <strong>tree model</strong> sway uses internally. Once you see the tree, every keystroke becomes obvious.</p>
+
+<p>The lessons build on each other. Each one ends with a quiz that lets you check your understanding before moving on. <em>Don't skip the quizzes</em> — they're how you find out whether the model actually clicked.</p>
+
+<div class="callout callout-tip">
+<strong>How to use this page</strong>
+Read each lesson, try the suggested experiments in a real sway session, then take the quiz. Click an answer to lock it in. Green = correct, red = wrong. Use the sidebar to jump around.
+</div>
+
+<h3>The keys you'll use most</h3>
+<table>
+<thead><tr><th>Key</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+t</kbd></td><td>Open a terminal</td></tr>
+<tr><td><kbd>$mod+h/j/k/l</kbd> <em>or</em> <kbd>$mod+←/↓/↑/→</kbd></td><td>Move focus left/down/up/right</td></tr>
+<tr><td><kbd>$mod+Shift+h</kbd> etc. <em>or</em> <kbd>$mod+Shift+arrows</kbd></td><td>Move the focused window</td></tr>
+<tr><td><kbd>$mod+[</kbd> / <kbd>$mod+]</kbd></td><td>Next window goes below / right</td></tr>
+<tr><td><kbd>$mod+c</kbd></td><td>Focus the parent container</td></tr>
+<tr><td><kbd>$mod+Shift+space</kbd></td><td>Toggle floating</td></tr>
+<tr><td><kbd>$mod+Shift+q</kbd></td><td>Close the focused window</td></tr>
+</table>
+
+<p>The full list is in the <a href="#cheat">cheat sheet</a> at the bottom.</p>
+</section>
+
+<section id="l1">
+<h2><span class="lesson-id">L1</span>A window is just a rectangle</h2>
+<p>Open one terminal: <kbd>$mod+t</kbd>. It fills the screen, minus a small gap.</p>
+<blockquote>One window takes all the space available to it.</blockquote>
+<p>That's the whole lesson. No tree, no containers — just one window filling its space.</p>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">You open one terminal on an empty workspace. What do you expect?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q1" value="1"> A small window centred on screen</label></li>
+  <li><label><input type="radio" name="q1" value="2"> A window that fills the workspace (minus the configured gap)</label></li>
+  <li><label><input type="radio" name="q1" value="3"> Sway asks where to place it</label></li>
+  <li><label><input type="radio" name="q1" value="4"> A floating window</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">A single tiled window expands to fill its workspace. Floating only happens when configured (<a href="#l12">L12</a>) or via auto-rules.</div>
+</div>
+</section>
+
+<section id="l2">
+<h2><span class="lesson-id">L2</span>A second window has to share the space</h2>
+<p>Open another terminal. Sway picks a direction (default: side-by-side) and <strong>shrinks the existing window</strong> to make room.</p>
+<blockquote>Sway never overlaps tiled windows. Space is always divided, never stacked.</blockquote>
+<p>This is the foundational difference between a tiling WM and a traditional one. There's no z-order to fight with for tiled windows.</p>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check</h4>
+<p class="question">With two terminals open side-by-side, you open a third. What happens?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q2" value="1"> Third window opens floating on top</label></li>
+  <li><label><input type="radio" name="q2" value="2"> Sway refuses — "too many windows"</label></li>
+  <li><label><input type="radio" name="q2" value="3"> All three windows shrink to ~1/3 each, in a row</label></li>
+  <li><label><input type="radio" name="q2" value="4"> The third replaces one of the existing two</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Tiles divide space. The arrangement (here: a row) is preserved; new windows just take their share.</div>
+</div>
+</section>
+
+<section id="l3">
+<h2><span class="lesson-id">L3</span>Sway remembers the arrangement</h2>
+<p>Sway didn't <em>happen</em> to put your three windows in a row. It <strong>decided</strong> "these go horizontally" and <strong>remembers</strong> that decision. Open a fourth terminal — it joins the row, four side-by-side.</p>
+<blockquote>Sway is keeping a note: "these windows are arranged horizontally." That note will eventually have a name: <em>container</em> (L8).</blockquote>
+<p>For now, just hold the idea: arrangements are remembered, not coincidental.</p>
+</section>
+
+<section id="l4">
+<h2><span class="lesson-id">L4</span>Focus: sway always knows which window is active</h2>
+<p>One window has a coloured border (blue in the Catppuccin theme). That's the <strong>focused</strong> window — the one keystrokes go to.</p>
+<p>Move focus with either of these — they're bound identically:</p>
+<ul>
+  <li><kbd>$mod+h</kbd> / <kbd>j</kbd> / <kbd>k</kbd> / <kbd>l</kbd> (vim-style: left/down/up/right)</li>
+  <li><kbd>$mod+←</kbd> / <kbd>↓</kbd> / <kbd>↑</kbd> / <kbd>→</kbd> (arrow keys, exactly the same)</li>
+</ul>
+<div class="callout callout-tip">
+<strong>Throughout this tutorial we'll write <kbd>$mod+hjkl</kbd> for brevity.</strong> Mentally substitute arrows if you prefer them — they're bound to the same actions everywhere. Same for <kbd>$mod+Shift+hjkl</kbd> (move window) ↔ <kbd>$mod+Shift+arrows</kbd>.
+</div>
+<p>This config has <code>focus_wrapping no</code>, so focus <strong>stops at the edge</strong>. Press <kbd>$mod+h</kbd> (or <kbd>$mod+←</kbd>) on the leftmost window and nothing happens — you're already as far left as you can go.</p>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check</h4>
+<p class="question">Which statement about focus is true in this config?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q4" value="1"> Multiple windows can be focused if you hold <kbd>Shift</kbd></label></li>
+  <li><label><input type="radio" name="q4" value="2"> Focus wraps around at the edges</label></li>
+  <li><label><input type="radio" name="q4" value="3"> Exactly one window is always focused; focus moves with <kbd>$mod+hjkl</kbd> (or arrows) and stops at edges</label></li>
+  <li><label><input type="radio" name="q4" value="4"> Focus is determined by mouse position only</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Single focus, keyboard-driven, no wrap. (Mouse <em>can</em> change focus too because <code>focus_follows_mouse yes</code> is set, but it's not the only way.)</div>
+</div>
+</section>
+
+<section id="l5">
+<h2><span class="lesson-id">L5</span>New windows appear next to the focused one</h2>
+<p>The single most important rule:</p>
+<blockquote>A new window opens <strong>next to whichever window is currently focused</strong>, in whatever arrangement that window lives in.</blockquote>
+<p>Proof: with three terminals A, B, C in a row, focus the leftmost (A) and open a new terminal. The new window appears <strong>between A and B</strong>, not at the end of the row. Focus is the anchor.</p>
+
+<div class="callout callout-tip">
+<strong>Practical takeaway</strong>
+If you want a new window in a specific spot, <strong>focus its desired neighbour first</strong>, then open it.
+</div>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check</h4>
+<p class="question">Three terminals in a row, side-by-side. You focus the middle one and open a fourth terminal. Where does it appear?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q5" value="1"> To the far right of the row</label></li>
+  <li><label><input type="radio" name="q5" value="2"> Below the middle terminal (stacked)</label></li>
+  <li><label><input type="radio" name="q5" value="3"> Between the middle and right terminals</label></li>
+  <li><label><input type="radio" name="q5" value="4"> It replaces the middle terminal</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Next to the focused window, in the same arrangement (the row).</div>
+</div>
+</section>
+
+<section id="l6">
+<h2><span class="lesson-id">L6</span>You choose the direction <em>before</em> opening the next window</h2>
+<p>So far sway has been picking the direction (horizontal). Now you take the wheel.</p>
+<table>
+<thead><tr><th>Key</th><th>Whisper to sway</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+]</kbd></td><td>Next window opens to the <strong>right</strong> (horizontal)</td></tr>
+<tr><td><kbd>$mod+[</kbd></td><td>Next window opens <strong>below</strong> (vertical)</td></tr>
+</tbody>
+</table>
+<p>These keys do nothing visible by themselves. They just set up the direction for the <em>next</em> window you open.</p>
+<p>Recipe to build a column: focus a window → <kbd>$mod+[</kbd> → <kbd>$mod+t</kbd>. The new terminal appears below.</p>
+
+<div class="callout callout-aha">
+<strong>The unlock</strong>
+This is how you build complex layouts. Pick a direction, open a window. Pick another direction, open another. You're in charge of every shape on screen.
+</div>
+</section>
+
+<section id="l7">
+<h2><span class="lesson-id">L7</span>Arrangements stick to their spot</h2>
+<p>Once you've established a direction in a slot (e.g. made a vertical column), new windows opened <em>inside that slot</em> keep going in that direction — <strong>without</strong> needing the bracket key again.</p>
+<p>Proof: focus a window inside your vertical column, hit <kbd>$mod+t</kbd>, and the new terminal stacks into the column rather than popping out sideways.</p>
+<blockquote>The slot <strong>knows what it is</strong>. Sway carries the arrangement forward until you change direction again with <kbd>[</kbd> or <kbd>]</kbd>.</blockquote>
+<p>This is the moment the mental model clicks for most people. Everything from here on is variations on this one idea.</p>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">You built a 3-window column with <kbd>$mod+[</kbd>. Now you focus the middle window and press <kbd>$mod+t</kbd> (no bracket key first). What happens?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q7" value="1"> The new terminal opens to the right (horizontal default)</label></li>
+  <li><label><input type="radio" name="q7" value="2"> The new terminal joins the column, stacked between the focused window and the next one</label></li>
+  <li><label><input type="radio" name="q7" value="3"> Sway asks for a direction</label></li>
+  <li><label><input type="radio" name="q7" value="4"> The new terminal floats</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">The slot remembers it's vertical. New windows in that slot stay vertical until you say otherwise.</div>
+</div>
+</section>
+
+<section id="l8">
+<h2><span class="lesson-id">L8</span>Containers — the tree, finally named</h2>
+<p>That "slot that knows what it is" has a name: a <strong>container</strong>.</p>
+<blockquote>A container = a remembered arrangement, with windows (or other containers) inside it.</blockquote>
+<p>Containers can hold:</p>
+<ul>
+<li><strong>Windows</strong> (the things you actually see), or</li>
+<li><strong>Other containers</strong> (which themselves hold windows or more containers).</li>
+</ul>
+<p>That nesting <em>is</em> the tree. Russian dolls of remembered arrangements.</p>
+
+<h3>See your tree</h3>
+<p>Run this in any terminal:</p>
+<pre><code>swaymsg -t get_tree | grep -E '"(name|layout)"' | head -40</code></pre>
+<p>Read the output as nested boxes:</p>
+<table>
+<thead><tr><th>Field</th><th>Means</th></tr></thead>
+<tbody>
+<tr><td><code>"layout": "splith"</code></td><td>horizontal container (children side-by-side)</td></tr>
+<tr><td><code>"layout": "splitv"</code></td><td>vertical container (children stacked)</td></tr>
+<tr><td><code>"layout": "tabbed"</code></td><td>tabbed container (children stacked as tabs)</td></tr>
+<tr><td><code>"layout": "none"</code></td><td>a <em>leaf</em> — a real window, not a container</td></tr>
+<tr><td><code>"name": "..."</code></td><td>a window's title (containers have <code>null</code> names)</td></tr>
+</tbody>
+</table>
+
+<h3>Worked example</h3>
+<p>A workspace with one tile on the left and a vertical column of two tiles on the right looks like this in the dump:</p>
+<pre><code>"name": "4",                          ← workspace 4
+  "layout": "splith",                 ← workspace is horizontal
+      "layout": "none",
+      "name": "π - dotfiles",         ← a window (left side)
+      "layout": "splitv",             ← a vertical container (the column!)
+          "layout": "none",
+          "name": "Chrome",           ← window in column
+          "layout": "none",
+          "name": "swaymsg …",        ← window in column
+</code></pre>
+
+<p>As a picture:</p>
+<div class="ascii">Workspace 4  (splith — horizontal)
+│
+├── π - dotfiles                    ← a window (left side)
+│
+└── (splitv — vertical column)      ← a container (right side)
+    │
+    ├── Chrome                       ← a window (top of column)
+    │
+    └── swaymsg terminal             ← a window (bottom of column)
+</div>
+
+<div class="callout callout-aha">
+<strong>Fun fact</strong>
+Workspaces are containers too — just the top-level ones. Everything is containers all the way down.
+</div>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">In the worked example above, how many <em>containers</em> are there (not counting leaf windows)?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q8" value="1"> 1 (just the column)</label></li>
+  <li><label><input type="radio" name="q8" value="2"> 2 (the workspace itself, plus the column)</label></li>
+  <li><label><input type="radio" name="q8" value="3"> 3 (workspace, row, column)</label></li>
+  <li><label><input type="radio" name="q8" value="4"> 0 — only windows are real</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Workspace (splith) and the column (splitv) are both containers. The three windows are leaves.</div>
+</div>
+</section>
+
+<section id="l8-5">
+<h2><span class="lesson-id">L8.5</span>The correct mental model for splith / splitv</h2>
+<p>This trips up almost everyone. The naming convention:</p>
+<ul>
+<li><code>splith</code> = children laid out <strong>h</strong>orizontally (a side-by-side <strong>row</strong>)</li>
+<li><code>splitv</code> = children laid out <strong>v</strong>ertically (a stacked <strong>column</strong>)</li>
+</ul>
+<p>The name describes <strong>how the children are arranged</strong>, NOT the direction of the divider line between them.</p>
+
+<h3>Why it feels backwards</h3>
+<p>Most people's first instinct is to picture the <em>divider</em>:</p>
+<ul>
+<li>"vertical split" → a vertical line down the middle → windows side-by-side</li>
+<li>"horizontal split" → a horizontal line across the middle → windows stacked</li>
+</ul>
+<p>That's the CSS / Photoshop / "split a board in half" intuition. It's perfectly reasonable — it's just <strong>the opposite</strong> of sway's. Sway names from the <strong>result's</strong> point of view: see a row → splith. See a column → splitv.</p>
+
+<div class="callout callout-warn">
+<strong>What to actively forget</strong>
+Stop thinking about the divider line. It will lie to you every time. Re-anchor on "shape of the children" or "direction the next window goes."
+</div>
+
+<h3>Cheat table</h3>
+<table>
+<thead><tr><th>You want…</th><th>Key</th><th>Container becomes</th><th>Tree dump shows</th></tr></thead>
+<tbody>
+<tr><td>Next window to the right</td><td><kbd>$mod+]</kbd></td><td>horizontal row</td><td><code>"layout": "splith"</code></td></tr>
+<tr><td>Next window below</td><td><kbd>$mod+[</kbd></td><td>vertical column</td><td><code>"layout": "splitv"</code></td></tr>
+</tbody>
+</table>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">You see <code>"layout": "splitv"</code> in a tree dump. What does that container look like on screen?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q85" value="1"> A horizontal row of windows side-by-side</label></li>
+  <li><label><input type="radio" name="q85" value="2"> A vertical column of windows stacked top-to-bottom</label></li>
+  <li><label><input type="radio" name="q85" value="3"> A tabbed group with one visible window</label></li>
+  <li><label><input type="radio" name="q85" value="4"> A single fullscreen window</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">splitv = children arranged vertically = a column. The "v" describes the children's shape, not the divider.</div>
+</div>
+</section>
+
+<section id="l8-75">
+<h2><span class="lesson-id">L8.75</span>The insertion rule (the one rule to rule them all)</h2>
+<p>Everything you've learned so far is consequences of a single rule.</p>
+<blockquote>When you open a new window, sway:<br>1. Looks at the <strong>focused window</strong><br>2. Finds the <strong>container that window lives in</strong> (its parent)<br>3. Inserts the new window <strong>into that container, right after the focused one</strong></blockquote>
+<p>The new window is always a <strong>sibling</strong> of the focused window — same parent, immediately after.</p>
+
+<h3>The bracket-key twist</h3>
+<p>The bracket keys (<kbd>$mod+[</kbd> and <kbd>$mod+]</kbd>) don't just "set a direction." They do something sneakier:</p>
+<blockquote>They <strong>ensure the focused window's parent is of the requested type</strong>, wrapping the focused window in a new container if it isn't.</blockquote>
+<p>So if you're focused on A inside <code>splith [ A B C ]</code> and hit <kbd>$mod+[</kbd>, sway silently rewraps A:</p>
+<div class="ascii">splith [ A  B  C ]              ← before
+            ↓  $mod+[
+splith [ splitv[ A ]  B  C ]    ← after
+</div>
+<p>Now opening a new terminal places it inside the new splitv (next sibling of A):</p>
+<div class="ascii">splith [ splitv[ A  NEW ]  B  C ]
+                  ↑ stacked vertically because parent is splitv
+</div>
+
+<h3>Sway is smart: brackets are no-ops when the parent already matches</h3>
+<p>If the focused window's parent is <strong>already</strong> the requested layout, the bracket key does <strong>nothing</strong>. No new wrapping, no nested-container tower.</p>
+<p>Hit <kbd>$mod+[</kbd> ten times in a row inside a splitv — the tree is unchanged after the first one (which itself was a no-op if you were already in a splitv). This is why your tree never gets bloated from idle keypresses.</p>
+
+<h3>The full table</h3>
+<table>
+<thead><tr><th>Current parent layout</th><th>You press</th><th>What happens</th></tr></thead>
+<tbody>
+<tr><td>splith</td><td><kbd>$mod+]</kbd></td><td><strong>no-op</strong> (already horizontal)</td></tr>
+<tr><td>splith</td><td><kbd>$mod+[</kbd></td><td>wrap focused window in a new splitv</td></tr>
+<tr><td>splitv</td><td><kbd>$mod+[</kbd></td><td><strong>no-op</strong> (already vertical)</td></tr>
+<tr><td>splitv</td><td><kbd>$mod+]</kbd></td><td>wrap focused window in a new splith</td></tr>
+<tr><td>tabbed</td><td><kbd>$mod+[</kbd></td><td>wrap focused window in a new splitv</td></tr>
+<tr><td>tabbed</td><td><kbd>$mod+]</kbd></td><td>wrap focused window in a new splith</td></tr>
+</tbody>
+</table>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check 1</h4>
+<p class="question">You're focused on a window inside a <code>splitv</code> column. You press <kbd>$mod+[</kbd> ten times in a row, then open a new terminal. What happens?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q875a" value="1"> The new terminal is wrapped in 10 nested splitv containers</label></li>
+  <li><label><input type="radio" name="q875a" value="2"> The new terminal appears to the right of the column</label></li>
+  <li><label><input type="radio" name="q875a" value="3"> The new terminal appears below the focused window in the same column (the bracket presses were no-ops)</label></li>
+  <li><label><input type="radio" name="q875a" value="4"> Sway crashes</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Brackets are no-ops when the parent layout already matches. The first <kbd>$mod+[</kbd> did nothing (parent was already splitv); the next nine likewise.</div>
+</div>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check 2</h4>
+<p class="question">You're focused on window A. The tree is <code>splith [ A  B  C ]</code>. You press <kbd>$mod+[</kbd>, then open a new terminal called NEW. What does the tree look like?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q875b" value="1"> <code>splith [ A  NEW  B  C ]</code> — NEW just inserted after A in the row</label></li>
+  <li><label><input type="radio" name="q875b" value="2"> <code>splitv [ splith[ A  B  C ]  NEW ]</code> — the whole row got wrapped, NEW went below</label></li>
+  <li><label><input type="radio" name="q875b" value="3"> <code>splith [ splitv[ A  NEW ]  B  C ]</code> — A wrapped in a splitv, NEW joined below A</label></li>
+  <li><label><input type="radio" name="q875b" value="4"> <code>splith [ A  B  C  NEW ]</code> — NEW went to the end</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback"><kbd>$mod+[</kbd> wrapped A in a fresh splitv (parent was splith, didn't match). NEW then became A's next sibling in that splitv.</div>
+</div>
+</section>
+
+<section id="l9">
+<h2><span class="lesson-id">L9</span>Focus parent / focus child</h2>
+<p>Until now, <strong>focus</strong> has always meant "a window is highlighted." But the tree has more than just windows in it — it has containers too. And sometimes you want to operate on <strong>a whole container</strong> instead of one window inside it.</p>
+<table>
+<thead><tr><th>Key</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+c</kbd></td><td><strong>Focus parent</strong> (zoom out one level up the tree)</td></tr>
+<tr><td><kbd>$mod+Ctrl+c</kbd></td><td><strong>Focus child</strong> (zoom back in)</td></tr>
+</tbody>
+</table>
+
+<h3>What you'll see</h3>
+<p>Focus a window normally — the border wraps just that window. Press <kbd>$mod+c</kbd>: the border <strong>expands</strong> to wrap the entire parent container, possibly multiple windows. That's sway saying "focus is now on the container, not the window."</p>
+<p>Press <kbd>$mod+c</kbd> again → expands further to the grandparent, and so on up to the workspace itself.</p>
+<p>Press <kbd>$mod+Ctrl+c</kbd> to walk back down. Sway remembers which child you came from.</p>
+
+<h3>Why this matters</h3>
+<p>When focus is on a container, <strong>commands act on the whole container</strong>:</p>
+<ul>
+<li><strong>Send a whole column to another workspace</strong>: focus a column container, hit <kbd>$mod+Shift+3</kbd> — the entire subtree moves.</li>
+<li><strong>Tab a whole group</strong>: focus a row, hit <kbd>$mod+Ctrl+f</kbd> — every direct child becomes a tab.</li>
+<li><strong>Wrap a whole subtree in a new split</strong>: focus a row, hit <kbd>$mod+[</kbd> — the entire row becomes the top child of a new splitv.</li>
+<li><strong>Float a whole group</strong>: focus a container, hit <kbd>$mod+Shift+space</kbd> — the whole subtree floats together.</li>
+</ul>
+
+<div class="callout callout-aha">
+<strong>Mental model</strong>
+Focus is a cursor in the tree. <kbd>$mod+c</kbd> moves the cursor up; <kbd>$mod+Ctrl+c</kbd> moves it down. Whatever it points at — window or container — is what the next command operates on.
+</div>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check</h4>
+<p class="question">You have a row of 5 windows, all siblings (no nesting). You focus one, press <kbd>$mod+c</kbd>, then press <kbd>$mod+Shift+space</kbd> (toggle floating). What floats?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q9" value="1"> Just the originally focused window</label></li>
+  <li><label><input type="radio" name="q9" value="2"> Nothing — you can't float a container</label></li>
+  <li><label><input type="radio" name="q9" value="3"> All five windows, as a group (the row container is what's focused after <kbd>$mod+c</kbd>)</label></li>
+  <li><label><input type="radio" name="q9" value="4"> Sway picks one at random</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback"><kbd>$mod+c</kbd> selected the row container. Toggling floating on a container floats the whole subtree.</div>
+</div>
+</section>
+
+<section id="l10">
+<h2><span class="lesson-id">L10</span>Mutating the tree (changing what's already there)</h2>
+<p>You can <em>build</em> trees (L6, L7) and <em>read</em> trees (L8). Now: how to <em>change</em> them after the fact.</p>
+
+<h3>Changing a container's layout (the easy mutation)</h3>
+<p>Focus any window. The window's <strong>parent container</strong> is what these commands act on:</p>
+<ul>
+<li><kbd>$mod+Ctrl+f</kbd> → set parent layout to <strong>tabbed</strong></li>
+<li><kbd>$mod+period</kbd> → <strong>toggle</strong> parent layout between tabbed and split</li>
+<li><kbd>$mod+]</kbd> / <kbd>$mod+[</kbd> → ensure parent is splith / splitv (wrapping if needed; see L8.75)</li>
+</ul>
+
+<div class="callout callout-aha">
+<strong>Key insight</strong>
+The windows themselves don't move in the tree. Only the <strong>rendering</strong> changes. A splith with 4 children becomes a tabbed with 4 children — same children, same order, different presentation.
+</div>
+
+<h3>Changing the tree shape (the powerful mutation)</h3>
+<p>Combine <kbd>$mod+c</kbd> from L9 with bracket keys from L8.75 to <strong>wrap whole subtrees</strong>. Recipe to add a status-bar-style window across the bottom of an existing layout:</p>
+<ol>
+<li>Focus any window in the layout.</li>
+<li><kbd>$mod+c</kbd> until the border wraps the entire workspace content (everything you want above the new bar).</li>
+<li><kbd>$mod+[</kbd> → wraps that whole subtree in a fresh splitv.</li>
+<li><kbd>$mod+t</kbd> → new terminal appears below the entire layout.</li>
+</ol>
+<p>Without the <kbd>$mod+c</kbd> step, the bracket key would only wrap one window. <kbd>$mod+c</kbd> is what makes mutations apply at the <em>right scope</em>.</p>
+
+<h3>Tabs that hold containers</h3>
+<p>A subtle but mind-bending consequence of L8.75 + L10: when you tab a row that contains a column, you get tabs where <strong>one of the tabs is the entire column</strong>. Click that tab and the screen fills with the column rendered as a splitv. You can build trees of arbitrary nesting, mixing splits and tabs, for any layout you want.</p>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">You have a row of 3 windows. You focus the middle one and press <kbd>$mod+Ctrl+f</kbd> (tabbed). What happens?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q10" value="1"> Only the middle window becomes tabbed (a single-tab group)</label></li>
+  <li><label><input type="radio" name="q10" value="2"> The whole row collapses into 3 tabs (parent container layout changes from splith to tabbed)</label></li>
+  <li><label><input type="radio" name="q10" value="3"> The middle window jumps to a new workspace</label></li>
+  <li><label><input type="radio" name="q10" value="4"> Nothing — you must focus the parent first</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Layout commands act on the focused window's parent container. Same windows in the same order, different rendering.</div>
+</div>
+</section>
+
+<section id="l11">
+<h2><span class="lesson-id">L11</span>Moving windows through the tree</h2>
+<p>You already know <kbd>$mod+Shift+hjkl</kbd> moves a window. Now we look at what it <em>actually does</em>.</p>
+<blockquote><kbd>$mod+Shift+&lt;direction&gt;</kbd> walks the focused window through the tree in that direction — swapping with siblings, escaping outward, or entering inward as needed.</blockquote>
+<p>It's the inverse of <kbd>$mod+&lt;direction&gt;</kbd>: arrow keys <em>read</em> the tree, shift+arrows <em>rewrite</em> it.</p>
+
+<h3>The three cases</h3>
+<p>When you press <kbd>$mod+Shift+l</kbd> (move right), one of these happens:</p>
+
+<h4>Case A — swap with a sibling</h4>
+<p>If there's a sibling immediately to the right in the same parent, they swap places.</p>
+<div class="ascii">splith [ A* B  C ]   →   splith [ B  A* C ]
+</div>
+
+<h4>Case B — escape outward</h4>
+<p>If there's no sibling that way, but a parent further up has space, the window pops <em>out</em> of its container.</p>
+<div class="ascii">splith [ splitv[ A* B ]  C ]   →   splith [ splitv[ B ]  A* C ]
+</div>
+
+<h4>Case C — enter a sibling container</h4>
+<p>If the next sibling in that direction is itself a container, the window dives <strong>into</strong> it.</p>
+<div class="ascii">splith [ A*  splitv[ B  C ] ]   →   splith [ splitv[ A* B  C ] ]
+</div>
+
+<h3>Bonus case — escape from a perpendicular layout</h3>
+<p>If you're inside a splitv and press "right," sway walks <em>up</em> the tree until it finds a parent that supports horizontal movement, then drops the window there.</p>
+<div class="ascii">splith [ A  splitv[ B*  C ] ]   $mod+Shift+l
+splith [ A  splitv[ C ]  B* ]   ← B escaped to the outer splith
+</div>
+<p>Sway never gets stuck — it just keeps escaping until the direction makes sense.</p>
+
+<div class="callout callout-aha">
+<strong>Mental model</strong>
+Moving a window doesn't move pixels — it <strong>edits the tree</strong>. Pixels are just the rendering of where the window ended up.
+</div>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">Tree is <code>splith [ A  B*  splitv[ C  D ] ]</code> with B focused. You press <kbd>$mod+Shift+l</kbd> (move right). What happens?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q11" value="1"> B swaps with the column (column moves left, B moves right)</label></li>
+  <li><label><input type="radio" name="q11" value="2"> B enters the column at the top: <code>splith [ A  splitv[ B  C  D ] ]</code></label></li>
+  <li><label><input type="radio" name="q11" value="3"> B and C swap inside the column</label></li>
+  <li><label><input type="radio" name="q11" value="4"> Nothing — B can't move that direction</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">B's right neighbour is a container (the splitv), so this is Case C: enter the container.</div>
+</div>
+</section>
+
+<section id="l12">
+<h2><span class="lesson-id">L12</span>Floating windows</h2>
+<blockquote>A floating window <strong>lives outside the tree</strong>. It has no parent, no siblings, no layout. It's just a rectangle that sits on top of everything tiled.</blockquote>
+<p>That's the whole concept. Everything else is consequences.</p>
+
+<h3>Toggle and verify</h3>
+<ul>
+<li><kbd>$mod+Shift+space</kbd> → toggle the focused window between tiled and floating (i3/sway default).</li>
+</ul>
+<p>Verify it actually floated by looking for <code>"type": "floating_con"</code> in the tree dump:</p>
+<pre><code>swaymsg -t get_tree | grep -B 1 '"type":' | grep -E '"(name|type)"'</code></pre>
+
+<h3>Mouse: hold $mod and drag</h3>
+<ul>
+<li><kbd>$mod</kbd> + <strong>left-click drag</strong> anywhere on the window → move it</li>
+<li><kbd>$mod</kbd> + <strong>right-click drag</strong> → resize it</li>
+</ul>
+<p>Requires <code>floating_modifier $mod normal</code> in your config.</p>
+
+<div class="callout callout-warn">
+<strong>⚠️ Mouse-resize rule of thumb</strong>
+Never start a <kbd>$mod</kbd>+right-drag from the <strong>middle</strong> of the window. Always position your cursor near the <strong>corner</strong> you want to grab first, then drag. The resize anchor follows the quadrant your cursor is in; near the centre it gets jittery.
+</div>
+
+<h3>Two stages per workspace</h3>
+<p><kbd>$mod+hjkl</kbd> only navigates within the layer you're in (tiled or floating). To cross between them:</p>
+<ul>
+<li><kbd>$mod+a</kbd> → <code>focus mode_toggle</code> (jump between tiled tree and floating layer)</li>
+<li>Mouse → just hover, since <code>focus_follows_mouse yes</code></li>
+<li><kbd>$mod+Tab</kbd> → the fuzzel windows picker</li>
+</ul>
+<blockquote>Each workspace has <strong>two stages</strong>: tiled (back) and floating (front). <kbd>$mod+a</kbd> is the curtain between them.</blockquote>
+
+<h3>Un-float placement gotcha</h3>
+<p>When you <kbd>$mod+Shift+space</kbd> a floater back to tiled, it's treated as a <strong>brand new window</strong>: inserted via the L8.75 rule as the next sibling of the most recently focused tile. Sway does <em>not</em> remember where the window came from before floating.</p>
+<p>To control placement: <kbd>$mod+a</kbd> into the tree, walk to the desired neighbour, <kbd>$mod+a</kbd> back to the floater, then <kbd>$mod+Shift+space</kbd>.</p>
+
+<h3>Keyboard resize — use <code>px</code>, not <code>ppt</code></h3>
+<div class="callout callout-warn">
+<strong>Gotcha</strong>
+The unit <code>ppt</code> (percentage points) only works on tiled windows. <code>resize … 10 ppt</code> errors out on a floater with <em>"Floating containers cannot use ppt measurements"</em>. The robust pattern is to always use <code>px</code> — sway clamps tiled windows to layout constraints, so it does the right thing for both.
+</div>
+
+<h3>Auto-floating rules</h3>
+<p>Use <code>for_window</code> to auto-float specific apps. Find the <code>app_id</code> with:</p>
+<pre><code>swaymsg -t get_tree | jq -r '.. | select(.type?=="con" or .type?=="floating_con") | "\(.app_id // .window_properties.class // "?")  ::  \(.name)"' | grep -i &lt;app-name&gt;</code></pre>
+<p>Then add a rule like:</p>
+<pre><code>for_window [app_id="^pavucontrol$"] floating enable</code></pre>
+
+<h3>The "summon and dismiss" pattern</h3>
+<p>For utility popups you summon, type into, and dismiss — audio mixers, calculators, password managers — use a richer rule that floats <em>and</em> sets a known size and position:</p>
+<pre><code>for_window [app_id="^wiremix-float$"] floating enable, resize set 720 480, move position center
+for_window [app_id="^org\.gnome\.Calculator$"] floating enable, resize set 480 600, move position center</code></pre>
+<p>Every launch: float, resize to a known size, centre on the active output. The window appears in the same predictable spot every time, with no manual cleanup.</p>
+
+<h3>The <code>for_window</code> cookbook</h3>
+<table>
+<thead><tr><th>Pattern</th><th>Use case</th></tr></thead>
+<tbody>
+<tr><td><code>floating enable</code></td><td>Just float; sway picks size and position</td></tr>
+<tr><td><code>floating enable, resize set W H, move position center</code></td><td>Summon-and-dismiss popup at a fixed size</td></tr>
+<tr><td><code>floating enable, sticky enable</code></td><td>Always-visible overlay (PiP, etc.)</td></tr>
+<tr><td><code>move scratchpad</code></td><td>Auto-stash into the drawer (Cider)</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn">
+<strong>Criteria selectors are tree-wide, not focus filters</strong>
+<code>[app_id=…]</code>, <code>[tiling]</code>, <code>[floating]</code> match against the <strong>whole tree</strong>, not the focused window. They're great for <code>for_window</code> rules and bulk <code>swaymsg</code> scripting, useless for "do X to the focused window only if it's of type Y."
+</div>
+
+<div class="quiz" data-answer="3">
+<h4>Quick check</h4>
+<p class="question">A window is floating. You press <kbd>$mod+Shift+space</kbd> to un-float it. Where in the tiled tree does it land?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q12" value="1"> Back exactly where it was before it floated</label></li>
+  <li><label><input type="radio" name="q12" value="2"> Always at the end of the workspace's top container</label></li>
+  <li><label><input type="radio" name="q12" value="3"> As the next sibling of the most recently focused tile (insertion rule)</label></li>
+  <li><label><input type="radio" name="q12" value="4"> Wherever the cursor is hovering</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">Sway treats it as a brand new window. It doesn't remember pre-float position.</div>
+</div>
+</section>
+
+<section id="l13">
+<h2><span class="lesson-id">L13</span>Scratchpad</h2>
+<blockquote>Scratchpad is a hideout for floating utility windows that aren't bound to any workspace. Stash with one key, summon with another.</blockquote>
+
+<h3>Bindings</h3>
+<table>
+<thead><tr><th>Key</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+Shift+n</kbd></td><td><code>move scratchpad</code> — stash focused window (it disappears)</td></tr>
+<tr><td><kbd>$mod+n</kbd></td><td><code>scratchpad show</code> — summon/hide; cycles through stash</td></tr>
+</tbody>
+</table>
+
+<h3>The model: a flat list of floaters with no workspace</h3>
+<ul>
+<li>Scratchpad windows are <strong>always floating</strong>. Stashing converts a tiled window to floating.</li>
+<li>They have <strong>no workspace</strong> — they appear on whichever workspace you're on when you summon.</li>
+<li>Each window remembers its <strong>size and position</strong>. Set once, summons always restore.</li>
+<li>You can stash any number of windows. <kbd>$mod+n</kbd> cycles through them; doesn't pop or consume.</li>
+</ul>
+<p>Cycling: <code>hidden → A → hidden → B → hidden → A → …</code>.</p>
+
+<h3>Eviction</h3>
+<p>No dedicated "unstash" command. Both routes work because they violate the "floating + no workspace" property:</p>
+<table>
+<thead><tr><th>Method</th><th>Why it evicts</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+Shift+space</kbd> on a summoned window</td><td>Stops floating → must have a workspace → joins current</td></tr>
+<tr><td><kbd>$mod+Shift+1..6</kbd></td><td>Has a workspace → no longer no-workspace</td></tr>
+<tr><td>Close the window</td><td>Window doesn't exist</td></tr>
+</tbody>
+</table>
+
+<h3>The killer pattern: auto-stash on launch</h3>
+<p>For a music player or chat app you always want one keystroke away:</p>
+<pre><code>for_window [app_id="^Cider$"] move scratchpad</code></pre>
+<p>Launch the app → it briefly flashes, then disappears into the scratchpad. <kbd>$mod+n</kbd> summons it whenever needed. <strong>Never wastes a workspace slot.</strong></p>
+
+<div class="quiz" data-answer="2">
+<h4>Quick check</h4>
+<p class="question">You have two terminals stashed in the scratchpad. You press <kbd>$mod+n</kbd> three times. What's on screen at the end?</p>
+<ul class="options">
+  <li><label><input type="radio" name="q13" value="1"> Both terminals visible</label></li>
+  <li><label><input type="radio" name="q13" value="2"> One terminal visible (the second one in the cycle: show A → hide A → show B)</label></li>
+  <li><label><input type="radio" name="q13" value="3"> Both terminals removed from scratchpad permanently</label></li>
+  <li><label><input type="radio" name="q13" value="4"> Nothing visible — the third press hid everything</label></li>
+</ul>
+<button class="check">Check</button>
+<button class="reset">Reset</button>
+<div class="feedback">show A, hide A, show B. The third press is a fresh "summon" and brings up the next one in the cycle.</div>
+</div>
+</section>
+
+<section id="sticky">
+<h2>Bonus · Sticky</h2>
+<blockquote>A sticky window stays visible on every workspace you switch to. Only applies to floaters.</blockquote>
+<p>This config already uses sticky for Picture-in-Picture videos:</p>
+<pre><code>for_window [title="^Picture in picture$"] floating enable, sticky enable, border pixel 2</code></pre>
+<p>Pop a YouTube video out into PiP — it floats AND sticks, so it follows you across workspaces. You've been using sticky daily without knowing the name.</p>
+
+<h3>Sticky vs scratchpad</h3>
+<table>
+<thead><tr><th></th><th>Scratchpad</th><th>Sticky</th></tr></thead>
+<tbody>
+<tr><td>Visible by default?</td><td>No (hidden)</td><td>Yes (always)</td></tr>
+<tr><td>Per-workspace?</td><td>No (no workspace)</td><td>No (every workspace)</td></tr>
+<tr><td>Summon needed?</td><td>Yes (<kbd>$mod+n</kbd>)</td><td>No (just there)</td></tr>
+<tr><td>Use case</td><td>On-demand utility</td><td>Always-visible overlay</td></tr>
+</tbody>
+</table>
+<p><strong>Scratchpad = drawer.</strong> Pull it out when needed. <strong>Sticky = sticker.</strong> Always on the window.</p>
+<p>If you ever want a manual sticky toggle, add: <code>bindsym $mod+? sticky toggle</code> to a free key.</p>
+</section>
+
+<section id="matrix">
+<h2>Reading the matrix</h2>
+<p>Sway shows you the tree in <strong>tab titles</strong> when a container has only one child but sits inside wrapper containers. The shorthand:</p>
+<table>
+<thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>H[ … ]</code></td><td>splith container</td></tr>
+<tr><td><code>V[ … ]</code></td><td>splitv container</td></tr>
+<tr><td><code>T[ … ]</code></td><td>tabbed container</td></tr>
+<tr><td><code>S[ … ]</code></td><td>stacked container (like tabbed but vertical title list)</td></tr>
+<tr><td>bare name</td><td>a leaf window</td></tr>
+</tbody>
+</table>
+<p>So <code>H[T[Alacritty]]</code> = an H container, holding a T container, holding one Alacritty window. Three nodes nested; only one is visible.</p>
+
+<div class="callout callout-aha">
+<strong>✨ Pro tip — reading orphans from the title bar</strong>
+When you see something like <code>H[V[H[Alacritty]]]</code>, sway is literally telling you "this window has three orphan wrappers around it." Most users see noise. You now read it as a diagnostic: one window, three single-child wrappers, all collapsible if you want (use L11 escape moves). This is the moment you realise sway has been showing you the tree all along — you just couldn't read it before.
+</div>
+
+<h3>What to do about orphans</h3>
+<p>Usually nothing. They don't affect rendering, focus navigation, or resize. They only bite when:</p>
+<ul>
+<li>A bracket key surprises you (extra wrapper changes what "the parent" is)</li>
+<li>Move-window has more layers to escape than expected</li>
+<li>A layout toggle changes scope you didn't intend</li>
+</ul>
+<p>The fix in all cases is the same one tool: <kbd>$mod+c</kbd> to navigate to the right scope first.</p>
+</section>
+
+<section id="cheat">
+<h2>Cheat sheet</h2>
+
+<h3>Open and close</h3>
+<table>
+<thead><tr><th>Key</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td><kbd>$mod+t</kbd></td><td>Open terminal</td></tr>
+<tr><td><kbd>$mod+b</kbd></td><td>Open browser</td></tr>
+<tr><td><kbd>$mod+i</kbd></td><td>Open VS Code</td></tr>
+<tr><td><kbd>$mod+space</kbd></td><td>Run launcher (fuzzel)</td></tr>
+<tr><td><kbd>$mod+Shift+q</kbd></td><td>Close focused window</td></tr>
+</tbody>
+</table>
+
+<h3>Focus & move</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+h/j/k/l</kbd> or <kbd>$mod+←/↓/↑/→</kbd></td><td>Focus left/down/up/right</td></tr>
+<tr><td><kbd>$mod+Shift+h/j/k/l</kbd> or <kbd>$mod+Shift+arrows</kbd></td><td>Move focused window</td></tr>
+<tr><td><kbd>$mod+c</kbd></td><td>Focus parent container</td></tr>
+<tr><td><kbd>$mod+Ctrl+c</kbd></td><td>Focus child container</td></tr>
+<tr><td><kbd>$mod+a</kbd></td><td>Toggle focus between tiled tree and floating layer</td></tr>
+<tr><td><kbd>$mod+Tab</kbd></td><td>Window picker (across all workspaces)</td></tr>
+</tbody>
+</table>
+
+<h3>Layout</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+]</kbd></td><td>Next window opens to the right (splith)</td></tr>
+<tr><td><kbd>$mod+[</kbd></td><td>Next window opens below (splitv)</td></tr>
+<tr><td><kbd>$mod+Ctrl+f</kbd></td><td>Layout: tabbed</td></tr>
+<tr><td><kbd>$mod+period</kbd></td><td>Toggle tabbed ↔ split</td></tr>
+<tr><td><kbd>$mod+f</kbd></td><td>Fullscreen toggle</td></tr>
+<tr><td><kbd>$mod+Shift+space</kbd></td><td>Floating toggle</td></tr>
+</tbody>
+</table>
+
+<h3>Resize</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+r</kbd></td><td>Cycle width preset (33% → 50% → 67%)</td></tr>
+<tr><td><kbd>$mod+Ctrl+r</kbd></td><td>Reset to even split</td></tr>
+<tr><td><kbd>$mod+=</kbd> / <kbd>$mod+-</kbd></td><td>Grow / shrink width</td></tr>
+<tr><td><kbd>$mod+Shift+=</kbd> / <kbd>$mod+Shift+-</kbd></td><td>Grow / shrink height</td></tr>
+</tbody>
+</table>
+
+<h3>Workspaces</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+1..6</kbd></td><td>Jump to workspace</td></tr>
+<tr><td><kbd>$mod+Shift+1..6</kbd></td><td>Send focused window/container to workspace</td></tr>
+<tr><td><kbd>$mod+Page_Up/Down</kbd></td><td>Prev / next workspace</td></tr>
+<tr><td><kbd>$mod+Ctrl+Page_Up/Down</kbd></td><td>Move container and follow</td></tr>
+<tr><td><kbd>$mod+g</kbd></td><td>Back-and-forth (toggle to last workspace)</td></tr>
+<tr><td><kbd>$mod+Shift+u/i</kbd></td><td>Move workspace to output left/right</td></tr>
+</tbody>
+</table>
+
+<h3>Scratchpad</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+Shift+n</kbd></td><td>Stash focused window into scratchpad</td></tr>
+<tr><td><kbd>$mod+n</kbd></td><td>Summon / hide / cycle scratchpad windows</td></tr>
+</tbody>
+</table>
+
+<h3>System</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod+Shift+r</kbd></td><td>Reload sway config</td></tr>
+<tr><td><kbd>$mod+Shift+slash</kbd></td><td>Hotkeys cheatsheet (fuzzel)</td></tr>
+<tr><td><kbd>$mod+F5</kbd></td><td>Screenshot all</td></tr>
+<tr><td><kbd>Ctrl+Alt+Delete</kbd></td><td>Session menu</td></tr>
+</tbody>
+</table>
+
+<h3>Mouse (with <kbd>$mod</kbd> held)</h3>
+<table>
+<tbody>
+<tr><td><kbd>$mod</kbd> + left-drag floater</td><td>Move</td></tr>
+<tr><td><kbd>$mod</kbd> + right-drag floater</td><td>Resize (grab from a corner!)</td></tr>
+</tbody>
+</table>
+
+<h3>Inspect the tree</h3>
+<pre><code># Compact view
+swaymsg -t get_tree | grep -E '"(name|layout)"'
+
+# Find an app's app_id
+swaymsg -t get_tree | jq -r '.. | select(.type?=="con" or .type?=="floating_con") | "\(.app_id // .window_properties.class // "?")  ::  \(.name)"'
+
+# Send commands directly (bypass keybinds)
+swaymsg "resize grow width 100 px"
+swaymsg "[app_id=firefox] focus"
+</code></pre>
+
+<p style="margin-top: 3rem; color: var(--subtext); text-align: center;"><em>You've finished sway school. Now go build weird layouts. 🌳</em></p>
+</section>
+
+</main>
+</div>
+
+<script>
+// Quiz logic
+(function() {
+  const quizzes = [];
+
+  function init() {
+    document.querySelectorAll('.quiz').forEach((quiz, idx) => {
+      const correct = quiz.dataset.answer;
+      const labels = quiz.querySelectorAll('.options label');
+      const feedback = quiz.querySelector('.feedback');
+      const checkBtn = quiz.querySelector('.check');
+      const resetBtn = quiz.querySelector('.reset');
+      const inputs = quiz.querySelectorAll('input[type=radio]');
+
+      quizzes.push({ quiz, answered: false });
+
+      checkBtn.addEventListener('click', () => {
+        const selected = quiz.querySelector('input[type=radio]:checked');
+        if (!selected) return;
+        labels.forEach(l => l.classList.remove('correct', 'wrong'));
+        const selectedLabel = selected.closest('label');
+        const correctLabel = quiz.querySelector(`input[value="${correct}"]`).closest('label');
+        const isRight = selected.value === correct;
+        if (isRight) {
+          selectedLabel.classList.add('correct');
+          feedback.classList.add('show', 'right');
+          feedback.classList.remove('nope');
+        } else {
+          selectedLabel.classList.add('wrong');
+          correctLabel.classList.add('correct');
+          feedback.classList.add('show', 'nope');
+          feedback.classList.remove('right');
+        }
+        quizzes[idx].answered = true;
+        updateProgress();
+      });
+
+      resetBtn.addEventListener('click', () => {
+        labels.forEach(l => l.classList.remove('correct', 'wrong'));
+        inputs.forEach(i => i.checked = false);
+        feedback.classList.remove('show', 'right', 'nope');
+        quizzes[idx].answered = false;
+        updateProgress();
+      });
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = quizzes.length;
+    const answered = quizzes.filter(q => q.answered).length;
+    const text = document.getElementById('progress-text');
+    const fill = document.getElementById('progress-fill');
+    if (text) text.textContent = `${answered} / ${total} answered`;
+    if (fill) fill.style.width = total ? `${(answered / total) * 100}%` : '0%';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
