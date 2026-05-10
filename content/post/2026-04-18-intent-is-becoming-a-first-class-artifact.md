@@ -27,7 +27,7 @@ This matters because AI can dump a huge pile of possibilities on the table. Vari
 
 Someone without much domain understanding can now put together something plausible very quickly. Sometimes it even looks good for a while. But plausible isn't the same thing as right. And it is definitely not the same thing as trusted. The valuable bit is being able to say: this is the direction that fits the problem, these are the principles shaping the change, and this is the version of the idea worth betting on.
 
-That is why I think intent is becoming a first-class artifact. The real value is not the prompt itself. It is the path from intent to trusted, used code.
+That is why I think intent is becoming a first-class artifact. The real value is not the prompt itself. It is the path from intent to proven code.
 
 Once intent is explicit, review gets easier. Future humans have a better chance of understanding why the system behaves the way it does. Agents have something more stable to work from than a one-off chat. And teams get a cleaner way to separate shiny generated output from code they actually use.
 
