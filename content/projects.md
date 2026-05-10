@@ -14,6 +14,11 @@ blog post stream.
 
 ## Developer tools
 
+- **[mu](https://github.com/martintrojer/mu)** — A small, opinionated
+  control plane for running a crew of AI coding agents in parallel. One
+  tmux session, a typed task DAG, isolated VCS workspaces per agent, and
+  an audit log — deliberately built to get out of the model's way.
+
 - **[vecgrep](https://github.com/martintrojer/vecgrep)** — Semantic grep:
   like ripgrep, but searches by meaning instead of substring. Local-first
   (the embedding model ships inside the binary, no API keys, code stays on
@@ -61,11 +66,6 @@ your keyboard and whatever you're typing into.
   Push-to-talk transcription using NVIDIA's Parakeet v3 model. Hold the
   hotkey, speak, release — the transcription gets typed (or copied) into
   whatever window has focus. Local model, no API.
-
-- **[improve-writing](https://github.com/martintrojer/improve-writing)** —
-  Select text, press a hotkey, and a local Ollama model rewrites it
-  in-place. Separate hotkeys for "improve text" and "generate shell
-  command from natural language description."
 
 ## Tutorials
 
