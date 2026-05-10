@@ -1,5 +1,5 @@
 ---
-title: New code, trusted code, used code
+title: New code, trusted code, proven code
 date: "2026-04-11T00:00:00Z"
 description: ""
 tags:
@@ -8,6 +8,8 @@ tags:
   - productivity
 categories:
   - software
+aliases:
+  - /post/2026-04-11-new-code-trusted-code-used-code/
 ---
 
 AI tooling is not hitting the software industry in a uniform way. The YC startup bubble gets most of the attention and that distorts the picture. Move fast and break things is simply not viable in big parts of the industry.
@@ -18,13 +20,13 @@ That is why I think the important distinction is not regulated versus unregulate
 
 - new code
 - trusted code
-- used code
+- proven code
 
 **New code** is cheap to produce now. It may be clean, well-structured, and even well-tested. It may also be wrong, weakly understood, or poorly owned.
 
 **Trusted code** is code that has been reviewed, exercised, and understood well enough that people are willing to stand behind it.
 
-**Used code** goes one step further. It has survived contact with reality. It has been lived with.
+**Proven code** goes one step further. It has survived contact with reality. It has been lived with.
 
 This distinction applies pretty broadly, but it matters more in finance because several things are not optional: explainability, policy alignment, audit trail, accountable ownership and operational resilience.
 
@@ -34,7 +36,7 @@ That is why AI use in finance should be judged less by how much code it can gene
 
 Used badly, they can flood an organisation with polished but weakly owned output. The danger isn't just incorrect code. It's opaque systems that nobody can properly explain later, plus a false sense of progress because the artifacts look finished.
 
-That is also why older codebases are not automatically a disadvantage here. In regulated environments, code that has already been exercised, reviewed, and lived with is often a stronger foundation than fresh output, however elegant that fresh output looks. Trusted and used code carries operational memory.
+That is also why older codebases are not automatically a disadvantage here. In regulated environments, code that has already been exercised, reviewed, and lived with is often a stronger foundation than fresh output, however elegant that fresh output looks. Proven code carries operational memory.
 
 That is what I mean when I say regulation changes the game, not the pressure.
 

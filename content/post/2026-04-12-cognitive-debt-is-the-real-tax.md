@@ -18,7 +18,7 @@ Working code isn't the same as understood code. A system can appear to behave. T
 
 And new code isn't the same as trusted code. Generated code can look clean, sensible and well-structured. It can even survive review. That still doesn't mean people really trust it. Trust comes from scrutiny, repetition, and seeing how the thing behaves when reality gets involved.
 
-And trusted code isn't the same as used code. Used code has survived contact with reality. It has been lived with. That kind of code carries operational memory in a way that fresh output doesn't.
+And trusted code isn't the same as proven code. Proven code has survived contact with reality. It has been lived with. That kind of code carries operational memory in a way that fresh output doesn't.
 
 What concretely is this new cognitive debt that we are sleepwalking into?
 
