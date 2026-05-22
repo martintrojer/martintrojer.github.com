@@ -343,7 +343,7 @@ Read each lesson, try the suggested experiments in a real sway session, then tak
 <table>
 <thead><tr><th>Key</th><th>What it does</th></tr></thead>
 <tbody>
-<tr><td><kbd>$mod+t</kbd></td><td>Open a terminal</td></tr>
+<tr><td><kbd>$mod+Return</kbd></td><td>Open a terminal</td></tr>
 <tr><td><kbd>$mod+h/j/k/l</kbd> <em>or</em> <kbd>$mod+←/↓/↑/→</kbd></td><td>Move focus left/down/up/right</td></tr>
 <tr><td><kbd>$mod+Shift+h</kbd> etc. <em>or</em> <kbd>$mod+Shift+arrows</kbd></td><td>Move the focused window</td></tr>
 <tr><td><kbd>$mod+[</kbd> / <kbd>$mod+]</kbd></td><td>Next window goes below / right</td></tr>
@@ -357,7 +357,7 @@ Read each lesson, try the suggested experiments in a real sway session, then tak
 
 <section id="l1">
 <h2><span class="lesson-id">L1</span>A window is just a rectangle</h2>
-<p>Open one terminal: <kbd>$mod+t</kbd>. It fills the screen, minus a small gap.</p>
+<p>Open one terminal: <kbd>$mod+Return</kbd>. It fills the screen, minus a small gap.</p>
 <blockquote>One window takes all the space available to it.</blockquote>
 <p>That's the whole lesson. No tree, no containers — just one window filling its space.</p>
 
@@ -469,7 +469,7 @@ If you want a new window in a specific spot, <strong>focus its desired neighbour
 </tbody>
 </table>
 <p>These keys do nothing visible by themselves. They just set up the direction for the <em>next</em> window you open.</p>
-<p>Recipe to build a column: focus a window → <kbd>$mod+[</kbd> → <kbd>$mod+t</kbd>. The new terminal appears below.</p>
+<p>Recipe to build a column: focus a window → <kbd>$mod+[</kbd> → <kbd>$mod+Return</kbd>. The new terminal appears below.</p>
 
 <div class="callout callout-aha">
 <strong>The unlock</strong>
@@ -480,13 +480,13 @@ This is how you build complex layouts. Pick a direction, open a window. Pick ano
 <section id="l7">
 <h2><span class="lesson-id">L7</span>Arrangements stick to their spot</h2>
 <p>Once you've established a direction in a slot (e.g. made a vertical column), new windows opened <em>inside that slot</em> keep going in that direction — <strong>without</strong> needing the bracket key again.</p>
-<p>Proof: focus a window inside your vertical column, hit <kbd>$mod+t</kbd>, and the new terminal stacks into the column rather than popping out sideways.</p>
+<p>Proof: focus a window inside your vertical column, hit <kbd>$mod+Return</kbd>, and the new terminal stacks into the column rather than popping out sideways.</p>
 <blockquote>The slot <strong>knows what it is</strong>. Sway carries the arrangement forward until you change direction again with <kbd>[</kbd> or <kbd>]</kbd>.</blockquote>
 <p>This is the moment the mental model clicks for most people. Everything from here on is variations on this one idea.</p>
 
 <div class="quiz" data-answer="2">
 <h4>Quick check</h4>
-<p class="question">You built a 3-window column with <kbd>$mod+[</kbd>. Now you focus the middle window and press <kbd>$mod+t</kbd> (no bracket key first). What happens?</p>
+<p class="question">You built a 3-window column with <kbd>$mod+[</kbd>. Now you focus the middle window and press <kbd>$mod+Return</kbd> (no bracket key first). What happens?</p>
 <ul class="options">
   <li><label><input type="radio" name="q7" value="1"> The new terminal opens to the right (horizontal default)</label></li>
   <li><label><input type="radio" name="q7" value="2"> The new terminal joins the column, stacked between the focused window and the next one</label></li>
@@ -701,7 +701,7 @@ splith [ splitv[ A ]  B  C ]    ← after
 <p>When focus is on a container, <strong>commands act on the whole container</strong>:</p>
 <ul>
 <li><strong>Send a whole column to another workspace</strong>: focus a column container, hit <kbd>$mod+Shift+3</kbd> — the entire subtree moves.</li>
-<li><strong>Tab a whole group</strong>: focus a row, hit <kbd>$mod+Ctrl+f</kbd> — every direct child becomes a tab.</li>
+<li><strong>Tab a whole group</strong>: focus a row, hit <kbd>$mod+period</kbd> — every direct child becomes a tab (toggles back to a split on a second press).</li>
 <li><strong>Wrap a whole subtree in a new split</strong>: focus a row, hit <kbd>$mod+[</kbd> — the entire row becomes the top child of a new splitv.</li>
 <li><strong>Float a whole group</strong>: focus a container, hit <kbd>$mod+Shift+space</kbd> — the whole subtree floats together.</li>
 </ul>
@@ -733,7 +733,6 @@ Focus is a cursor in the tree. <kbd>$mod+c</kbd> moves the cursor up; <kbd>$mod+
 <h3>Changing a container's layout (the easy mutation)</h3>
 <p>Focus any window. The window's <strong>parent container</strong> is what these commands act on:</p>
 <ul>
-<li><kbd>$mod+Ctrl+f</kbd> → set parent layout to <strong>tabbed</strong></li>
 <li><kbd>$mod+period</kbd> → <strong>toggle</strong> parent layout between tabbed and split</li>
 <li><kbd>$mod+]</kbd> / <kbd>$mod+[</kbd> → ensure parent is splith / splitv (wrapping if needed; see L8.75)</li>
 </ul>
@@ -749,7 +748,7 @@ The windows themselves don't move in the tree. Only the <strong>rendering</stron
 <li>Focus any window in the layout.</li>
 <li><kbd>$mod+c</kbd> until the border wraps the entire workspace content (everything you want above the new bar).</li>
 <li><kbd>$mod+[</kbd> → wraps that whole subtree in a fresh splitv.</li>
-<li><kbd>$mod+t</kbd> → new terminal appears below the entire layout.</li>
+<li><kbd>$mod+Return</kbd> → new terminal appears below the entire layout.</li>
 </ol>
 <p>Without the <kbd>$mod+c</kbd> step, the bracket key would only wrap one window. <kbd>$mod+c</kbd> is what makes mutations apply at the <em>right scope</em>.</p>
 
@@ -758,7 +757,7 @@ The windows themselves don't move in the tree. Only the <strong>rendering</stron
 
 <div class="quiz" data-answer="2">
 <h4>Quick check</h4>
-<p class="question">You have a row of 3 windows. You focus the middle one and press <kbd>$mod+Ctrl+f</kbd> (tabbed). What happens?</p>
+<p class="question">You have a row of 3 windows. You focus the middle one and press <kbd>$mod+period</kbd> (toggle to tabbed). What happens?</p>
 <ul class="options">
   <li><label><input type="radio" name="q10" value="1"> Only the middle window becomes tabbed (a single-tab group)</label></li>
   <li><label><input type="radio" name="q10" value="2"> The whole row collapses into 3 tabs (parent container layout changes from splith to tabbed)</label></li>
@@ -1019,7 +1018,7 @@ When you see something like <code>H[V[H[Alacritty]]]</code>, sway is literally t
 <table>
 <thead><tr><th>Key</th><th>Action</th></tr></thead>
 <tbody>
-<tr><td><kbd>$mod+t</kbd></td><td>Open terminal</td></tr>
+<tr><td><kbd>$mod+Return</kbd></td><td>Open terminal</td></tr>
 <tr><td><kbd>$mod+b</kbd></td><td>Open browser</td></tr>
 <tr><td><kbd>$mod+i</kbd></td><td>Open VS Code</td></tr>
 <tr><td><kbd>$mod+space</kbd></td><td>Run launcher (fuzzel)</td></tr>
@@ -1044,7 +1043,6 @@ When you see something like <code>H[V[H[Alacritty]]]</code>, sway is literally t
 <tbody>
 <tr><td><kbd>$mod+]</kbd></td><td>Next window opens to the right (splith)</td></tr>
 <tr><td><kbd>$mod+[</kbd></td><td>Next window opens below (splitv)</td></tr>
-<tr><td><kbd>$mod+Ctrl+f</kbd></td><td>Layout: tabbed</td></tr>
 <tr><td><kbd>$mod+period</kbd></td><td>Toggle tabbed ↔ split</td></tr>
 <tr><td><kbd>$mod+f</kbd></td><td>Fullscreen toggle</td></tr>
 <tr><td><kbd>$mod+Shift+space</kbd></td><td>Floating toggle</td></tr>
@@ -1055,7 +1053,6 @@ When you see something like <code>H[V[H[Alacritty]]]</code>, sway is literally t
 <table>
 <tbody>
 <tr><td><kbd>$mod+r</kbd></td><td>Cycle width preset (33% → 50% → 67%)</td></tr>
-<tr><td><kbd>$mod+Ctrl+r</kbd></td><td>Reset to even split</td></tr>
 <tr><td><kbd>$mod+=</kbd> / <kbd>$mod+-</kbd></td><td>Grow / shrink width</td></tr>
 <tr><td><kbd>$mod+Shift+=</kbd> / <kbd>$mod+Shift+-</kbd></td><td>Grow / shrink height</td></tr>
 </tbody>
