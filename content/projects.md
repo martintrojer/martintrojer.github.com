@@ -3,75 +3,59 @@ layout: page
 title: Projects
 header: Projects & writeups
 group: navigation
-date: "2026-04-26"
+date: "2026-11-12"
 menus:
   - main
 weight: 5
 ---
 
-A curated list of things I've built or written that live outside the regular
-blog post stream.
+I build terminal tools to sharpen my workflow, and keep tinkering with a
+Wayland compositor until it works exactly the way I want. Clojure and Scala
+in a former life.
 
-## Developer tools
+## Terminal & compositor
 
-- **[mu](https://github.com/martintrojer/mu)** — A small, opinionated
-  control plane for running a crew of AI coding agents in parallel. One
-  tmux session, a typed task DAG, isolated VCS workspaces per agent, and
-  an audit log — deliberately built to get out of the model's way.
+- **[vtmux](https://github.com/martintrojer/vtmux)** — Drop-in tmux
+  replacement. Modern stack, better rendering, live upgrades.
+
+- **[swayward-wm](https://github.com/swayward-wm)** — An i3/sway-compatible
+  Wayland compositor (and [screen locker](https://github.com/swayward-wm/swaywardlock))
+  on smithay, plus [sway-ipc-oracle](https://github.com/swayward-wm/sway-ipc-oracle)
+  conformance tests.
+
+- **[mu-crew](https://github.com/mu-crew)** — A persistent crew of pi agents
+  across all my machines. Control plane, shared agent state, remote jobs,
+  and an append-only session archive.
+
+## Notes
+
+- **[mdroots](https://github.com/martintrojer/mdroots)** — A zero-config
+  markdown (and org) language server and Rust library.
+
+- **[ramble](https://github.com/martintrojer/ramble)** — Read your notes in
+  the terminal, and follow them wherever they link.
+
+- **[debrief](https://github.com/martintrojer/debrief)** — Catch up with what
+  your coding agents committed, and answer back.
+
+- **[carddown](https://github.com/martintrojer/carddown)** — Spaced repetition
+  for your markdown notes. Cards are identified by content hash so they
+  survive edits and file moves; per-vault SQLite state, no cloud.
 
 - **[vecgrep](https://github.com/martintrojer/vecgrep)** — Semantic grep:
-  like ripgrep, but searches by meaning instead of substring. Local-first
-  (the embedding model ships inside the binary, no API keys, code stays on
-  your machine), with an interactive TUI, an HTTP server for IDE plugins,
-  and optional hybrid lexical+semantic ranking. The one I reach for daily.
+  like ripgrep, but searches by meaning. Local-first embedding model inside
+  the binary, interactive TUI, optional hybrid lexical+semantic ranking.
 
-- **[carddown](https://github.com/martintrojer/carddown)** — A CLI flashcard
-  system with spaced repetition (SM2/SM5/Simple8) that lives in your
-  markdown notes. Cards are identified by content hash so they survive
-  edits and file moves; per-vault SQLite state, no cloud, no sync.
+## Other tools
 
 - **[klik](https://github.com/martintrojer/klik)** — A typing-speed TUI
   that adapts to *you* — analyzes per-character miss rate and timing,
-  then targets your weakest letters with practice words. Detailed
-  analytics, session deltas, and historical comparison. Fork of `thokr`.
-
-## Neovim plugins
-
-A small family of plugins that bring vim-fugitive's "the workflow is the UI"
-ergonomics to non-git VCSes, plus a shared review engine.
-
-- **[jj-fugitive](https://github.com/martintrojer/jj-fugitive)** — A
-  fugitive-style plugin for [Jujutsu](https://github.com/jj-vcs/jj). Log
-  view as the primary hub, bookmark management, rebase/squash from the
-  log, side-by-side diffs, annotate/blame, divergence protection — the
-  full surface, native to jj's model.
-
-- **[sl-fugitive](https://github.com/martintrojer/sl-fugitive)** — Same
-  idea, but for [Sapling](https://sapling-scm.com/). Smartlog as the hub,
-  stack-aware mutations (rebase, split, fold, absorb, restack), interactive
-  rebase, amend-to.
-
-- **[redline.nvim](https://github.com/martintrojer/redline.nvim)** — The
-  shared review-capture engine behind both plugins above. Press `cR` in any
-  diff buffer to capture lines into a structured markdown packet, then
-  paste the whole thing into the AI agent of your choice for review. Works
-  with mini.git, vim-fugitive, and Neovim 0.12+ `:DiffTool`.
-
-## Voice & writing helpers
-
-Hotkey-triggered Rust tools for Linux (Wayland) and macOS that sit between
-your keyboard and whatever you're typing into.
+  then targets your weakest letters with practice words. Fork of `thokr`.
 
 - **[parakeet-writer](https://github.com/martintrojer/parakeet-writer)** —
   Push-to-talk transcription using NVIDIA's Parakeet v3 model. Hold the
   hotkey, speak, release — the transcription gets typed (or copied) into
   whatever window has focus. Local model, no API.
-
-## Tutorials
-
-- **[Sway School](/sway-school/)** — A tree-first tutorial for beginners
-  learning the [sway](https://swaywm.org/) Wayland compositor. Explains
-  the i3/sway layout tree from the ground up with worked examples.
 
 ## Older projects
 
@@ -85,10 +69,9 @@ your keyboard and whatever you're typing into.
 <!--
 Add new entries above. Group conventions:
 
-## Developer tools     - standalone CLIs
-## Neovim plugins      - editor extensions
-## Voice & writing helpers - hotkey-triggered desktop tools
-## Tutorials           - standalone HTML tutorials in static/
+## Terminal & compositor - vtmux, swayward, mu-crew
+## Notes               - markdown / note-taking CLIs
+## Other tools         - misc standalone tools
 ## Older projects      - still works, but not actively developed
 
 Each entry: bold link + 1-3 sentence description. Keep it scannable; lead
